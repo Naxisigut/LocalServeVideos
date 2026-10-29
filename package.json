@@ -5,9 +5,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "echo 'HyperFrames dev server will be configured here'",
-    "build": "echo 'HyperFrames video rendering will be configured here'",
-    "render": "echo 'Video rendering pipeline to be implemented'"
+    "dev": "hyperframes preview",
+    "preview": "hyperframes preview",
+    "build": "hyperframes lint",
+    "lint": "hyperframes lint",
+    "doctor": "hyperframes doctor",
+    "check": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes check",
+    "render": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render --output renders/localserve-placeholder.mp4"
   },
   "keywords": [
     "video",
@@ -16,7 +20,10 @@
     "hyperframes"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22"
+  },
+  "dependencies": {
+    "hyperframes": "^0.8.216"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

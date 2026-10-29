@@ -3,56 +3,116 @@
 ## 简介 / Overview
 
 **中文：**  
-本仓库用于制作 LocalServe 产品的演示视频。项目基于 HyperFrames 技术栈（HTML → MP4），将网页内容渲染为高质量的产品演示视频。
+本仓库用于制作 LocalServe 产品的演示视频。项目基于 [HyperFrames](https://hyperframes.heygen.com)（HTML → MP4），用普通 HTML/CSS/JS（GSAP）编写组合，再预览并渲染为高质量视频。
 
-当前阶段为项目初始化，具体的演示内容和视频脚本将在后续阶段添加。
+**English：**  
+This repository creates LocalServe product demo videos with [HyperFrames](https://hyperframes.heygen.com) (HTML → MP4). Compositions are authored in plain HTML/CSS/JS (GSAP), then previewed and rendered locally.
 
-**English:**  
-This repository is for creating LocalServe product demo videos. The project uses the HyperFrames stack (HTML → MP4) to render web content into high-quality product demonstration videos.
+---
 
-This is the initialization phase. Demo content and video scripts will be added in future iterations.
+## 本机要求 / Prerequisites
+
+- **Node.js** `>= 22`（当前建议 22.x）
+- **FFmpeg**（CLI 渲染依赖，macOS 可用 `brew install ffmpeg`）
+- **pnpm**（与本仓库脚本一致）
+
+可选：HyperFrames Studio 桌面应用，用于可视化编辑。
 
 ---
 
 ## 技术栈 / Tech Stack
 
-- **HyperFrames**: HTML-based video composition and rendering
-- **Node.js + TypeScript**: Development environment
-- **视频输出 / Video Output**: MP4 format
+- **HyperFrames**：HTML 组合、预览、渲染
+- **GSAP**：可 seek 的时间轴动画
+- **输出**：MP4（默认 1920×1080）
 
 ---
 
 ## 项目结构 / Project Structure
 
 ```
-localserve-videos/
-├── compositions/      # 视频组合文件 / Video composition files
-├── assets/           # 媒体资源（图片、图标等）/ Media assets
-├── scripts/          # 构建和渲染脚本 / Build and render scripts
-├── package.json      # 项目配置 / Project configuration
-└── README.md         # 本文件 / This file
+LocalServeVideos/
+├── index.html           # 根组合（主时间轴入口）
+├── compositions/        # 子组合（data-composition-src 引用）
+├── assets/              # 媒体资源（图片、图标等）
+├── scripts/             # 辅助脚本
+├── renders/             # 本地渲染输出（已 gitignore）
+├── hyperframes.json     # HyperFrames 路径与 registry 配置
+├── meta.json            # 项目元数据
+├── package.json
+└── README.md
 ```
 
 ---
 
 ## 快速开始 / Quick Start
 
-项目尚未完全配置 HyperFrames。后续将添加完整的开发和渲染流程。
-
-Project is not yet fully configured with HyperFrames. Development and rendering workflow will be added later.
-
-### 安装依赖 / Install Dependencies
+### 安装依赖 / Install
 
 ```bash
 pnpm install
 ```
 
-### 待实现功能 / To Be Implemented
+### 环境自检 / Doctor
 
-- [ ] 配置 HyperFrames 开发环境 / Configure HyperFrames dev environment
-- [ ] 创建视频组合模板 / Create video composition templates
-- [ ] 实现渲染管道 / Implement rendering pipeline
-- [ ] 添加演示内容脚本 / Add demo content scripts
+```bash
+pnpm run doctor
+# or: npx hyperframes doctor
+```
+
+### 预览 / Preview
+
+```bash
+pnpm dev
+# 或: pnpm preview
+```
+
+浏览器会打开 HyperFrames Studio。代理/非交互环境可用：
+
+```bash
+npx hyperframes preview --background --no-open
+```
+
+### 静态检查 / Lint
+
+```bash
+pnpm lint
+```
+
+更深的浏览器门禁（布局/动效/对比度）：
+
+```bash
+pnpm check
+```
+
+### 渲染 / Render
+
+```bash
+pnpm render
+```
+
+首次渲染可能下载 `chrome-headless-shell`（较慢）。可临时用本机 Chrome：
+
+```bash
+export HYPERFRAMES_BROWSER_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+pnpm render
+```
+
+
+默认输出：`renders/localserve-placeholder.mp4`（目录与 `*.mp4` 均已忽略）。也可：
+
+```bash
+npx hyperframes render --output renders/my-video.mp4
+```
+
+---
+
+## 当前状态 / Status
+
+- [x] 配置 HyperFrames 开发环境 / HyperFrames wired up
+- [x] 最小可渲染占位组合 / Minimal placeholder composition (`index.html`, 4s)
+- [ ] 创建视频组合模板 / Create demo composition templates
+- [ ] 实现完整渲染管道与演示内容 / Full demo content and pipeline polish
 
 ---
 
