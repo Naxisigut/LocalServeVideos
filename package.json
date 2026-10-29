@@ -1,0 +1,24 @@
+{
+  "name": "localserve-videos",
+  "version": "0.1.0",
+  "description": "LocalServe product demo videos powered by HyperFrames",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'HyperFrames dev server will be configured here'",
+    "build": "echo 'HyperFrames video rendering will be configured here'",
+    "render": "echo 'Video rendering pipeline to be implemented'"
+  },
+  "keywords": [
+    "video",
+    "demo",
+    "localserve",
+    "hyperframes"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
