@@ -32,8 +32,9 @@ This repository creates LocalServe product demo videos with [HyperFrames](https:
 
 ```
 LocalServeVideos/
-├── index.html           # 根组合（主时间轴入口）
-├── compositions/        # 子组合（data-composition-src 引用）
+├── index.html           # 根组合（占位入口）
+├── compositions/        # 组合（含 youtube-main.html）
+├── docs/                # 分镜与策划文档
 ├── assets/              # 媒体资源（图片、图标等）
 ├── scripts/             # 辅助脚本
 ├── renders/             # 本地渲染输出（已 gitignore）
@@ -111,8 +112,17 @@ npx hyperframes render --output renders/my-video.mp4
 
 - [x] 配置 HyperFrames 开发环境 / HyperFrames wired up
 - [x] 最小可渲染占位组合 / Minimal placeholder composition (`index.html`, 4s)
-- [ ] 创建视频组合模板 / Create demo composition templates
-- [ ] 实现完整渲染管道与演示内容 / Full demo content and pipeline polish
+- [x] YouTube 主片分镜 / Storyboard: `docs/youtube-main-storyboard.md`
+- [x] YouTube 主片骨架 (~70s) / Skeleton: `compositions/youtube-main.html`
+- [ ] 真素材 + 旁白混音 / Real captures + VO mix
+- [ ] 交付级渲染 polish / Delivery-quality polish
+
+### YouTube 主片 / YouTube main
+
+```bash
+pnpm run render:youtube-main          # draft → renders/youtube-main-v1.mp4
+pnpm run render:youtube-main:looks    # higher quality
+```
 
 ---
 

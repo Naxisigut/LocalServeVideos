@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #0b1220;
+        --panel: #111827;
+        --panel-2: #0f172a;
+        --ink: #f8fafc;
+        --muted: rgba(248, 250, 252, 0.68);
+        --accent: #38bdf8;
+        --accent-2: #818cf8;
+        --good: #34d399;
+        --warn: #fbbf24;
+        --bad: #f87171;
+        --line: rgba(148, 163, 184, 0.28);
+        --font: "Inter", "Segoe UI", system-ui, sans-serif;
+        --mono: "SF Mono", "Menlo", "Consolas", monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ground);
+        font-family: var(--font);
+        color: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          radial-gradient(ellipse at 22% 18%, rgba(56, 189, 248, 0.16), transparent 50%),
+          radial-gradient(ellipse at 78% 82%, rgba(129, 140, 248, 0.14), transparent 48%),
+          var(--ground);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      .scene {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 64px 80px 140px;
+        gap: 28px;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .title {
+        font-size: 64px;
+        font-weight: 750;
+        letter-spacing: -0.04em;
+        line-height: 1.08;
+        text-align: center;
+        max-width: 1400px;
+      }
+      .stage {
+        width: 1480px;
+        min-height: 520px;
+        background: linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(15, 23, 42, 0.98));
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+        padding: 40px 48px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .stage-row {
+        display: flex;
+        gap: 20px;
+        align-items: stretch;
+      }
+      .card {
+        flex: 1;
+        background: rgba(2, 6, 23, 0.55);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 24px 26px;
+      }
+      .card h3 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        letter-spacing: -0.02em;
+      }
+      .card p, .mono, .meta {
+        color: var(--muted);
+        font-size: 24px;
+        line-height: 1.35;
+      }
+      .mono { font-family: var(--mono); color: #e2e8f0; }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 22px;
+        font-weight: 650;
+        border: 1px solid transparent;
+      }
+      .pill.bad { background: rgba(248, 113, 113, 0.14); color: #fecaca; border-color: rgba(248, 113, 113, 0.35); }
+      .pill.warn { background: rgba(251, 191, 36, 0.14); color: #fde68a; border-color: rgba(251, 191, 36, 0.35); }
+      .pill.good { background: rgba(52, 211, 153, 0.14); color: #a7f3d0; border-color: rgba(52, 211, 153, 0.35); }
+      .pill.info { background: rgba(56, 189, 248, 0.14); color: #bae6fd; border-color: rgba(56, 189, 248, 0.35); }
+      .pill.soft { background: rgba(148, 163, 184, 0.12); color: #e2e8f0; border-color: var(--line); }
+      .pills { display: flex; flex-wrap: wrap; gap: 12px; }
+      .window-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+      .dot { width: 14px; height: 14px; border-radius: 50%; }
+      .dot.r { background: #f87171; }
+      .dot.y { background: #fbbf24; }
+      .dot.g { background: #34d399; }
+      .window-title { color: var(--muted); font-size: 20px; margin-left: 8px; }
+      .term-line { font-family: var(--mono); font-size: 26px; color: #cbd5e1; line-height: 1.55; }
+      .term-line .ok { color: var(--good); }
+      .term-line .hi { color: var(--accent); font-weight: 700; }
+      .drop-zone {
+        border: 2px dashed rgba(56, 189, 248, 0.45);
+        border-radius: 18px;
+        padding: 36px;
+        text-align: center;
+        background: rgba(56, 189, 248, 0.06);
+      }
+      .drop-zone strong { display: block; font-size: 36px; margin-bottom: 8px; }
+      .browser-url {
+        background: rgba(2, 6, 23, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-family: var(--mono);
+        font-size: 24px;
+        color: #bae6fd;
+      }
+      .qr-box {
+        width: 220px;
+        height: 220px;
+        border-radius: 16px;
+        background:
+          linear-gradient(90deg, #0f172a 25%, transparent 25%) 0 0 / 28px 28px,
+          linear-gradient(#0f172a 25%, transparent 25%) 0 0 / 28px 28px,
+          #e2e8f0;
+        border: 8px solid #f8fafc;
+        flex-shrink: 0;
+      }
+      .phone {
+        width: 280px;
+        height: 520px;
+        border-radius: 36px;
+        border: 8px solid #1e293b;
+        background: #020617;
+        margin: 0 auto;
+        padding: 28px 18px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+      }
+      .phone-screen {
+        height: 100%;
+        border-radius: 22px;
+        background: linear-gradient(180deg, #0ea5e9 0%, #312e81 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 24px;
+        text-align: center;
+      }
+      .phone-screen strong { font-size: 28px; }
+      .phone-screen span { color: rgba(248,250,252,0.8); font-size: 20px; }
+      .menu-bar {
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 18px;
+        gap: 16px;
+        font-size: 20px;
+        color: var(--muted);
+      }
+      .tray {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .cta-grid {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .cta-chip {
+        padding: 16px 22px;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        font-size: 28px;
+        font-weight: 650;
+      }
+      .download {
+        margin-top: 8px;
+        font-size: 56px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: var(--ink);
+      }
+      .caption {
+        position: absolute;
+        left: 120px;
+        right: 120px;
+        bottom: 56px;
+        text-align: center;
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #f8fafc;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65);
+        padding: 16px 28px;
+        border-radius: 16px;
+        background: rgba(2, 6, 23, 0.55);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        z-index: 20;
+        pointer-events: none;
+      }
+      .rule {
+        display: grid;
+        grid-template-columns: 180px 40px 1fr 120px;
+        gap: 16px;
+        align-items: center;
+        padding: 18px 20px;
+        border-radius: 14px;
+        background: rgba(2, 6, 23, 0.55);
+        border: 1px solid var(--line);
+        font-size: 26px;
+      }
+      .arrow { color: var(--accent); text-align: center; font-weight: 700; }
+      .status { color: var(--good); font-weight: 750; text-align: right; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="youtube-main"
+      data-start="0"
+      data-duration="70"
+      data-width="1920"
+      data-height="1080"
+      data-fps="30"
+    >
+      <!-- S1 0–4 -->
+      <section id="s1" class="clip scene" data-start="0" data-duration="4" data-track-index="0">
+        <div class="eyebrow">S1 · Pain</div>
+        <div class="stage">
+          <div class="window-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="window-title">Terminal — npm run build</span>
+          </div>
+          <div class="term-line"><span class="ok">✓</span> built in 1.42s</div>
+          <div class="term-line">dist/index.html <span class="hi">← ready</span></div>
+          <div class="term-line">dist/assets/…</div>
+          <div class="pills" style="margin-top: 12px;">
+            <span class="pill bad">CORS blocked</span>
+            <span class="pill bad">404 on refresh</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- S2 4–10 -->
+      <section id="s2" class="clip scene" data-start="4" data-duration="6" data-track-index="0">
+        <div class="eyebrow">S2 · Too many pieces</div>
+        <div class="stage stage-row">
+          <div class="card"><h3>npx serve</h3><p>Another CLI to remember</p></div>
+          <div class="card"><h3>Edit hosts</h3><p>Local domains, friction</p></div>
+          <div class="card"><h3>Phone preview</h3><p>Can’t open the site</p></div>
+        </div>
+      </section>
+
+      <!-- S3 10–16 -->
+      <section id="s3" class="clip scene" data-start="10" data-duration="6" data-track-index="0">
+        <div class="eyebrow">S3 · LocalServe</div>
+        <h1 class="title">LocalServe turns any folder into a local site.</h1>
+        <div class="stage" style="min-height: 280px; align-items: center; justify-content: center;">
+          <div class="window-bar" style="width: 100%;">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="window-title">LocalServe</span>
+            <span class="pill good" style="margin-left: auto;">Ready</span>
+          </div>
+          <p class="meta" style="font-size: 30px;">No CLI. No cloud. Just your Mac.</p>
+        </div>
+      </section>
+
+      <!-- S4 16–24 -->
+      <section id="s4" class="clip scene" data-start="16" data-duration="8" data-track-index="0">
+        <div class="eyebrow">S4 · One-click site</div>
+        <div class="stage">
+          <div class="drop-zone">
+            <strong>Drop dist/</strong>
+            <span class="meta">Port 5173 · Start</span>
+          </div>
+          <div class="pills">
+            <span class="pill info">Folder linked</span>
+            <span class="pill soft">Port 5173</span>
+            <span class="pill good">● Running</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- S5 24–30 -->
+      <section id="s5" class="clip scene" data-start="24" data-duration="6" data-track-index="0">
+        <div class="eyebrow">S5 · SPA routes</div>
+        <div class="stage">
+          <div class="browser-url">http://127.0.0.1:5173/dashboard/settings</div>
+          <div class="card">
+            <h3>SPA deep link</h3>
+            <p>Refresh stays on route — no 404.</p>
+            <div class="pills" style="margin-top: 16px;">
+              <span class="pill good">200 OK</span>
+              <span class="pill soft">history API fallback</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S6 30–38 -->
+      <section id="s6" class="clip scene" data-start="30" data-duration="8" data-track-index="0">
+        <div class="eyebrow">S6 · Reverse proxy</div>
+        <div class="stage">
+          <div class="rule">
+            <span class="mono">/api</span>
+            <span class="arrow">→</span>
+            <span class="mono">127.0.0.1:9083</span>
+            <span class="status">200</span>
+          </div>
+          <div class="pills">
+            <span class="pill good">Same-origin</span>
+            <span class="pill bad" style="text-decoration: line-through; opacity: 0.55;">CORS</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- S7 38–48 -->
+      <section id="s7" class="clip scene" data-start="38" data-duration="10" data-track-index="0">
+        <div class="eyebrow">S7 · LAN QR</div>
+        <div class="stage stage-row" style="align-items: center;">
+          <div class="qr-box" aria-hidden="true"></div>
+          <div class="card">
+            <h3>Same Wi‑Fi</h3>
+            <p class="mono" style="margin-top: 12px;">http://192.168.1.42:5173</p>
+            <p style="margin-top: 16px;">Scan to open on your phone.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- S8 48–55 -->
+      <section id="s8" class="clip scene" data-start="48" data-duration="7" data-track-index="0">
+        <div class="eyebrow">S8 · Phone preview</div>
+        <div class="stage stage-row" style="justify-content: center;">
+          <div class="phone">
+            <div class="phone-screen">
+              <strong>Your site</strong>
+              <span>LAN preview</span>
+              <span class="pill soft" style="margin-top: 8px;">192.168.1.42</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S9 55–62 -->
+      <section id="s9" class="clip scene" data-start="55" data-duration="7" data-track-index="0">
+        <div class="eyebrow">S9 · Menu bar</div>
+        <div class="stage">
+          <div class="menu-bar">
+            <span>Fri 3:18</span>
+            <span class="tray">◆ LocalServe · Running</span>
+          </div>
+          <p class="meta" style="font-size: 30px; text-align: center;">
+            Close the window — it stays in your menu bar.
+          </p>
+        </div>
+      </section>
+
+      <!-- S10 62–70 -->
+      <section id="s10" class="clip scene" data-start="62" data-duration="8" data-track-index="0">
+        <div class="eyebrow">S10 · CTA</div>
+        <h1 class="title" style="font-size: 56px;">Seven days free — no account.</h1>
+        <div class="cta-grid">
+          <span class="cta-chip">$9 one-time</span>
+          <span class="cta-chip">7-day free trial</span>
+          <span class="cta-chip">Up to 3 Macs</span>
+        </div>
+        <div class="download">Download LocalServe</div>
+      </section>
+
+      <!-- Captions track -->
+      <div id="cap-s1" class="clip caption" data-start="0" data-duration="4" data-track-index="1">
+        You built it. Now… how do you actually run it locally?
+      </div>
+      <div id="cap-s2" class="clip caption" data-start="4" data-duration="6" data-track-index="1">
+        No CLI. No cloud. Just your Mac.
+      </div>
+      <div id="cap-s3" class="clip caption" data-start="10" data-duration="6" data-track-index="1">
+        LocalServe turns any folder into a local site.
+      </div>
+      <div id="cap-s4" class="clip caption" data-start="16" data-duration="8" data-track-index="1">
+        Drop your build folder. Hit start.
+      </div>
+      <div id="cap-s5" class="clip caption" data-start="24" data-duration="6" data-track-index="1">
+        Open it in your browser—SPA routes just work.
+      </div>
+      <div id="cap-s6" class="clip caption" data-start="30" data-duration="8" data-track-index="1">
+        Need an API? Add a reverse proxy—no more CORS.
+      </div>
+      <div id="cap-s7" class="clip caption" data-start="38" data-duration="10" data-track-index="1">
+        Same Wi‑Fi? Scan to open it on your phone.
+      </div>
+      <div id="cap-s8" class="clip caption" data-start="48" data-duration="7" data-track-index="1">
+        Preview on any device on your network.
+      </div>
+      <div id="cap-s9" class="clip caption" data-start="55" data-duration="7" data-track-index="1">
+        It stays in your menu bar, ready when you are.
+      </div>
+      <div id="cap-s10" class="clip caption" data-start="62" data-duration="8" data-track-index="1">
+        Seven days free—no account. Then nine dollars, yours forever.
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const scenes = [
+        ["#s1", 0],
+        ["#s2", 4],
+        ["#s3", 10],
+        ["#s4", 16],
+        ["#s5", 24],
+        ["#s6", 30],
+        ["#s7", 38],
+        ["#s8", 48],
+        ["#s9", 55],
+        ["#s10", 62],
+      ];
+
+      scenes.forEach(([sel, start]) => {
+        tl.fromTo(
+          sel,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
+          start + 0.08,
+        );
+      });
+
+      for (let i = 1; i <= 10; i++) {
+        const start = [0, 4, 10, 16, 24, 30, 38, 48, 55, 62][i - 1];
+        tl.fromTo(
+          `#cap-s${i}`,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+          start + 0.2,
+        );
+      }
+
+      // S1 error pills pop
+      tl.fromTo(
+        "#s1 .pill",
+        { scale: 0.85, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.35, stagger: 0.12, ease: "back.out(1.6)" },
+        1.2,
+      );
+
+      // S4 running pill
+      tl.fromTo(
+        "#s4 .pill.good",
+        { scale: 0.9, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.4)" },
+        19.2,
+      );
+
+      // S10 CTA
+      tl.fromTo(
+        "#s10 .cta-chip",
+        { y: 18, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, ease: "power2.out" },
+        62.5,
+      );
+      tl.fromTo(
+        "#s10 .download",
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+        63.2,
+      );
+
+      window.__timelines["youtube-main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

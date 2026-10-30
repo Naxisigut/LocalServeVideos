@@ -11,7 +11,9 @@
     "lint": "hyperframes lint",
     "doctor": "hyperframes doctor",
     "check": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes check",
-    "render": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render --output renders/localserve-placeholder.mp4"
+    "render": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render --output renders/localserve-placeholder.mp4",
+    "render:youtube-main": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render -c compositions/youtube-main.html -o renders/youtube-main-v1.mp4 --quality draft",
+    "render:youtube-main:looks": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render -c compositions/youtube-main.html -o renders/youtube-main-v1.mp4 --quality looks"
   },
   "keywords": [
     "video",
