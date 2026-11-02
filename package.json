@@ -1,33 +1,40 @@
 {
   "name": "localserve-videos",
   "version": "0.1.0",
-  "description": "LocalServe product demo videos powered by HyperFrames",
+  "description": "LocalServe product demo videos powered by Remotion",
+  "repository": {},
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
   "private": true,
-  "type": "module",
+  "dependencies": {
+    "@remotion/cli": "4.0.539",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.539",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "10.12.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
   "scripts": {
-    "dev": "hyperframes preview",
-    "preview": "hyperframes preview",
-    "build": "hyperframes lint",
-    "lint": "hyperframes lint",
-    "doctor": "hyperframes doctor",
-    "check": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes check",
-    "render": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render --output renders/localserve-placeholder.mp4",
-    "render:youtube-main": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render -c compositions/youtube-main.html -o renders/youtube-main-v1.mp4 --quality draft",
-    "render:youtube-main:looks": "HYPERFRAMES_BROWSER_PATH=\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" hyperframes render -c compositions/youtube-main.html -o renders/youtube-main-v1.mp4 --quality looks"
+    "dev": "remotion studio",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc"
+  },
+  "allowScripts": {
+    "esbuild": false
   },
   "keywords": [
     "video",
     "demo",
     "localserve",
-    "hyperframes"
-  ],
-  "engines": {
-    "node": ">=22"
-  },
-  "dependencies": {
-    "hyperframes": "^0.8.216"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3"
-  }
+    "remotion"
+  ]
 }
