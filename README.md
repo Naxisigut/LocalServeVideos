@@ -114,7 +114,8 @@ npx hyperframes render --output renders/my-video.mp4
 - [x] 最小可渲染占位组合 / Minimal placeholder composition (`index.html`, 4s)
 - [x] YouTube 主片分镜 / Storyboard: `docs/youtube-main-storyboard.md`
 - [x] YouTube 主片骨架 (~70s) / Skeleton: `compositions/youtube-main.html`
-- [ ] 真素材 + 旁白混音 / Real captures + VO mix
+- [x] 产品 UI 演示 mock（代码生成，干净演示数据）/ Product UI mocks from Tauri source
+- [ ] 旁白混音 / VO mix
 - [ ] 交付级渲染 polish / Delivery-quality polish
 
 ### YouTube 主片 / YouTube main

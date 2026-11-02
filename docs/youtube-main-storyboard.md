@@ -13,6 +13,7 @@
 | Proxy segment | Kept short (~8s, S6) |
 | Composition | `compositions/youtube-main.html` |
 | Audio (v1) | None yet — captions stand in for VO; do not claim audio exists |
+| Product UI | HTML/CSS mocks from LocalServeTauri styles + clean demo data (not messy real project screenshots) |
 
 **One-liner:** You built a frontend. LocalServe turns the folder into a local site, proxies your API, and lets you scan to preview on your phone — no CLI, no cloud.
 
@@ -156,14 +157,12 @@
 
 ## Asset checklist (for next pass)
 
-- [ ] Real LocalServe window / tray screenshots (light or dark)
-- [ ] Sample `dist` folder + SPA deep-link demo
-- [ ] Proxy rule + DevTools 200 response stills
-- [ ] QR + real LAN URL (or anonymized)
-- [ ] Phone preview capture
+- [x] Product UI HTML/CSS mocks (from LocalServeTauri; demo data: Acme Dashboard) — `assets/ui/`
+- [x] Logo / tray brand assets — `assets/brand/`
+- [x] Demo LAN QR — `assets/ui/qr-lan.png` (`http://192.168.1.24:5173`)
 - [ ] English VO take (or TTS) aligned to S1–S10
 - [ ] Optional soft BGM under VO
-- [ ] Logo / wordmark SVG or PNG
+- [ ] Optional real phone capture if mock is not enough
 
 ---
 
@@ -172,3 +171,4 @@
 - HyperFrames composition: `compositions/youtube-main.html`
 - Render: `pnpm run render:youtube-main`
 - Output (local, gitignored): `renders/youtube-main-v1.mp4`
+- UI note: on-screen product chrome is **demo-data mock** based on Tauri source (`global.css`, SiteCard, SiteDrawer, QrPopup), not a capture of a messy local project list.
