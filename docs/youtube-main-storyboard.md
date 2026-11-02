@@ -157,9 +157,9 @@
 
 ## Asset checklist (for next pass)
 
-- [x] Product UI HTML/CSS mocks (from LocalServeTauri; demo data: Acme Dashboard) — `assets/ui/`
+- [x] Product UI HTML/CSS mocks (from LocalServeTauri; demo data: Acme Dashboard) — now in `src/ui/` (Remotion)
 - [x] Logo / tray brand assets — `assets/brand/`
-- [x] Demo LAN QR — `assets/ui/qr-lan.png` (`http://192.168.1.24:5173`)
+- [x] Demo LAN QR — QR asset TBD under Remotion `public/` or `assets/` (`http://192.168.1.24:5173`)
 - [ ] English VO take (or TTS) aligned to S1–S10
 - [ ] Optional soft BGM under VO
 - [ ] Optional real phone capture if mock is not enough
@@ -170,5 +170,5 @@
 
 - HyperFrames composition: `compositions/youtube-main.html`
 - Render: `pnpm run render:youtube-main`
-- Output (local, gitignored): `renders/youtube-main-v1.mp4`
+- Output (local, gitignored): local render output under gitignored `out/` / `renders/`
 - UI note: on-screen product chrome is **demo-data mock** based on Tauri source (`global.css`, SiteCard, SiteDrawer, QrPopup), not a capture of a messy local project list.
