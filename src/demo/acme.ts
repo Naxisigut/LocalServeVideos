@@ -2,6 +2,9 @@ import type { SiteView } from '../ui/types';
 
 export const ACME_LAN_URL = 'http://192.168.1.24:5173';
 
+/** Frozen for Remotion frame determinism (avoid live clock). */
+export const ACME_STARTED_AT = 1_700_000_000_000;
+
 export const acmeSite: SiteView = {
   id: 'demo-acme',
   name: 'Acme Dashboard',
@@ -24,5 +27,5 @@ export const acmeSite: SiteView = {
   autoStart: false,
   appendCors: false,
   status: 'running',
-  startedAt: Date.now(),
+  startedAt: ACME_STARTED_AT,
 };
