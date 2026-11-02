@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@nuintun/qrcode':
+        specifier: 5.0.3
+        version: 5.0.3
       '@remotion/cli':
         specifier: 4.0.539
         version: 4.0.539(postcss@8.5.32)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
@@ -402,6 +405,9 @@ packages:
 
   '@napi-rs/wasm-runtime@1.0.7':
     resolution: {integrity: sha512-SeDnOO0Tk7Okiq6DbXmmBODgOAb9dp9gjlphokTUxmt8U3liIP1ZsozBahH69j/RJv+Rfs6IwUKHTgQYJ/HBAw==}
+
+  '@nuintun/qrcode@5.0.3':
+    resolution: {integrity: sha512-eKxU05NO2A5ycOiAKu9XKaf5akfR0wJHgjBvy4Wgy2dOgBjMh58IHz8gvMwS2IBiqWq63ITntuzP/iuVA2wOHg==}
 
   '@remotion/bundler@4.0.539':
     resolution: {integrity: sha512-TK+O9Xd/mdPQuXvXaxND8QLW5QyAVLkD38CuB1UKVpVJEEMBxVVIP6iqdCoVm3fvwlys+KKWyXzhd8ZiyV8CIA==}
@@ -2063,6 +2069,10 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
+  '@nuintun/qrcode@5.0.3':
+    dependencies:
+      tslib: 2.9.1
+
   '@remotion/bundler@4.0.539(postcss@8.5.32)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@remotion/studio': 4.0.539(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2070,13 +2080,13 @@ snapshots:
       '@remotion/timeline-utils': 4.0.539(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@rspack/core': 1.7.11
       '@rspack/plugin-react-refresh': 1.6.1(react-refresh@0.18.0)
-      css-loader: 7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(postcss@8.5.32))
+      css-loader: 7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.32))
       esbuild: 0.28.1
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-refresh: 0.18.0
       remotion: 4.0.539(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      style-loader: 4.0.0(webpack@5.105.0(postcss@8.5.32))
+      style-loader: 4.0.0(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.32))
       webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.32)
     transitivePeerDependencies:
       - '@minify-html/node'
@@ -2804,7 +2814,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  css-loader@7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(postcss@8.5.32)):
+  css-loader@7.1.4(@rspack/core@1.7.11)(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.32)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.32)
       postcss: 8.5.32
@@ -3358,7 +3368,7 @@ snapshots:
 
   strip-final-newline@2.0.0: {}
 
-  style-loader@4.0.0(webpack@5.105.0(postcss@8.5.32)):
+  style-loader@4.0.0(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.32)):
     dependencies:
       webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.32)
 

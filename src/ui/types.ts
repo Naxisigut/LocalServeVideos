@@ -1,5 +1,9 @@
 export type SiteStatus = 'stopped' | 'starting' | 'running' | 'error';
 
+export type Language = 'zh' | 'en';
+
+export type Theme = 'light' | 'dark';
+
 export interface ProxyRule {
   id: string;
   prefix: string;
@@ -25,4 +29,31 @@ export interface SiteView {
   status: SiteStatus;
   statusMessage?: string;
   startedAt?: number;
+}
+
+export interface FileShareItemView {
+  id: string;
+  fileName: string;
+  missing: boolean;
+}
+
+export type LogLevel = 'access' | 'proxy' | 'error' | 'info';
+
+export interface LogEntry {
+  id: string;
+  /** Pre-formatted `HH:MM:SS` so renders never depend on the host timezone. */
+  time: string;
+  level: LogLevel;
+  message: string;
+}
+
+export interface LicenseView {
+  /** e.g. `USD 19.00`; parsed the same way as the Tauri pricing card. */
+  priceLabel: string;
+  activationLimit: number;
+}
+
+export interface TrialView {
+  /** Remaining trial time; drives the label and the blue→red fill. */
+  remainingMs: number;
 }

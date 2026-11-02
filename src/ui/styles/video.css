@@ -1,0 +1,380 @@
+/*
+ * Video-only layer on top of the verbatim LocalServeTauri `global.css`.
+ * Keep global.css identical to the app; put every video adaptation here.
+ */
+
+/* ─── Forced themes (global.css follows prefers-color-scheme) ─────────── */
+.ls-theme-light {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-alt: #fafafa;
+  --fg: #111111;
+  --fg-2: #3a3a3a;
+  --muted: #777777;
+  --border: #e2e2e2;
+  --border-soft: #eeeeee;
+  --accent: #111111;
+  --accent-on: #ffffff;
+  --status-green-bg: color-mix(in oklab, #16a34a 12%, transparent);
+  --status-red-bg: color-mix(in oklab, #dc2626 12%, transparent);
+  --status-blue-bg: color-mix(in oklab, #2563eb 12%, transparent);
+  --status-gray-bg: color-mix(in oklab, #777777 14%, transparent);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--border);
+  --shadow-drawer: -8px 0 32px rgba(0, 0, 0, 0.12), -1px 0 0 var(--border);
+  --icon-hover: rgba(0, 0, 0, 0.06);
+  --ls-chrome-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.22), 0 22px 70px rgba(0, 0, 0, 0.32);
+  color-scheme: light;
+}
+
+.ls-theme-dark {
+  --bg: #1e1e1e;
+  --surface: #282828;
+  --surface-alt: #2e2e2e;
+  --fg: #f0f0f0;
+  --fg-2: #c8c8c8;
+  --muted: #888888;
+  --border: #3a3a3a;
+  --border-soft: #333333;
+  --accent: #f0f0f0;
+  --accent-on: #111111;
+  --status-green-bg: color-mix(in oklab, #16a34a 18%, transparent);
+  --status-red-bg: color-mix(in oklab, #dc2626 18%, transparent);
+  --status-blue-bg: color-mix(in oklab, #2563eb 18%, transparent);
+  --status-gray-bg: color-mix(in oklab, #888888 18%, transparent);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border);
+  --shadow-drawer: -8px 0 32px rgba(0, 0, 0, 0.32), -1px 0 0 var(--border);
+  --icon-hover: rgba(255, 255, 255, 0.1);
+  --ls-chrome-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 22px 70px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+.ls-theme-light .license-pricing-card .chip--yellow {
+  background: rgba(255, 196, 60, 0.2);
+  color: #8a5a00;
+}
+.ls-theme-light .license-pricing-card .chip--pink {
+  background: rgba(240, 90, 170, 0.14);
+  color: #a8306c;
+}
+.ls-theme-light .license-pricing-card .chip--blue {
+  background: rgba(40, 130, 255, 0.13);
+  color: #0b5bc4;
+}
+.ls-theme-dark .license-pricing-card .chip--yellow {
+  background: rgba(255, 196, 60, 0.3);
+  color: #ffc94d;
+}
+.ls-theme-dark .license-pricing-card .chip--pink {
+  background: rgba(240, 90, 170, 0.22);
+  color: #ff8cc6;
+}
+.ls-theme-dark .license-pricing-card .chip--blue {
+  background: rgba(40, 130, 255, 0.22);
+  color: #6ab0ff;
+}
+
+/* ─── Frame-driven motion only ────────────────────────────────────────── */
+/* CSS transitions/keyframes run on wall-clock time and break frame renders. */
+.ls-root,
+.ls-root *,
+.ls-root *::before,
+.ls-root *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ─── macOS window chrome ─────────────────────────────────────────────── */
+.ls-window {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  box-shadow: var(--ls-chrome-shadow);
+  text-align: left;
+}
+
+.ls-window .app {
+  height: 100%;
+}
+
+.ls-traffic-lights {
+  position: absolute;
+  top: 11px;
+  left: 13px;
+  z-index: 70;
+  display: flex;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.ls-traffic-lights > span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.18);
+}
+
+.ls-traffic-lights > span:nth-child(1) {
+  background: #ff5f57;
+}
+.ls-traffic-lights > span:nth-child(2) {
+  background: #febc2e;
+}
+.ls-traffic-lights > span:nth-child(3) {
+  background: #28c840;
+}
+
+.ls-traffic-lights[data-inactive] > span {
+  background: color-mix(in srgb, var(--muted) 40%, transparent);
+}
+
+/* Toast is `position: fixed` in the app; anchor it to the window here. */
+.ls-window .toast {
+  position: absolute;
+}
+
+/* Tooltips render in place (no portal) and stay readable above menus. */
+.ls-window .tooltip-bubble {
+  z-index: 80;
+}
+
+/* ─── Scripted hover states (mirror of global.css :hover rules) ──────── */
+.ls-window .btn-icon[data-hover] {
+  color: var(--fg);
+  background: var(--icon-hover);
+}
+
+.ls-window .btn-primary[data-hover],
+.ls-window .titlebar-actions .titlebar-add-btn[data-hover],
+.ls-window .titlebar-actions .titlebar-trial-btn[data-hover],
+.ls-window .btn-footer-primary[data-hover] {
+  opacity: 0.88;
+}
+
+.ls-window .btn-footer[data-hover] {
+  background: var(--bg);
+}
+
+.ls-window .site-card[data-hover] {
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--border);
+}
+
+.ls-window .site-card-tools .btn-icon[data-hover] {
+  background: var(--surface);
+  color: var(--fg);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 1px color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+.ls-window .site-card-right .btn-action-start[data-hover] {
+  background: color-mix(in srgb, var(--status-green) 18%, transparent);
+}
+
+.ls-window .site-card-right .btn-action-stop[data-hover] {
+  background: color-mix(in srgb, #ff3b30 18%, transparent);
+}
+
+.ls-window .site-menu-item[data-hover] {
+  background: color-mix(in oklab, var(--fg) 10%, transparent);
+}
+
+.ls-window .site-menu-item-danger[data-hover] {
+  background: color-mix(in oklab, var(--status-red) 16%, transparent);
+}
+
+.ls-window .btn-path-picker[data-hover],
+.ls-window .btn-add-row[data-hover] {
+  background: var(--status-blue-bg);
+  border-color: var(--status-blue);
+}
+
+.ls-window .btn-path-picker.is-empty[data-hover] {
+  color: var(--status-blue);
+}
+
+.ls-window .fs-header[data-hover],
+.ls-window .addr-section-header[data-hover] {
+  background: var(--surface-alt);
+}
+
+.ls-window .settings-row-toggle[data-hover] {
+  background: var(--icon-hover);
+}
+
+.ls-window .qr-modal .qr-close[data-hover] {
+  background: color-mix(in srgb, var(--fg) 12%, transparent);
+  color: var(--fg);
+}
+
+.ls-window .qr-url-text[data-hover] {
+  color: var(--fg);
+}
+
+.ls-window .qr-modal .qr-url-open[data-hover] {
+  background: var(--surface-alt);
+}
+
+.ls-window .share-card[data-hover] .share-card-overlay {
+  opacity: 1;
+  visibility: visible;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.ls-window .share-card[data-hover] .share-card-overlay .tooltip-wrap {
+  opacity: 1;
+  transform: none;
+}
+
+/* Text caret for scripted typing inside inputs. */
+.ls-caret {
+  display: inline-block;
+  width: 1px;
+  height: 1.1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--fg);
+}
+
+/* Fake input that can render a caret (real <input> can't host children). */
+.ls-input {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ls-input-placeholder {
+  color: var(--muted);
+}
+
+/* ─── macOS menu bar + tray menu ──────────────────────────────────────── */
+.ls-menubar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 14px;
+  gap: 18px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: #ffffff;
+  background: rgba(30, 30, 30, 0.42);
+  backdrop-filter: blur(30px) saturate(1.6);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.ls-theme-light.ls-menubar {
+  color: #111111;
+  background: rgba(246, 246, 246, 0.62);
+  text-shadow: none;
+}
+
+.ls-menubar-left,
+.ls-menubar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.ls-menubar-right {
+  margin-left: auto;
+  gap: 14px;
+}
+
+.ls-menubar-app {
+  font-weight: 700;
+}
+
+.ls-menubar-tray {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 5px;
+}
+
+.ls-menubar-tray[data-active] {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.ls-theme-light .ls-menubar-tray[data-active] {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.ls-menubar-tray img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.ls-tray-menu {
+  position: relative;
+  min-width: 230px;
+  padding: 5px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.18),
+    0 12px 40px rgba(0, 0, 0, 0.28);
+  text-shadow: none;
+}
+
+.ls-tray-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.ls-tray-item[data-disabled] {
+  color: var(--muted);
+}
+
+.ls-tray-item[data-hover] {
+  color: #ffffff;
+  background: #0a64d6;
+}
+
+.ls-tray-item-chevron {
+  margin-left: auto;
+  padding-left: 18px;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.ls-tray-separator {
+  height: 1px;
+  margin: 5px 10px;
+  background: color-mix(in srgb, var(--fg) 14%, transparent);
+}
+
+.ls-tray-submenu {
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: calc(100% + 4px);
+  min-width: 120px;
+}

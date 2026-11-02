@@ -1,25 +1,19 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
-import '../ui/styles/global.css';
-import { AppShell } from '../ui/AppShell';
-import { SiteCardSmoke } from '../ui/SiteCardSmoke';
-import { acmeSite } from '../demo/acme';
+import { DEMO_HOME_DIR, DEMO_LAN_IP, demoFiles, demoSites, demoTrial } from '../demo/acme';
+import { AppWindow } from '../ui/AppWindow';
+import { MacWindow } from '../ui/MacWindow';
+import type { Language, Theme } from '../ui/types';
+import { Stage } from './Stage';
 
-export const UiSmoke: React.FC = () => {
-  return (
-    <AbsoluteFill
-      style={{
-        background: '#0b0f14',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 48,
-      }}
-    >
-      <div style={{ width: 720, maxWidth: '100%' }}>
-        <AppShell>
-          <SiteCardSmoke site={acmeSite} />
-        </AppShell>
-      </div>
-    </AbsoluteFill>
-  );
+export type UiSmokeProps = {
+  theme: Theme;
+  language: Language;
 };
+
+export const UiSmoke: React.FC<UiSmokeProps> = ({ theme, language }) => (
+  <Stage theme={theme}>
+    <MacWindow theme={theme} env={{ language, localLanIp: DEMO_LAN_IP, homeDir: DEMO_HOME_DIR }}>
+      <AppWindow sites={demoSites} files={demoFiles} trial={demoTrial} />
+    </MacWindow>
+  </Stage>
+);
