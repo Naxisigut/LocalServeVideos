@@ -3,7 +3,16 @@ import { useT, useUiEnv } from './context';
 import { ChevronRightIcon, CloseIcon } from './icons';
 import { ModalLayer, Toggle } from './primitives';
 
+export type ThemePreference = 'system' | 'light' | 'dark';
+
+const THEME_OPTIONS: readonly { value: ThemePreference; label: string }[] = [
+  { value: 'system', label: '跟随系统' },
+  { value: 'light', label: '浅色' },
+  { value: 'dark', label: '深色' },
+];
+
 export type SettingsState = {
+  theme?: ThemePreference;
   minimizeToTrayOnClose: boolean | number;
   launchAtLogin: boolean | number;
   restoreHostsOnQuit: boolean | number;
@@ -33,11 +42,28 @@ export const Settings: React.FC<Props> = ({ settings, domainsOpen = false, enter
         <div className="settings-group">
           <div className="settings-group-title">{t('语言')}</div>
           <div className="settings-card">
-            <Row name={t('显示语言')} desc={t('切换后立即生效')}>
+            <Row name={t('显示语言')}>
               <label className="language-select">
                 <select value={language} onChange={() => undefined}>
                   <option value="zh">中文</option>
                   <option value="en">English</option>
+                </select>
+              </label>
+            </Row>
+          </div>
+        </div>
+
+        <div className="settings-group">
+          <div className="settings-group-title">{t('外观')}</div>
+          <div className="settings-card">
+            <Row name={t('主题')}>
+              <label className="language-select">
+                <select value={settings.theme ?? 'system'} onChange={() => undefined}>
+                  {THEME_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {t(option.label)}
+                    </option>
+                  ))}
                 </select>
               </label>
             </Row>
@@ -58,10 +84,10 @@ export const Settings: React.FC<Props> = ({ settings, domainsOpen = false, enter
         <div className="settings-group">
           <div className="settings-group-title">{t('行为')}</div>
           <div className="settings-card">
-            <Row name={t('关闭窗口时最小化到托盘')} desc={t('关闭窗口后继续在后台运行')}>
+            <Row name={t('关闭窗口时最小化到托盘')}>
               <Toggle checked={settings.minimizeToTrayOnClose} />
             </Row>
-            <Row name={t('开机自启动')} desc={t('登录系统时自动启动 LocalServe')}>
+            <Row name={t('开机自启动')}>
               <Toggle checked={settings.launchAtLogin} />
             </Row>
           </div>

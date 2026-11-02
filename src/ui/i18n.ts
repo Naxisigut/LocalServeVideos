@@ -1,9 +1,9 @@
 import type { Language } from './types'
 
-export type TranslationParams = Record<string, string | number>
-
 const hasOwn = (target: object, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(target, key)
+
+export type TranslationParams = Record<string, string | number>
 
 /** Chinese source messages are the keys and the fallback locale. */
 export const englishMessages: Readonly<Record<string, string>> = {
@@ -13,34 +13,47 @@ export const englishMessages: Readonly<Record<string, string>> = {
   '开发模式已下载更新，不执行安装':
     'Update downloaded. Installation is disabled in development mode',
   已下载更新: 'Update downloaded',
+  开发模式下不执行安装: 'Installation is disabled in development mode',
+  未配置更新源: 'Update source is not configured',
   读取更新状态失败: 'Failed to load update status',
-  应用更新失败: 'App update failed',
   更新操作正在进行: 'An update operation is already in progress',
   请先检查更新: 'Check for updates first',
   请先下载更新: 'Download the update first',
   应用正在退出: 'The app is shutting down',
   '检查中…': 'Checking…',
-  已是最新: 'Up to date',
+  已是最新版本: 'You are on the latest version',
   下载更新: 'Download update',
-  '发现新版本 v{version}': 'Version {version} is available',
+  '发现新版本 v{version}': 'New version v{version} is available',
   '下载中…': 'Downloading…',
   '已下载 {size} MB': '{size} MB downloaded',
-  '下载进度 {progress}%': 'Downloaded {progress}%',
+  '下载进度 {progress}%': 'Downloading… {progress}%',
   安装并重启: 'Install and restart',
   '下载完成，可稍后安装；退出应用后需重新下载':
     'Ready to install. Quitting the app discards the download.',
   '安装中…': 'Installing…',
   '正在安装更新，请稍候': 'Installing the update. Please wait.',
+  '更新已安装，重启后生效': 'Update installed. Restart to apply it.',
+  立即重启: 'Restart now',
+  '重启以完成更新？': 'Restart to finish updating?',
   更新下载进度: 'Update download progress',
   更新说明: 'Release notes',
-  '更新失败：{message}': 'Update failed: {message}',
+  '检查更新失败，请检查网络后重试':
+    'Could not check for updates. Check your network and try again.',
+  '下载更新失败，请检查网络后重试':
+    'Could not download the update. Check your network and try again.',
+  '安装更新失败，请稍后重试': 'Could not install the update. Please try again later.',
   '安装更新并重启？': 'Install the update and restart?',
   '重启会短暂中断正在运行的站点和文件分享，并按退出设置清理 hosts。只有开启自动启动的服务会在重启后恢复。':
     'Restarting briefly interrupts sites and file sharing, and cleans up hosts according to your quit settings. Only services with auto-start enabled will resume.',
   选择语言: 'Select language',
   语言: 'Language',
   显示语言: 'Display language',
-  切换后立即生效: 'Changes take effect immediately',
+  外观: 'Appearance',
+  主题: 'Theme',
+  选择主题: 'Select theme',
+  跟随系统: 'System',
+  浅色: 'Light',
+  深色: 'Dark',
   设置: 'Settings',
   关闭: 'Close',
   新增: 'New',
@@ -184,9 +197,7 @@ export const englishMessages: Readonly<Record<string, string>> = {
   浏览器打开: 'Open in browser',
   行为: 'Behavior',
   关闭窗口时最小化到托盘: 'Minimize to tray on close',
-  关闭窗口后继续在后台运行: 'Keep running in the background when the window closes',
   开机自启动: 'Launch at login',
-  '登录系统时自动启动 LocalServe': 'Start LocalServe when you log in',
   域名与hosts: 'Domains and hosts',
   '退出应用时自动还原 hosts': 'Restore hosts when quitting',
   关闭可避免频繁的管理员授权: 'Turn off to avoid repeated administrator prompts',
@@ -502,9 +513,6 @@ export const englishMessages: Readonly<Record<string, string>> = {
   激活失败: 'Activation failed',
   刷新许可证失败: 'Failed to refresh license',
   无法打开购买页面: 'Unable to open checkout',
-  离线使用中: 'Working offline',
-  '本次未能联网确认授权，许可证不受影响，联网后会自动确认':
-    'The activation could not be confirmed online. Your license is unaffected; it will be confirmed automatically when a connection returns.',
   '试用已结束，请购买激活': 'Your trial has ended. Purchase a license to activate.',
   '无法连接许可证服务器，请稍后重试':
     'Unable to reach the license server. Please retry later.',
