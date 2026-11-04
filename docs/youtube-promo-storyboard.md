@@ -21,7 +21,7 @@
 - 仅 macOS；无需命令行、无需账号、无需联网即可试用。
 - 7 天免费试用，试用判断完全在本机完成。
 - 永久许可证，一次性买断、无订阅，最多 3 台 Mac；激活后可永久离线使用。
-- 价格：**待定**（演示数据为 `USD 19.00`，旧分镜写 `$9`，以 Dodo 实际定价为准再出片）。
+- 价格：**$9 一次性买断**（演示数据 `USD 9.00` 与正式定价一致）。
 - 不要提 HTTPS（暂不支持）、不要提“开机自启”（当前版本尚未提供）。
 
 ---
@@ -188,7 +188,7 @@
 | VO | Try it free for seven days — no account needed. Then buy once, and it's yours forever. LocalServe. Your folder, live in seconds. |
 | 中文 | 免费试用 7 天，无需注册。之后一次买断，永久使用。LocalServe，让文件夹秒变站点。 |
 | 素材 | `assets/brand/logo.png`；`License` 组件可作为背景参考 |
-| 注意 | 价格数字确认后再加到第二枚标签（如 `$XX once`）。 |
+| 注意 | 第二枚标签可写为 `$9 once · No subscription`。 |
 
 ---
 

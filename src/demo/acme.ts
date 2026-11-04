@@ -116,7 +116,7 @@ export const acmeLogs: LogEntry[] = [
 ];
 
 export const demoLicense: LicenseView = {
-  priceLabel: 'USD 19.00',
+  priceLabel: 'USD 9.00',
   activationLimit: 3,
 };
 
