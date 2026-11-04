@@ -183,6 +183,15 @@
   background: color-mix(in srgb, #ff3b30 18%, transparent);
 }
 
+.ls-window .share-retry-btn[data-state='error'][data-hover] {
+  background: color-mix(in oklab, var(--status-red) 20%, transparent);
+}
+
+.ls-window .btn-icon-sm[data-hover] {
+  background: var(--surface-alt);
+  color: var(--fg);
+}
+
 .ls-window .site-menu-item[data-hover] {
   background: color-mix(in oklab, var(--fg) 10%, transparent);
 }

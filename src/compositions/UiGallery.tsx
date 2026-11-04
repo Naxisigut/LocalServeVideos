@@ -6,6 +6,7 @@ import {
   acmeDraft,
   acmeLogs,
   acmeSite,
+  adminSite,
   demoFiles,
   demoLicense,
   demoSettings,
@@ -28,6 +29,7 @@ export type UiScreen =
   | 'main'
   | 'empty'
   | 'errors'
+  | 'file-error'
   | 'add-menu'
   | 'site-menu'
   | 'action-bar'
@@ -70,7 +72,20 @@ const Screen: React.FC<{ screen: UiScreen }> = ({ screen }) => {
     case 'empty':
       return <AppWindow sites={[]} files={[]} trial={demoTrial} />;
     case 'errors':
-      return <AppWindow {...base} sites={demoSitesWithError} />;
+      return (
+        <AppWindow
+          {...base}
+          sites={demoSitesWithError}
+          siteStates={{ [adminSite.id]: { hover: 'badge', tooltip: 'badge' } }}
+        />
+      );
+    case 'file-error':
+      return (
+        <AppWindow
+          {...base}
+          fileRetry={{ state: 'error', reason: '端口被占用（PID 4821）', hover: true, tooltip: true }}
+        />
+      );
     case 'add-menu':
       return <AppWindow {...base} titlebarHover="new" addMenuOpen addMenuHover="site" />;
     case 'site-menu':

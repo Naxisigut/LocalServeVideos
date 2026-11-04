@@ -13,6 +13,7 @@ import {
 import { AppWindow } from '../ui/AppWindow';
 import { MacCursor } from '../ui/MacCursor';
 import { MacWindow } from '../ui/MacWindow';
+import { BADGE_MORPH_MS, POWER_MS, motionProgress } from '../ui/motion';
 import { QrPopup } from '../ui/QrPopup';
 import type { Language, SiteStatus, Theme } from '../ui/types';
 import { Stage } from './Stage';
@@ -33,7 +34,8 @@ const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 const ease = Easing.bezier(0.45, 0, 0.2, 1);
 
 /**
- * Start "Landing Page" → port chip slides in → open Acme's LAN QR code.
+ * Start "Landing Page" (status capsule pops in, morphs to running, power icon
+ * swaps, port chip slides in) → open Acme's LAN QR code.
  * Every state is derived from the frame; nothing relies on CSS motion.
  */
 export const UiMotionDemo: React.FC<UiMotionDemoProps> = ({ theme, language }) => {
@@ -57,8 +59,17 @@ export const UiMotionDemo: React.FC<UiMotionDemoProps> = ({ theme, language }) =
   const pressed =
     (frame >= startClick && frame < startClick + 4) || (frame >= qrClick && frame < qrClick + 4);
 
+  const startingAt = startClick + 2;
+  const runningAt = s(2.6);
   const landingStatus: SiteStatus =
-    frame < startClick + 2 ? 'stopped' : frame < s(2.6) ? 'starting' : 'running';
+    frame < startingAt ? 'stopped' : frame < runningAt ? 'starting' : 'running';
+  const landingBadge =
+    frame < runningAt
+      ? { badgeFrom: null, badgeProgress: motionProgress(frame, startingAt, fps, BADGE_MORPH_MS) }
+      : {
+          badgeFrom: 'starting' as const,
+          badgeProgress: motionProgress(frame, runningAt, fps, BADGE_MORPH_MS),
+        };
   const sites = demoSites.map((site) =>
     site.id === landingSite.id ? { ...site, status: landingStatus } : site,
   );
@@ -83,7 +94,10 @@ export const UiMotionDemo: React.FC<UiMotionDemoProps> = ({ theme, language }) =
           siteStates={{
             [landingSite.id]: {
               hover: onStart && landingStatus === 'stopped' ? 'start' : undefined,
-              portReveal: interpolate(frame, [s(2.6), s(3)], [0, 1], { ...clamp, easing: ease }),
+              portReveal: interpolate(frame, [runningAt, s(3)], [0, 1], { ...clamp, easing: ease }),
+              ...landingBadge,
+              powerFrom: false,
+              powerProgress: motionProgress(frame, runningAt, fps, POWER_MS),
             },
             [acmeSite.id]: {
               hover: onQr ? 'qr' : undefined,

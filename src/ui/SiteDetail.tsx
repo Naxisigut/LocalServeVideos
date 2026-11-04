@@ -1,15 +1,27 @@
 import React from 'react';
 import { useT, useUiEnv } from './context';
-import { AlertIcon, ChevronRightIcon, CloseIcon, CopyIcon, ExternalLinkIcon } from './icons';
-import { ModalLayer } from './primitives';
+import {
+  AlertIcon,
+  ChevronRightIcon,
+  CloseIcon,
+  CopyIcon,
+  ExportIcon,
+  ExternalLinkIcon,
+  TrashIcon,
+} from './icons';
+import { ModalLayer, Tooltip, hoverAttr } from './primitives';
+import { siteFailure } from './SiteCard';
 import type { LogEntry, LogLevel, SiteStatus, SiteView } from './types';
 
 const STATUS_TEXT: Record<SiteStatus, string> = {
   running: '运行中',
   stopped: '已停止',
-  error: '异常',
+  error: '已停止',
   starting: '启动中',
 };
+
+export type LogSource = 'site' | 'shared';
+export type SiteDetailControl = 'clear' | 'export';
 
 const LEVEL_LABEL: Record<LogLevel, string> = {
   access: '访问',
@@ -27,6 +39,11 @@ type Props = {
   search?: string;
   urlsOpen?: boolean;
   autoScroll?: boolean;
+  logSource?: LogSource;
+  /** The failure was already reported by a toast, so no diagnostic bar. */
+  failureSeen?: boolean;
+  hover?: SiteDetailControl;
+  tooltip?: SiteDetailControl;
   enter?: number;
 };
 
@@ -47,11 +64,16 @@ export const SiteDetail: React.FC<Props> = ({
   search = '',
   urlsOpen = false,
   autoScroll = true,
+  logSource = 'site',
+  failureSeen,
+  hover,
+  tooltip,
   enter,
 }) => {
   const t = useT();
   const { localLanIp } = useUiEnv();
   const running = site.status === 'running';
+  const failure = siteFailure(site, failureSeen);
   const urls = siteUrls(site, localLanIp);
   const q = search.trim().toLowerCase();
   const filtered = logs.filter(
@@ -75,10 +97,10 @@ export const SiteDetail: React.FC<Props> = ({
             <Stat label={t('自定义域名')} value={site.domains[0] || t('未配置')} />
             <Stat label={t('代理')} value={t('{count} 条', { count: site.proxyRules.length })} />
           </div>
-          {site.status === 'error' && site.statusMessage ? (
+          {failure ? (
             <div className="diag-bar">
               <AlertIcon size={14} />
-              <div>{t(site.statusMessage)}</div>
+              <div>{t(failure)}</div>
             </div>
           ) : null}
         </div>
@@ -111,9 +133,20 @@ export const SiteDetail: React.FC<Props> = ({
 
         <div className="log-section">
           <div className="log-toolbar">
-            <select style={{ height: 26, width: 'auto', fontSize: 11 }} value="site" onChange={() => undefined}>
-              <option value="site">{t('站点日志')}</option>
-            </select>
+            <div className="log-tabs" role="tablist">
+              {(['site', 'shared'] as const).map((source) => (
+                <button
+                  key={source}
+                  type="button"
+                  tabIndex={-1}
+                  role="tab"
+                  aria-selected={logSource === source}
+                  className={`tab${logSource === source ? ' active' : ''}`}
+                >
+                  {source === 'site' ? t('站点日志') : t('共享端口 80 日志')}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="log-toolbar">
             <div className="log-tabs">
@@ -125,23 +158,39 @@ export const SiteDetail: React.FC<Props> = ({
             </div>
             <input
               type="text"
-              className="mono"
+              className="mono log-search"
               placeholder={t('搜索日志')}
               value={search}
               onChange={() => undefined}
-              style={{ height: 26, maxWidth: 150, fontSize: 11 }}
             />
-            <div className="log-spacer" />
-            <button type="button" tabIndex={-1} className="btn-log">
-              {t('清空')}
-            </button>
-            <button type="button" tabIndex={-1} className="btn-log">
-              {t('导出')}
-            </button>
-            <div className="autoscroll-wrap">
+            <button
+              type="button"
+              tabIndex={-1}
+              className={`tab${autoScroll ? ' active' : ''}`}
+              aria-pressed={autoScroll}
+            >
               {t('自动滚动')}
-              <input type="checkbox" checked={autoScroll} onChange={() => undefined} />
-            </div>
+            </button>
+            <Tooltip label={t('清空日志')} visible={tooltip === 'clear'}>
+              <button
+                type="button"
+                tabIndex={-1}
+                className="btn-icon-sm"
+                {...hoverAttr(hover === 'clear')}
+              >
+                <TrashIcon size={12} />
+              </button>
+            </Tooltip>
+            <Tooltip label={t('导出日志')} visible={tooltip === 'export'}>
+              <button
+                type="button"
+                tabIndex={-1}
+                className="btn-icon-sm"
+                {...hoverAttr(hover === 'export')}
+              >
+                <ExportIcon size={13} />
+              </button>
+            </Tooltip>
           </div>
           {/* Bottom-anchored list stands in for the app's auto-scroll. */}
           <div
@@ -177,6 +226,8 @@ const Stat: React.FC<{ label: string; value: string; tone?: 'green' | 'gray' }> 
 }) => (
   <div className="stat-card">
     <span className="stat-label">{label}</span>
-    <span className={`stat-value${tone ? ' ' + tone : ''}`}>{value}</span>
+    <span className={`stat-value${tone ? ' ' + tone : ''}`} title={value}>
+      {value}
+    </span>
   </div>
 );

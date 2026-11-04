@@ -1,7 +1,6 @@
 import React from 'react';
 import { compactHomePath, useT, useUiEnv } from './context';
 import {
-  AlertIcon,
   ExternalLinkIcon,
   FolderIcon,
   MoreIcon,
@@ -11,19 +10,23 @@ import {
   StopIcon,
   TrashIcon,
 } from './icons';
+import { POWER_MS, clamp01, easeCss, easeStandard, mixColor, segment } from './motion';
 import { DropdownMenu, MenuDivider, MenuItem, Tooltip, hoverAttr } from './primitives';
+import { SiteStatusBadge, type SiteBadgeKind } from './SiteStatusBadge';
 import type { SiteStatus, SiteView } from './types';
 
-const STATUS_TEXT: Record<SiteStatus, string> = {
-  running: '运行中',
-  stopped: '已停止',
-  error: '异常',
-  starting: '启动中',
+const STATUS_BADGE: Partial<Record<SiteStatus, SiteBadgeKind>> = {
+  running: 'running',
+  starting: 'starting',
 };
 
-export type SiteCardControl = 'card' | 'open' | 'qr' | 'more' | 'stop' | 'start';
+export type SiteCardControl = 'card' | 'badge' | 'open' | 'qr' | 'more' | 'stop' | 'start';
 
 export type SiteMenuItem = 'detail' | 'edit' | 'restart' | 'export' | 'reveal' | 'delete';
+
+/** Failure text the card keeps on screen (the app hides failures already shown in a toast). */
+export const siteFailure = (site: SiteView, failureSeen?: boolean): string | null =>
+  site.status === 'error' && site.statusMessage && !failureSeen ? site.statusMessage : null;
 
 type Props = {
   site: SiteView;
@@ -35,6 +38,17 @@ type Props = {
   menuHover?: SiteMenuItem;
   /** 0–1 reveal of the "Port" chip; defaults to running ? 1 : 0. */
   portReveal?: number;
+  /** The failure was already reported by a toast, so no "异常" capsule. */
+  failureSeen?: boolean;
+  /** Capsule kind before the current status; animates with `badgeProgress`. */
+  badgeFrom?: SiteBadgeKind | null;
+  /** 0–1 over `BADGE_MORPH_MS`. */
+  badgeProgress?: number;
+  /** Whether the site was running before; animates the icon swap with `powerProgress`. */
+  powerFrom?: boolean;
+  /** 0–1 over `POWER_MS`. */
+  powerProgress?: number;
+  style?: React.CSSProperties;
 };
 
 export const SiteCard: React.FC<Props> = ({
@@ -44,10 +58,18 @@ export const SiteCard: React.FC<Props> = ({
   menuOpen,
   menuHover,
   portReveal,
+  failureSeen,
+  badgeFrom,
+  badgeProgress,
+  powerFrom,
+  powerProgress = 1,
+  style,
 }) => {
   const t = useT();
   const { homeDir, localLanIp } = useUiEnv();
   const running = site.status === 'running';
+  const starting = site.status === 'starting';
+  const failure = siteFailure(site, failureSeen);
   const reveal = portReveal ?? (running ? 1 : 0);
   const lanAvailable = site.host === '0.0.0.0' && !!localLanIp;
   const qrDisabled = !running || !lanAvailable;
@@ -57,14 +79,22 @@ export const SiteCard: React.FC<Props> = ({
     : `http://127.0.0.1:${site.port}`;
 
   return (
-    <div className="site-card" data-status={site.status} {...hoverAttr(hover === 'card')}>
+    <div
+      className="site-card"
+      data-status={site.status}
+      style={style}
+      {...hoverAttr(hover === 'card')}
+    >
       <div className="site-card-left">
         <div className="site-card-title-row">
           <span className="site-name">{site.name}</span>
-          <span className={`status-badge status-${site.status}`}>
-            <span className="status-dot" />
-            {t(STATUS_TEXT[site.status])}
-          </span>
+          <SiteStatusBadge
+            kind={failure ? 'failure' : (STATUS_BADGE[site.status] ?? null)}
+            from={badgeFrom}
+            progress={badgeProgress}
+            reason={failure ? t(failure) : null}
+            tooltip={tooltip === 'badge'}
+          />
         </div>
 
         <div className="path-row">
@@ -73,12 +103,6 @@ export const SiteCard: React.FC<Props> = ({
           </span>
           <span className="path-text">{compactHomePath(site.rootDir, homeDir)}</span>
         </div>
-
-        {site.status === 'error' && site.statusMessage ? (
-          <span className="error-hint">
-            <AlertIcon /> {t(site.statusMessage)}
-          </span>
-        ) : null}
       </div>
 
       <div className="site-card-right">
@@ -150,34 +174,86 @@ export const SiteCard: React.FC<Props> = ({
             ) : null}
           </div>
         </div>
-        {running ? (
-          <Tooltip label={t('停止')} visible={tooltip === 'stop'}>
-            <button
-              type="button"
-              tabIndex={-1}
-              className="btn-icon btn-action-stop"
-              {...hoverAttr(hover === 'stop')}
-            >
-              <StopIcon />
-            </button>
-          </Tooltip>
-        ) : (
-          <Tooltip
-            label={t(site.status === 'starting' ? '启动中' : '启动')}
-            visible={tooltip === 'start'}
-          >
-            <button
-              type="button"
-              tabIndex={-1}
-              className="btn-icon btn-action-start"
-              disabled={site.status === 'starting'}
-              {...hoverAttr(hover === 'start')}
-            >
-              <PlayIcon />
-            </button>
-          </Tooltip>
-        )}
+        <PowerButton
+          running={running}
+          starting={starting}
+          progress={powerFrom === undefined || powerFrom === running ? 1 : powerProgress}
+          hover={hover === 'stop' || hover === 'start'}
+          tooltip={tooltip === 'stop' || tooltip === 'start'}
+        />
       </div>
     </div>
+  );
+};
+
+const STOP_TINT = '#ff3b30';
+const STOP_BG = `color-mix(in srgb, ${STOP_TINT} 10%, transparent)`;
+
+/** One button with stacked play/stop icons that rotate-swap (`site-power-btn`). */
+const PowerButton: React.FC<{
+  running: boolean;
+  starting: boolean;
+  progress: number;
+  hover: boolean;
+  tooltip: boolean;
+}> = ({ running, starting, progress, hover, tooltip }) => {
+  const t = useT();
+  const p = clamp01(progress);
+  const moving = p < 1;
+  const move = easeStandard(p);
+  const fade = easeCss(segment(p, POWER_MS, 0, 260));
+  const tint = easeCss(segment(p, POWER_MS, 0, 360));
+  // 0 = play showing, 1 = stop showing.
+  const pos = running ? move : 1 - move;
+  const stopOpacity = running ? fade : 1 - fade;
+  const toStop = running ? tint : 1 - tint;
+  return (
+    <Tooltip label={t(running ? '停止' : '启动')} visible={tooltip}>
+      <button
+        type="button"
+        tabIndex={-1}
+        className={`btn-icon site-power-btn ${running ? 'btn-action-stop' : 'btn-action-start'}`}
+        data-running={running || undefined}
+        aria-disabled={starting || undefined}
+        style={
+          moving
+            ? {
+                color: mixColor('var(--status-green)', STOP_TINT, toStop),
+                background: mixColor('var(--status-green-bg)', STOP_BG, toStop),
+              }
+            : undefined
+        }
+        {...hoverAttr(hover)}
+      >
+        <span
+          className="site-power-icon site-power-play"
+          aria-hidden="true"
+          style={
+            moving
+              ? {
+                  opacity: 1 - stopOpacity,
+                  transform: `rotate(${90 * pos}deg) scale(${1 - 0.6 * pos})`,
+                }
+              : undefined
+          }
+        >
+          <PlayIcon />
+        </span>
+        <span
+          className="site-power-icon site-power-stop"
+          aria-hidden="true"
+          style={
+            moving
+              ? {
+                  opacity: stopOpacity,
+                  transform: `rotate(${-90 * (1 - pos)}deg) scale(${0.4 + 0.6 * pos})`,
+                }
+              : undefined
+          }
+        >
+          <StopIcon />
+        </span>
+      </button>
+    </Tooltip>
   );
 };

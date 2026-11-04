@@ -3,7 +3,6 @@ import { Composition, Folder, Still } from 'remotion';
 import { UiGallery } from './compositions/UiGallery';
 import { UiMotionDemo } from './compositions/UiMotionDemo';
 import { UiSmoke } from './compositions/UiSmoke';
-
 export const RemotionRoot: React.FC = () => {
   return (
     <>
@@ -31,6 +30,7 @@ export const RemotionRoot: React.FC = () => {
         <Still id="Ui-Main-Zh" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'main' as const, theme: 'light' as const, language: 'zh' as const }} />
         <Still id="Ui-Empty" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'empty' as const, theme: 'light' as const, language: 'en' as const }} />
         <Still id="Ui-Errors" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'errors' as const, theme: 'light' as const, language: 'en' as const }} />
+        <Still id="Ui-FileError" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'file-error' as const, theme: 'light' as const, language: 'en' as const }} />
         <Still id="Ui-AddMenu" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'add-menu' as const, theme: 'light' as const, language: 'en' as const }} />
         <Still id="Ui-SiteMenu" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'site-menu' as const, theme: 'light' as const, language: 'en' as const }} />
         <Still id="Ui-ActionBar" component={UiGallery} width={1920} height={1080} defaultProps={{ screen: 'action-bar' as const, theme: 'light' as const, language: 'en' as const }} />

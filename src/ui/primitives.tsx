@@ -1,10 +1,9 @@
 import React from 'react';
+import { clamp01, easeCss } from './motion';
 
 /** Spread onto an element to apply the scripted hover look from video.css. */
 export const hoverAttr = (active: boolean | undefined) =>
   active ? { 'data-hover': '' } : {};
-
-const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
 /**
  * Same markup as the app Toggle. `checked` may be a 0–1 progress so a
@@ -60,7 +59,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   return (
     <span className="tooltip-wrap">
       {children}
-      {visible ? (
+      {visible && label ? (
         <span className={bubbleClass} style={below} role="tooltip">
           {label}
         </span>
@@ -176,20 +175,21 @@ export const ModalLayer: React.FC<{
   );
 };
 
+/** Centered toast; `enter` replaces `toastIn` (0–1 over `TOAST_MS`). */
 export const Toast: React.FC<{ text: string; index?: number; enter?: number }> = ({
   text,
   index = 0,
   enter = 1,
 }) => {
-  const p = clamp01(enter);
+  const p = easeCss(clamp01(enter));
   if (p <= 0) return null;
   return (
     <div
       className="toast"
       style={{
-        bottom: 36 + index * 40,
+        marginTop: index * 40,
         opacity: p,
-        transform: `translateX(-50%) translateY(${(1 - p) * 8}px)`,
+        transform: `translate(-50%, -50%) scale(${0.96 + 0.04 * p})`,
       }}
     >
       {text}

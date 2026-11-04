@@ -16,13 +16,19 @@ import {
   ServerIcon,
   StopIcon,
 } from './icons';
+import type { FileShareRetryProps } from './FileShareRetryButton';
 import { LicenseGate, TrialLicenseButton } from './License';
+import { cumulativeShifts, presenceStyle, slotTranslate, type Presence } from './motion';
 import { DropdownMenu, MenuItem, Toast, Tooltip, hoverAttr } from './primitives';
 import { SiteCard, type SiteCardControl, type SiteMenuItem } from './SiteCard';
+import type { SiteBadgeKind } from './SiteStatusBadge';
 import type { FileShareItemView, LicenseView, SiteView, TrialView } from './types';
 
 export type TitlebarHover = 'trial' | 'language' | 'settings' | 'new';
 export type SitesHeadHover = 'add-site' | 'more' | 'start-all' | 'stop-all' | 'import' | 'export';
+
+/** `.site-list` gap. */
+const SITE_GAP = 14;
 
 export type SiteCardState = {
   hover?: SiteCardControl;
@@ -30,6 +36,13 @@ export type SiteCardState = {
   menuOpen?: boolean;
   menuHover?: SiteMenuItem;
   portReveal?: number;
+  failureSeen?: boolean;
+  badgeFrom?: SiteBadgeKind | null;
+  badgeProgress?: number;
+  powerFrom?: boolean;
+  powerProgress?: number;
+  /** Joining/leaving motion. Leaving sites stay in `sites` until it ends. */
+  presence?: Presence;
 };
 
 export type ToastState = { text: string; enter?: number };
@@ -55,6 +68,9 @@ type Props = {
 
   siteStates?: Record<string, SiteCardState>;
   fileHoverId?: string;
+  /** File sharing failed: header retry capsule (also disables file QR codes while not `success`). */
+  fileRetry?: FileShareRetryProps;
+  filePresence?: Record<string, Presence>;
 
   /** Dialog layer (SiteDrawer, QrPopup, SiteDetail, Settings, License…). */
   overlay?: React.ReactNode;
@@ -76,13 +92,15 @@ export const AppWindow: React.FC<Props> = ({
   actionBar = 0,
   siteStates = {},
   fileHoverId,
+  fileRetry,
+  filePresence,
   overlay,
   toasts = [],
 }) => {
   const t = useT();
   const running = sites.filter((s) => s.status === 'running').length;
-  const errors = sites.filter((s) => s.status === 'error').length;
   const bar = Math.min(1, Math.max(0, actionBar));
+  const siteShifts = cumulativeShifts(sites.map((site) => siteStates[site.id]?.presence));
 
   return (
     <div className="app">
@@ -134,7 +152,13 @@ export const AppWindow: React.FC<Props> = ({
       ) : (
         <>
           <div className="content-area">
-            <FileSharePanel items={files} hoverItemId={fileHoverId} />
+            <FileSharePanel
+              items={files}
+              hoverItemId={fileHoverId}
+              running={!fileRetry || fileRetry.state === 'success'}
+              retry={fileRetry}
+              presence={filePresence}
+            />
 
             <section className="sites-section">
               <div className="section-head">
@@ -227,9 +251,20 @@ export const AppWindow: React.FC<Props> = ({
                 </div>
               ) : (
                 <div className="site-list">
-                  {sites.map((site) => (
-                    <SiteCard key={site.id} site={site} {...siteStates[site.id]} />
-                  ))}
+                  {sites.map((site, index) => {
+                    const { presence, ...state } = siteStates[site.id] ?? {};
+                    return (
+                      <SiteCard
+                        key={site.id}
+                        site={site}
+                        {...state}
+                        style={{
+                          ...presenceStyle(presence),
+                          ...slotTranslate(siteShifts[index], 'y', SITE_GAP),
+                        }}
+                      />
+                    );
+                  })}
                 </div>
               )}
             </section>
@@ -243,12 +278,6 @@ export const AppWindow: React.FC<Props> = ({
                 running,
               })}
             </div>
-            {errors > 0 ? (
-              <div className="statusbar-item">
-                <span className="status-dot" style={{ background: 'var(--status-red)' }} />
-                {t('{count} 异常', { count: errors })}
-              </div>
-            ) : null}
             <div style={{ flex: 1 }} />
             <div className="statusbar-item">v{version}</div>
           </div>

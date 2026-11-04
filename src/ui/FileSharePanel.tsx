@@ -9,8 +9,13 @@ import {
   QrCodeIcon,
   TrashIcon,
 } from './icons';
+import { FileShareRetryButton, type FileShareRetryProps } from './FileShareRetryButton';
+import { cumulativeShifts, presenceStyle, slotTranslate, type Presence } from './motion';
 import { Tooltip, hoverAttr } from './primitives';
 import type { FileShareItemView } from './types';
+
+/** `.share-list` gap. */
+const SHARE_GAP = 8;
 
 type Props = {
   items: FileShareItemView[];
@@ -19,6 +24,10 @@ type Props = {
   hoverItemId?: string;
   hoverAction?: 'add' | 'help' | 'more';
   tooltip?: 'add' | 'help' | 'more';
+  /** File sharing failed to start (or is recovering): the retry capsule in the header. */
+  retry?: FileShareRetryProps;
+  /** Item id → joining/leaving motion. Leaving items stay in `items` until it ends. */
+  presence?: Record<string, Presence>;
 };
 
 export const FileSharePanel: React.FC<Props> = ({
@@ -27,8 +36,11 @@ export const FileSharePanel: React.FC<Props> = ({
   hoverItemId,
   hoverAction,
   tooltip,
+  retry,
+  presence = {},
 }) => {
   const t = useT();
+  const shifts = cumulativeShifts(items.map((item) => presence[item.id]));
   return (
     <section className="share-panel">
       <div className="section-head">
@@ -41,6 +53,7 @@ export const FileSharePanel: React.FC<Props> = ({
         <div className="section-head-actions">
           <div className="action-bar-menu">
             <div className="action-bar-anchor">
+              {retry ? <FileShareRetryButton {...retry} /> : null}
               <Tooltip label={t('新增文件')} placement="below" visible={tooltip === 'add'}>
                 <button
                   type="button"
@@ -89,12 +102,16 @@ export const FileSharePanel: React.FC<Props> = ({
         </div>
       ) : (
         <div className="share-list">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <FileShareCard
               key={item.id}
               item={item}
               running={running}
               hover={hoverItemId === item.id}
+              style={{
+                ...presenceStyle(presence[item.id]),
+                ...slotTranslate(shifts[index], 'x', SHARE_GAP),
+              }}
             />
           ))}
         </div>
@@ -107,14 +124,15 @@ const FileShareCard: React.FC<{
   item: FileShareItemView;
   running: boolean;
   hover: boolean;
-}> = ({ item, running, hover }) => {
+  style?: React.CSSProperties;
+}> = ({ item, running, hover, style }) => {
   const t = useT();
-  const dot = item.fileName.lastIndexOf('.');
-  const extension = dot > 0 ? item.fileName.slice(dot + 1).toLowerCase() : '';
+  const extension = fileExtension(item.fileName);
   return (
     <div
       className="share-card"
       data-missing={item.missing || undefined}
+      style={style}
       {...hoverAttr(hover)}
     >
       {item.missing ? (
@@ -182,6 +200,12 @@ const splitFileName = (name: string): string[] => {
   return [first, '…' + chars.slice(tailStart).join('')];
 };
 
+const fileExtension = (fileName: string): string => {
+  const dot = fileName.lastIndexOf('.');
+  if (dot <= 0) return '';
+  return fileName.slice(dot + 1, dot + 5).toLowerCase();
+};
+
 const FileFormatIcon: React.FC<{ extension: string }> = ({ extension }) => {
   const kind = /^(png|jpe?g|gif|webp|svg|heic|avif|bmp|tiff?|ico)$/.test(extension)
     ? 'image'
@@ -195,7 +219,7 @@ const FileFormatIcon: React.FC<{ extension: string }> = ({ extension }) => {
                 extension,
               )
             ? 'code'
-            : /^(xls|xlsx|csv|numbers)$/.test(extension)
+            : /^(xls|xlsx|csv|numb)$/.test(extension)
               ? 'sheet'
               : extension === 'pdf'
                 ? 'pdf'
