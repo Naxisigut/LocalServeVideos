@@ -76,9 +76,9 @@ export const SiteStatusBadge: React.FC<Props> = ({
   const motion = settled
     ? {}
     : from === null
-      ? presenceStyle({ enter: presence })
+      ? presenceStyle({ enter: presence }, 'badge')
       : kind === null
-        ? presenceStyle({ leave: presence })
+        ? presenceStyle({ leave: presence }, 'badge')
         : {};
   const c = easeCss(p);
   const tone = (k: SiteBadgeKind, suffix = '') => `var(--status-${TONE[k]}${suffix})`;

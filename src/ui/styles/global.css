@@ -503,30 +503,65 @@ input {
 /* ─── content area ──────────────────────────────────────────────────── */
 .content-area {
   flex: 1;
-  overflow-y: auto;
-  padding: 12px 20px 16px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 12px 20px 0;
   background: var(--bg);
 }
 
-.content-area::-webkit-scrollbar {
-  width: 8px;
-}
-
-.content-area::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+.share-panel {
+  flex: none;
 }
 
 /* ─── site cards ────────────────────────────────────────────────────── */
+.sites-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 负 margin + padding 给卡片阴影留出空间，避免被滚动容器裁切 */
 .site-list {
   position: relative;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0 -14px;
+  padding: 4px 14px 16px;
 }
 
-.sites-section {
-  min-height: 0;
+.site-list > * {
+  flex-shrink: 0;
+}
+
+.site-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.site-list::-webkit-scrollbar-track {
+  background: transparent;
+  /* 相对卡片内缩约 8px：上 = 4px padding + 8px，下 = 16px padding + 8px */
+  margin-block: 12px 24px;
+}
+
+.site-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.site-list::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+.sites-section > .empty-state {
+  margin-bottom: 16px;
 }
 
 .section-head {
@@ -1050,15 +1085,31 @@ input {
     color 560ms ease;
 }
 
+/* `backwards`, not `both`: a transform/opacity left filled after the animation keeps
+   the card a stacking context, trapping its dropdown beneath later siblings. */
 .site-status-badge[data-enter],
 [data-presence='enter'] {
-  animation: presence-enter var(--presence-enter-ms) var(--presence-enter-ease) both;
+  animation: presence-enter var(--presence-enter-ms) var(--presence-enter-ease) backwards;
 }
 
-.site-status-badge[data-leaving],
-[data-presence='leave'] {
+.site-status-badge[data-leaving] {
   animation: presence-leave var(--presence-leave-ms) var(--presence-leave-ease) forwards;
   pointer-events: none;
+}
+
+/* List items clear the slot fast, before the sliding siblings arrive under them. */
+[data-presence='leave'] {
+  animation: presence-exit var(--presence-exit-ms) var(--presence-exit-ease) forwards;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Leaving items are pinned out of flow, so they would paint above the siblings
+   closing the gap. Raise survivors only while a leave is in flight; `.site-card`
+   stays static otherwise, so its dropdown is not trapped in a stacking context. */
+:is(.share-list, .site-list):has(> [data-presence='leave']) > :not([data-presence='leave']) {
+  position: relative;
+  z-index: 1;
 }
 
 .site-status-badge-content {
@@ -1082,6 +1133,10 @@ input {
   /* Keep in sync with PRESENCE_LEAVE_MS in use-presence-list.ts. */
   --presence-leave-ms: 400ms;
   --presence-leave-ease: cubic-bezier(0.4, 0, 1, 1);
+  /* Keep in sync with PRESENCE_EXIT_MS in use-presence-list.ts. Must stay well
+     under the 480ms FLIP slide so the gap closes onto empty space. */
+  --presence-exit-ms: 190ms;
+  --presence-exit-ease: cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 @keyframes presence-enter {
@@ -1095,6 +1150,15 @@ input {
   to {
     opacity: 0;
     transform: scale(0);
+  }
+}
+
+/* Leaving list items dissolve in place without shrinking to a point; the slot
+   is already collapsing underneath them. */
+@keyframes presence-exit {
+  to {
+    opacity: 0;
+    transform: scale(0.86);
   }
 }
 

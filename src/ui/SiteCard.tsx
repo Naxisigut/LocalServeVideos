@@ -10,7 +10,17 @@ import {
   StopIcon,
   TrashIcon,
 } from './icons';
-import { POWER_MS, clamp01, easeCss, easeStandard, mixColor, segment } from './motion';
+import {
+  POWER_MS,
+  clamp01,
+  easeCss,
+  easeStandard,
+  mixColor,
+  presenceAttr,
+  presenceStyle,
+  segment,
+  type Presence,
+} from './motion';
 import { DropdownMenu, MenuDivider, MenuItem, Tooltip, hoverAttr } from './primitives';
 import { SiteStatusBadge, type SiteBadgeKind } from './SiteStatusBadge';
 import type { SiteStatus, SiteView } from './types';
@@ -48,6 +58,8 @@ type Props = {
   powerFrom?: boolean;
   /** 0–1 over `POWER_MS`. */
   powerProgress?: number;
+  /** Joining/leaving motion; drives `data-presence` and enter/exit transform. */
+  presence?: Presence;
   style?: React.CSSProperties;
 };
 
@@ -63,6 +75,7 @@ export const SiteCard: React.FC<Props> = ({
   badgeProgress,
   powerFrom,
   powerProgress = 1,
+  presence,
   style,
 }) => {
   const t = useT();
@@ -82,7 +95,8 @@ export const SiteCard: React.FC<Props> = ({
     <div
       className="site-card"
       data-status={site.status}
-      style={style}
+      style={{ ...presenceStyle(presence), ...style }}
+      {...presenceAttr(presence)}
       {...hoverAttr(hover === 'card')}
     >
       <div className="site-card-left">

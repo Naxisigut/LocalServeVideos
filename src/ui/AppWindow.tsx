@@ -18,7 +18,7 @@ import {
 } from './icons';
 import type { FileShareRetryProps } from './FileShareRetryButton';
 import { LicenseGate, TrialLicenseButton } from './License';
-import { cumulativeShifts, presenceStyle, slotTranslate, type Presence } from './motion';
+import { cumulativeShifts, slotTranslate, type Presence } from './motion';
 import { DropdownMenu, MenuItem, Toast, Tooltip, hoverAttr } from './primitives';
 import { SiteCard, type SiteCardControl, type SiteMenuItem } from './SiteCard';
 import type { SiteBadgeKind } from './SiteStatusBadge';
@@ -251,20 +251,14 @@ export const AppWindow: React.FC<Props> = ({
                 </div>
               ) : (
                 <div className="site-list">
-                  {sites.map((site, index) => {
-                    const { presence, ...state } = siteStates[site.id] ?? {};
-                    return (
-                      <SiteCard
-                        key={site.id}
-                        site={site}
-                        {...state}
-                        style={{
-                          ...presenceStyle(presence),
-                          ...slotTranslate(siteShifts[index], 'y', SITE_GAP),
-                        }}
-                      />
-                    );
-                  })}
+                  {sites.map((site, index) => (
+                    <SiteCard
+                      key={site.id}
+                      site={site}
+                      {...siteStates[site.id]}
+                      style={slotTranslate(siteShifts[index], 'y', SITE_GAP)}
+                    />
+                  ))}
                 </div>
               )}
             </section>

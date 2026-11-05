@@ -10,7 +10,13 @@ import {
   TrashIcon,
 } from './icons';
 import { FileShareRetryButton, type FileShareRetryProps } from './FileShareRetryButton';
-import { cumulativeShifts, presenceStyle, slotTranslate, type Presence } from './motion';
+import {
+  cumulativeShifts,
+  presenceAttr,
+  presenceStyle,
+  slotTranslate,
+  type Presence,
+} from './motion';
 import { Tooltip, hoverAttr } from './primitives';
 import type { FileShareItemView } from './types';
 
@@ -108,10 +114,8 @@ export const FileSharePanel: React.FC<Props> = ({
               item={item}
               running={running}
               hover={hoverItemId === item.id}
-              style={{
-                ...presenceStyle(presence[item.id]),
-                ...slotTranslate(shifts[index], 'x', SHARE_GAP),
-              }}
+              presence={presence[item.id]}
+              style={slotTranslate(shifts[index], 'x', SHARE_GAP)}
             />
           ))}
         </div>
@@ -124,15 +128,17 @@ const FileShareCard: React.FC<{
   item: FileShareItemView;
   running: boolean;
   hover: boolean;
+  presence?: Presence;
   style?: React.CSSProperties;
-}> = ({ item, running, hover, style }) => {
+}> = ({ item, running, hover, presence, style }) => {
   const t = useT();
   const extension = fileExtension(item.fileName);
   return (
     <div
       className="share-card"
       data-missing={item.missing || undefined}
-      style={style}
+      style={{ ...presenceStyle(presence), ...style }}
+      {...presenceAttr(presence)}
       {...hoverAttr(hover)}
     >
       {item.missing ? (
