@@ -752,6 +752,7 @@ input {
 .share-list {
   position: relative;
   display: flex;
+  height: 108px;
   gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -947,14 +948,20 @@ input {
 }
 
 .share-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  margin: 2px 0 10px;
   background: var(--surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 16px 18px;
+  padding: 0 18px;
   color: var(--muted);
   font-size: var(--fs-sm);
   line-height: 1.5;
-  margin-bottom: 8px;
+  text-align: center;
 }
 
 .empty-state-inline {

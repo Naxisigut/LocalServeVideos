@@ -1,5 +1,6 @@
 import React from 'react';
 import { Composition, Folder, Still } from 'remotion';
+import { PromoSample } from './compositions/PromoSample';
 import { UiGallery } from './compositions/UiGallery';
 import { UiMotionDemo } from './compositions/UiMotionDemo';
 import { UiSmoke } from './compositions/UiSmoke';
@@ -19,6 +20,15 @@ export const RemotionRoot: React.FC = () => {
         id="UiMotionDemo"
         component={UiMotionDemo}
         durationInFrames={210}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ theme: 'light' as const, language: 'en' as const }}
+      />
+      <Composition
+        id="PromoSample"
+        component={PromoSample}
+        durationInFrames={2850}
         fps={30}
         width={1920}
         height={1080}

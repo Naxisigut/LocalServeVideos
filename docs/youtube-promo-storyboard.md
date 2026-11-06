@@ -1,6 +1,8 @@
 # LocalServe YouTube 推广视频 — 分镜脚本 v2
 
-> 与 `youtube-main-storyboard.md`（70s，结构 A）的区别：v2 覆盖完整卖点（站点 / SPA / 反代 / 自定义域名 / 局域网扫码 / 文件分享 / 菜单栏 / 授权），时长约 95 秒，作为 YouTube 主推广片。
+> v2 覆盖完整卖点（站点 / SPA / 反代 / 自定义域名 / 局域网扫码 / 文件分享 / 菜单栏 / 授权），时长约 95 秒，作为 YouTube 主推广片。
+>
+> 画面文案以 `src/ui/i18n.ts` 英文为准（按钮名、提示语与 App 一致），下文引号内的 UI 文案均已对齐。
 
 ## 概览
 
@@ -89,8 +91,8 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | `MacCursor` 点击 “New site” → `SiteDrawer` 滑入；填入名称 `Acme Dashboard`、目录 `~/Projects/acme/dist`、端口 `5173`；出现 “Folder validation passed”。 |
-| 动效 | 抽屉 `enter`；输入框逐字填写；目录校验绿勾弹出。 |
+| 画面 | `MacCursor` 点击空状态里的 “Add site” → `SiteDrawer`（标题 “Add site”）弹出；逐字输入名称 `Acme Dashboard`；点击 “Choose folder…” 后目录填为 `~/Projects/acme/dist`，右侧出现绿色勾（`dirCheck="ok"`，UI 只有图标没有文字）；输入端口 `5173`；打开 “Enable LAN access”（为 S10 扫码埋点）。代理规则留到 S8 再加。 |
+| 动效 | 抽屉 `enter`；输入框逐字填写 + 光标闪烁；目录绿勾弹出；LAN 开关用数值 `Toggle` 过渡。 |
 | VO | Pick your build folder, choose a port… |
 | 中文 | 选好打包目录，设个端口…… |
 | 数据 | `acmeDraft` |
@@ -99,7 +101,7 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 点击 “Save and start” → 抽屉收起 → `SiteCard` 出现，状态 Starting → **Running**，访问地址 `http://127.0.0.1:5173` 显现（`portReveal`）。 |
+| 画面 | 点击 “Save and start” → 抽屉收起 → `SiteCard` 弹入（`presence.enter`），状态 Starting → **Running**，“Port 5173” 标签展开（`portReveal`）；光标移到“在浏览器打开”按钮，tooltip 显示 `http://127.0.0.1:5173`（卡片本身不显示地址文本）。 |
 | VO | …and hit start. That's it. |
 | 中文 | 点启动，就这么简单。 |
 | 数据 | `acmeSite` |
@@ -108,7 +110,7 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | Cmd-点击地址 → 浏览器窗口 mock 打开 Acme Dashboard；进入 `/dashboard/settings` 并刷新，页面正常。右下角小日志条：`GET /dashboard/settings 200 (SPA fallback)`。 |
+| 画面 | 点击卡片的“在浏览器打开”按钮 → 浏览器窗口 mock 打开 Acme Dashboard；进入 `/dashboard/settings` 并刷新，页面正常。右下角小日志条：`GET /dashboard/settings 200 (SPA fallback)`。 |
 | VO | Deep links and refreshes just work — SPA fallback is built in. |
 | 中文 | 深层路由、刷新都不会 404，内置 SPA 回退。 |
 | 素材 | 浏览器 chrome mock + Acme 页面（新组件）；日志行来自 `acmeLogs` l7 |
@@ -119,7 +121,7 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 左：`SiteDrawer` 代理规则行 `/api → http://127.0.0.1:9083`（Change origin 开启）。右：示意图，浏览器 → `:5173/api/me` → LocalServe → `:9083`，同源请求返回 **200**；一个红色 “CORS error” 标签被划掉。 |
+| 画面 | 左：卡片菜单 “Edit site” → `SiteDrawer`（`mode="edit"` + `runningOnOpen`）展开 “Proxy rules”，点 “Add proxy rule” 填入 `/api → http://127.0.0.1:9083`（“Origin” 开关开启），点 “Save and apply”。右：示意图，浏览器 → `:5173/api/me` → LocalServe → `:9083`，同源请求返回 **200**；一个红色 “CORS error” 标签被划掉。 |
 | 动效 | 规则行插入；请求光点沿路径流动；200 绿色徽章弹出。 |
 | VO | Got a backend? Add a proxy rule. Same origin, no CORS headaches. |
 | 中文 | 有后端接口？加一条代理规则，同源访问，告别跨域。 |
@@ -131,7 +133,7 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 切到 Product Docs 站点卡片，显示域名 `docs.ls`；浏览器地址栏从 `127.0.0.1:4000` 变成 `http://docs.ls`。角标提示 “Administrator approval required when saving”，一闪而过。 |
+| 画面 | 列表里弹入第二张卡片 Product Docs（`presence.enter`，此前画面只有 Acme，避免穿帮）；悬停打开按钮，tooltip 为 `http://docs.ls`；浏览器地址栏从 `127.0.0.1:4000` 变成 `http://docs.ls`。可插一帧抽屉里 “Enable custom domain” 的帮助提示 “Saving requires administrator approval”，一闪而过。 |
 | VO | Give every project a name you'll remember. LocalServe manages hosts for you. |
 | 中文 | 给每个项目起个好记的域名，hosts 由 LocalServe 帮你托管。 |
 | 数据 | `docsSite` |
@@ -142,7 +144,7 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 回到 Acme 卡片，点击 LAN 地址 → `QrPopup` 弹出，二维码 + `http://192.168.1.24:5173` + “Connect your phone and Mac to the same Wi-Fi, then scan”。 |
+| 画面 | 回到 Acme 卡片，点击二维码按钮（tooltip “Scan to open”）→ `QrPopup`（“LAN access”）弹出，二维码 + `http://192.168.1.24:5173` + “Scan with a phone on the same Wi-Fi”。 |
 | VO | Same Wi-Fi? Scan the code. |
 | 中文 | 同一个 Wi-Fi？扫一下就行。 |
 | 数据 | `ACME_LAN_URL` |
@@ -173,7 +175,7 @@
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 前半（74–79s）：主窗口站点列表扩展为 3 个站点，状态栏 “Files: 5 · Sites: 3 · Running: 2”；快速闪过 `SiteDetail` 日志面板。后半（79–84s）：关闭窗口 → 窗口缩进菜单栏 → `TrayMenu` 展开，站点仍在运行。 |
+| 画面 | 前半（74–79s）：主窗口站点列表扩展为 3 个站点（新增 Landing Page，停止态），状态栏 “Files: 5 · Sites: 3 · Running: 2”；快速闪过 `SiteDetail` 日志面板。后半（79–84s）：关闭窗口 → 窗口缩进菜单栏 → `TrayMenu` 展开，站点仍在运行。 |
 | VO | Run all your projects side by side, with live logs. Close the window — it keeps serving from your menu bar. |
 | 中文 | 多个项目同时运行，实时日志一目了然。关掉窗口，它仍在菜单栏里持续服务。 |
 | 数据 | `demoSites`、`acmeLogs`、`demoSettings.minimizeToTrayOnClose` |
@@ -272,6 +274,8 @@ S1（2s）→ S3 大字（2s）→ S5+S6 压缩（6s）→ S10+S11（10s）→ S
 ---
 
 ## 实现映射（Remotion）
+
+样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已实现完整 S1–S14（0–95s），字幕为硬字幕，暂无 VO / BGM。
 
 | 分镜 | 现有组件 / 数据 | 需新增 |
 | --- | --- | --- |
