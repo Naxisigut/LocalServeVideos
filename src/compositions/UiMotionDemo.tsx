@@ -34,7 +34,7 @@ const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 const ease = Easing.bezier(0.45, 0, 0.2, 1);
 
 /**
- * Start "Landing Page" (status capsule pops in, morphs to running, power icon
+ * Start "Reading List" (status capsule pops in, morphs to running, power icon
  * swaps, port chip slides in) → open Acme's LAN QR code.
  * Every state is derived from the frame; nothing relies on CSS motion.
  */

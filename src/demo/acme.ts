@@ -18,8 +18,8 @@ export const ACME_STARTED_AT = 1_700_000_000_000;
 
 export const acmeSite: SiteView = {
   id: 'demo-acme',
-  name: 'Acme Dashboard',
-  rootDir: `${DEMO_HOME_DIR}/Projects/acme/dist`,
+  name: 'Budget Tracker',
+  rootDir: `${DEMO_HOME_DIR}/Projects/budget-tracker/dist`,
   port: 5173,
   host: '0.0.0.0',
   domains: [],
@@ -43,11 +43,11 @@ export const acmeSite: SiteView = {
 
 export const docsSite: SiteView = {
   id: 'demo-docs',
-  name: 'Product Docs',
-  rootDir: `${DEMO_HOME_DIR}/Projects/docs/build`,
+  name: 'Recipe Box',
+  rootDir: `${DEMO_HOME_DIR}/Downloads/recipe-box`,
   port: 4000,
   host: '127.0.0.1',
-  domains: ['docs.ls'],
+  domains: ['recipes.ls'],
   spaFallback: false,
   https: false,
   proxyRules: [],
@@ -59,8 +59,8 @@ export const docsSite: SiteView = {
 
 export const landingSite: SiteView = {
   id: 'demo-landing',
-  name: 'Landing Page',
-  rootDir: `${DEMO_HOME_DIR}/Projects/landing/out`,
+  name: 'Reading List',
+  rootDir: `${DEMO_HOME_DIR}/Desktop/reading-list`,
   port: 8080,
   host: '127.0.0.1',
   domains: [],
@@ -74,8 +74,8 @@ export const landingSite: SiteView = {
 
 export const adminSite: SiteView = {
   id: 'demo-admin',
-  name: 'Admin Console',
-  rootDir: `${DEMO_HOME_DIR}/Projects/admin/dist`,
+  name: 'Habit Tracker',
+  rootDir: `${DEMO_HOME_DIR}/Documents/ai-tests/habit-tracker`,
   port: 3000,
   host: '127.0.0.1',
   domains: [],
@@ -106,10 +106,10 @@ export const acmeLogs: LogEntry[] = [
   { id: 'l3', time: '09:41:05', level: 'access', message: 'GET /assets/index-3f2a.js 200 142kB 6ms' },
   { id: 'l4', time: '09:41:05', level: 'access', message: 'GET /assets/index-9c1d.css 200 18kB 2ms' },
   { id: 'l5', time: '09:41:06', level: 'proxy', message: 'GET /api/me → http://127.0.0.1:9083/api/me 200 12ms' },
-  { id: 'l6', time: '09:41:06', level: 'proxy', message: 'GET /api/projects → http://127.0.0.1:9083/api/projects 200 21ms' },
-  { id: 'l7', time: '09:41:09', level: 'access', message: 'GET /dashboard/settings 200 (SPA fallback) 3ms' },
+  { id: 'l6', time: '09:41:06', level: 'proxy', message: 'GET /api/transactions → http://127.0.0.1:9083/api/transactions 200 21ms' },
+  { id: 'l7', time: '09:41:09', level: 'access', message: 'GET /settings/categories 200 (SPA fallback) 3ms' },
   { id: 'l8', time: '09:41:12', level: 'access', message: 'GET /favicon.svg 200 1.2kB 1ms' },
-  { id: 'l9', time: '09:41:15', level: 'proxy', message: 'POST /api/projects → http://127.0.0.1:9083/api/projects 201 34ms' },
+  { id: 'l9', time: '09:41:15', level: 'proxy', message: 'POST /api/transactions → http://127.0.0.1:9083/api/transactions 201 34ms' },
   { id: 'l10', time: '09:41:18', level: 'error', message: 'GET /old-logo.png 404' },
   { id: 'l11', time: '09:41:21', level: 'access', message: 'GET / 200 3.1kB 3ms (192.168.1.31 · iPhone)' },
   { id: 'l12', time: '09:41:21', level: 'proxy', message: 'GET /api/me → http://127.0.0.1:9083/api/me 200 9ms' },
@@ -128,14 +128,14 @@ export const demoSettings: SettingsState = {
   minimizeToTrayOnClose: true,
   launchAtLogin: false,
   restoreHostsOnQuit: true,
-  managedDomains: ['docs.ls'],
+  managedDomains: ['recipes.ls'],
   version: '0.1.0',
 };
 
-/** The Acme site as typed into the "New site" dialog. */
+/** The Budget Tracker site as typed into the "New site" dialog. */
 export const acmeDraft: SiteDraft = {
-  name: 'Acme Dashboard',
-  rootDir: '~/Projects/acme/dist',
+  name: 'Budget Tracker',
+  rootDir: '~/Projects/budget-tracker/dist',
   port: '5173',
   lan: true,
   domainEnabled: false,

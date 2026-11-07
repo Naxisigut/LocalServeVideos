@@ -12,16 +12,13 @@ import {
   demoSites,
   demoTrial,
   docsSite,
-  landingSite,
 } from '../../demo/acme';
 import { AppWindow } from '../../ui/AppWindow';
 import { MacCursor } from '../../ui/MacCursor';
 import { MacWindow } from '../../ui/MacWindow';
 import { PRESENCE_MS, motionProgress } from '../../ui/motion';
 import { QrPopup } from '../../ui/QrPopup';
-import { SiteDetail } from '../../ui/SiteDetail';
 import { SiteDrawer } from '../../ui/SiteDrawer';
-import { MacMenuBar, TrayMenu } from '../../ui/TrayMenu';
 import type { Language, Theme } from '../../ui/types';
 import { Backdrop } from '../Stage';
 import { AcmePage, BrowserFrame, LogPill, PhoneFrame } from './mocks';
@@ -55,39 +52,63 @@ const twoSites = [acmeSite, docsSite];
 const ACME_QR = { x: 545, y: 279 };
 const FILE_URL = `http://${DEMO_LAN_IP}:19800/Demo.mp4`;
 
-/** S7 — deep link + refresh work thanks to SPA fallback. */
+/** S7 — the build that was blank from Finder now loads; deep link + refresh work too. */
 export const SpaScene: React.FC = () => {
   const frame = useCurrentFrame();
   const s = useSeconds();
-  const path = typed(frame, '/dashboard/settings', s(1.6));
-  const navigated = frame >= s(2.8);
-  const refresh = interpolate(frame, [s(3.4), s(4)], [0, 1], { ...clamp, easing: easeInOut });
-  const flash = frame >= s(3.4) && frame < s(3.7) ? 0.35 : 1;
+  const servedAt = s(1.5);
+  const served = frame >= servedAt;
+  const path = typed(frame, '/settings/categories', servedAt + s(0.7));
+  const navigated = frame >= servedAt + s(2.2);
+  const refreshAt = servedAt + s(2.4);
+  const refresh = interpolate(frame, [refreshAt, refreshAt + s(0.5)], [0, 1], { ...clamp, easing: easeInOut });
+  const flash = (frame >= servedAt && frame < servedAt + 4) || (frame >= refreshAt && frame < refreshAt + s(0.3)) ? 0.35 : 1;
   return (
     <Backdrop theme="light">
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
         <BrowserFrame
           width={1420}
-          height={820}
+          height={780}
           refreshSpin={refresh}
           url={
-            <>
-              <span style={{ color: '#999' }}>http://</span>127.0.0.1:5173<span style={{ color: '#4f46e5' }}>{path}</span>
-            </>
+            served ? (
+              <>
+                <span style={{ color: '#999' }}>http://</span>127.0.0.1:5173<span style={{ color: '#4f46e5' }}>{path}</span>
+              </>
+            ) : (
+              <span style={{ color: '#777' }}>file:///Users/demo/Projects/budget-tracker/dist/index.html</span>
+            )
           }
           style={{
-            translate: '0 -30px',
+            translate: '0 -50px',
             opacity: fadeIn(frame, 0, 10),
             scale: String(interpolate(frame, [0, s(0.5)], [0.94, 1], { ...clamp, easing: easeOut })),
           }}
         >
-          <div style={{ height: '100%', opacity: flash }}>
-            <AcmePage view={navigated ? 'settings' : 'overview'} />
+          <div style={{ height: '100%', opacity: flash, background: '#fff' }}>
+            {served ? <AcmePage view={navigated ? 'settings' : 'overview'} /> : null}
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              left: 28,
+              top: 24,
+              padding: '10px 20px',
+              borderRadius: 999,
+              fontFamily: DISPLAY_FONT,
+              fontSize: 32,
+              fontWeight: 700,
+              color: '#fff',
+              background: served ? '#16a34a' : '#dc2626',
+              opacity: served ? 1 - fadeIn(frame, servedAt + s(1.2), 10) : fadeIn(frame, 6, 8),
+            }}
+          >
+            {served ? 'With LocalServe' : 'Before · double-clicked in Finder'}
           </div>
           <LogPill
             level="access"
             text={acmeLogs[6].message}
-            style={{ position: 'absolute', right: 28, bottom: 28, opacity: fadeIn(frame, s(4.1)) }}
+            style={{ position: 'absolute', right: 28, bottom: 28, opacity: fadeIn(frame, refreshAt + s(0.6)) }}
           />
         </BrowserFrame>
       </AbsoluteFill>
@@ -175,7 +196,7 @@ export const ProxyScene: React.FC<SceneProps> = (props) => {
   );
 };
 
-/** S9 — Product Docs joins with `docs.ls`; the address bar switches over. */
+/** S9 — Recipe Box joins with `recipes.ls`; the address bar switches over. */
 export const DomainScene: React.FC<SceneProps> = (props) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -206,13 +227,13 @@ export const DomainScene: React.FC<SceneProps> = (props) => {
           url={
             <span style={{ position: 'relative', display: 'inline-block', width: 400, height: 24 }}>
               <span style={{ position: 'absolute', opacity: 1 - swap, translate: `0 ${-12 * swap}px` }}>http://127.0.0.1:4000</span>
-              <span style={{ position: 'absolute', opacity: swap, translate: `0 ${12 * (1 - swap)}px`, fontWeight: 600 }}>http://docs.ls</span>
+              <span style={{ position: 'absolute', opacity: swap, translate: `0 ${12 * (1 - swap)}px`, fontWeight: 600 }}>http://recipes.ls</span>
             </span>
           }
         >
           <div style={{ padding: '30px 36px', fontFamily: DISPLAY_FONT }}>
-            <div style={{ fontSize: 15, color: '#4f46e5', fontWeight: 600 }}>PRODUCT DOCS</div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>Getting started</div>
+            <div style={{ fontSize: 15, color: '#4f46e5', fontWeight: 600 }}>RECIPE BOX</div>
+            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>Grandma's lasagna</div>
             {[92, 80, 86, 60].map((w, i) => (
               <div key={i} style={{ height: 14, width: `${w}%`, borderRadius: 7, background: '#eceef3', marginTop: 18 }} />
             ))}
@@ -311,56 +332,9 @@ export const FilesScene: React.FC<SceneProps> = (props) => {
   );
 };
 
-/** S13 — three sites + live logs, then the window tucks into the menu bar. */
-export const MenuBarScene: React.FC<SceneProps> = (props) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const s = useSeconds();
-  const detailIn = fadeIn(frame, s(1.6), 9);
-  const detailOut = interpolate(frame, [s(4.4), s(4.7)], [1, 0], clamp);
-  const tuck = interpolate(frame, [s(5), s(5.7)], [0, 1], { ...clamp, easing: easeInOut });
-  const bar = fadeIn(frame, s(5.2), 10);
-  const trayOpen = frame >= s(6.3);
-  return (
-    <Backdrop theme={props.theme}>
-      <WindowShot
-        {...props}
-        x={interpolate(tuck, [0, 1], [960, 1780])}
-        y={interpolate(tuck, [0, 1], [520, 20])}
-        scale={1.3 * interpolate(tuck, [0, 1], [1, 0.04])}
-        style={{ opacity: 1 - interpolate(tuck, [0.6, 1], [0, 1], clamp) }}
-      >
-        <AppWindow
-          sites={demoSites}
-          files={demoFiles}
-          trial={demoTrial}
-          siteStates={{ [landingSite.id]: { presence: { enter: motionProgress(frame, s(0.3), fps, PRESENCE_MS) } } }}
-          overlay={<SiteDetail site={acmeSite} logs={acmeLogs} enter={detailIn * detailOut} />}
-        />
-      </WindowShot>
-      <div style={{ position: 'absolute', top: 0, left: 0, scale: '2.4', transformOrigin: '0 0', opacity: bar, translate: `0 ${(1 - bar) * -20}px` }}>
-        <MacMenuBar
-          theme={props.theme}
-          width={800}
-          trayActive={trayOpen}
-          trayMenu={
-            trayOpen ? (
-              <TrayMenu
-                sites={demoSites}
-                language={props.language}
-                hover={frame >= s(7.4) ? { kind: 'site', id: acmeSite.id, sub: 'open' } : undefined}
-              />
-            ) : undefined
-          }
-        />
-      </div>
-    </Backdrop>
-  );
-};
-
 const PILLS = ['7-day free trial · No account', '$9 once · No subscription', 'Up to 3 Macs'];
 
-/** S14 — end card. */
+/** S13 — end card. */
 export const EndCardScene: React.FC<SceneProps> = (props) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();

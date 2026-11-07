@@ -64,23 +64,23 @@ const Stat: React.FC<{ label: string; value: string; delta: string }> = ({ label
 
 const BARS = [42, 58, 50, 72, 64, 86, 78, 92, 70, 96, 88, 100];
 
-/** The demo "Acme Dashboard" web app served by LocalServe. */
+/** The demo "Budget Tracker" web app served by LocalServe. */
 export const AcmePage: React.FC<{ view: 'overview' | 'settings'; mobile?: boolean }> = ({
   view,
   mobile,
 }) => {
   const stats = (
     <>
-      <Stat label="Active users" value="12,480" delta="+8.2%" />
-      <Stat label="Revenue" value="$48.2k" delta="+12.4%" />
-      {mobile ? null : <Stat label="Projects" value="36" delta="+3" />}
+      <Stat label="Spent this month" value="$1,284" delta="-6.1% vs Oct" />
+      <Stat label="Saved" value="$620" delta="+$140" />
+      {mobile ? null : <Stat label="Budget left" value="$416" delta="9 days to go" />}
     </>
   );
   if (mobile) {
     return (
       <div style={{ height: '100%', background: '#f6f7fb', padding: '62px 18px 18px', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 22, fontWeight: 700 }}>
-          <span style={{ width: 30, height: 30, borderRadius: 8, background: ACCENT }} /> Acme
+          <span style={{ width: 30, height: 30, borderRadius: 8, background: ACCENT }} /> Budget
         </div>
         <div style={{ fontSize: 26, fontWeight: 700, color: '#111' }}>Overview</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>{stats}</div>
@@ -92,13 +92,13 @@ export const AcmePage: React.FC<{ view: 'overview' | 'settings'; mobile?: boolea
       </div>
     );
   }
-  const nav = ['Overview', 'Projects', 'Team', 'Settings'];
+  const nav = ['Overview', 'Transactions', 'Reports', 'Settings'];
   const active = view === 'overview' ? 'Overview' : 'Settings';
   return (
     <div style={{ height: '100%', display: 'flex', background: '#f6f7fb' }}>
       <div style={{ width: 230, background: '#fff', borderRight: '1px solid #e8e9ef', padding: '26px 18px', display: 'flex', flexDirection: 'column', gap: 6 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 22, fontWeight: 700, marginBottom: 20 }}>
-          <span style={{ width: 30, height: 30, borderRadius: 8, background: ACCENT }} /> Acme
+          <span style={{ width: 30, height: 30, borderRadius: 8, background: ACCENT }} /> Budget
         </div>
         {nav.map((item) => (
           <div key={item} style={{ padding: '10px 14px', borderRadius: 9, fontSize: 17, color: item === active ? ACCENT : '#555', background: item === active ? '#eef0ff' : 'transparent', fontWeight: item === active ? 600 : 400 }}>
@@ -119,7 +119,7 @@ export const AcmePage: React.FC<{ view: 'overview' | 'settings'; mobile?: boolea
           </>
         ) : (
           <div style={{ borderRadius: 14, background: '#fff', boxShadow: '0 0 0 1px #e8e9ef', padding: '8px 24px' }}>
-            {[['Workspace name', 'Acme Inc.'], ['Default region', 'us-east-1'], ['Notifications', 'Email + Slack'], ['API endpoint', '/api']].map(([k, v]) => (
+            {[['Categories', 'Food · Rent · Fun · Travel'], ['Monthly budget', '$1,700'], ['Currency', 'USD'], ['Sync API', '/api']].map(([k, v]) => (
               <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '18px 0', borderBottom: '1px solid #f0f1f5', fontSize: 18 }}>
                 <span style={{ color: '#555' }}>{k}</span>
                 <span style={{ color: '#111', fontWeight: 500 }}>{v}</span>
