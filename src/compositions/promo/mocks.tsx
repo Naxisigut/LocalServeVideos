@@ -132,6 +132,172 @@ export const AcmePage: React.FC<{ view: 'overview' | 'settings'; mobile?: boolea
   );
 };
 
+const RECIPE_ORANGE = '#ea580c';
+const SERIF_FONT = "'New York', 'Iowan Old Style', Georgia, 'Times New Roman', serif";
+
+/** Plated lasagna slice on a wooden table, drawn with CSS. */
+const LasagnaPhoto: React.FC = () => (
+  <div
+    style={{
+      position: 'relative',
+      width: 430,
+      height: 360,
+      flexShrink: 0,
+      borderRadius: 18,
+      overflow: 'hidden',
+      background:
+        'repeating-linear-gradient(8deg, rgba(0,0,0,0.06) 0 3px, transparent 3px 22px), linear-gradient(160deg, #a86b3c 0%, #7a4524 100%)',
+      boxShadow: '0 18px 40px rgba(120,53,15,0.25)',
+    }}
+  >
+    <div style={{ position: 'absolute', left: -40, top: -50, width: 180, height: 120, borderRadius: 16, background: 'linear-gradient(135deg, #f5efe4, #e7dcc8)', rotate: '-14deg', boxShadow: '0 8px 18px rgba(0,0,0,0.2)' }} />
+    <div style={{ position: 'absolute', left: 40, top: 30, width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle at 50% 45%, #ffffff 0 52%, #eef0f2 53% 60%, #ffffff 61% 100%)', boxShadow: '0 14px 30px rgba(0,0,0,0.3)' }} />
+    <div
+      style={{
+        position: 'absolute',
+        left: 110,
+        top: 120,
+        width: 210,
+        height: 150,
+        borderRadius: '10px 14px 8px 8px',
+        background:
+          'linear-gradient(180deg, #f2b84b 0 14%, #c2410c 14% 26%, #f7dc8f 26% 34%, #f0c46a 34% 44%, #b91c1c 44% 58%, #fde7a8 58% 66%, #f0c46a 66% 76%, #9a3412 76% 90%, #e9b45c 90% 100%)',
+        boxShadow: '6px 10px 18px rgba(0,0,0,0.25)',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: -6,
+          right: -8,
+          top: -14,
+          height: 30,
+          borderRadius: '40% 60% 45% 55% / 70% 70% 30% 30%',
+          background:
+            'radial-gradient(circle at 22% 50%, #b45309 0 6px, transparent 7px), radial-gradient(circle at 58% 40%, #b45309 0 5px, transparent 6px), radial-gradient(circle at 80% 60%, #92400e 0 4px, transparent 5px), linear-gradient(180deg, #fcd34d, #f59e0b)',
+        }}
+      />
+    </div>
+    {[
+      { left: 150, top: 92, rotate: -30 },
+      { left: 182, top: 86, rotate: 20 },
+      { left: 166, top: 100, rotate: 80 },
+    ].map((leaf) => (
+      <div key={leaf.rotate} style={{ position: 'absolute', left: leaf.left, top: leaf.top, width: 34, height: 18, borderRadius: '50% 50% 50% 50% / 100% 100% 0 0', background: 'linear-gradient(180deg, #4d9a3a, #2f6b22)', rotate: `${leaf.rotate}deg` }} />
+    ))}
+    <div style={{ position: 'absolute', right: 14, bottom: 14, padding: '6px 12px', borderRadius: 999, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 14, fontWeight: 600 }}>
+      📷 Photo by Mom
+    </div>
+  </div>
+);
+
+/** The demo "Recipe Box" family cookbook site, on Grandma's lasagna. */
+export const RecipePage: React.FC = () => {
+  const meta = [
+    ['Prep', '30 min'],
+    ['Cook', '1 hr 15 min'],
+    ['Serves', '8'],
+  ];
+  const ingredients = ['12 lasagna noodles', '1 lb Italian sausage', '24 oz marinara sauce', '15 oz ricotta cheese', '2 cups mozzarella, shredded'];
+  const steps = [
+    'Brown the sausage with onion and garlic, then stir in the marinara and simmer 20 min.',
+    'Mix ricotta, one egg, parsley and half the parmesan in a bowl.',
+    'Layer sauce, noodles, ricotta and mozzarella — three times. Finish with cheese.',
+  ];
+  return (
+    <div style={{ height: '100%', background: '#fffaf5', color: '#1f1a17', fontFamily: DISPLAY_FONT }}>
+      <div style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 40px', background: '#7c2d12', color: '#fde7d4', fontSize: 15, fontWeight: 500 }}>
+        Family cookbook · 128 recipes · New: Aunt May&apos;s fall soups →
+      </div>
+      <div style={{ height: 76, display: 'flex', alignItems: 'center', gap: 34, padding: '0 40px', background: '#fff', borderBottom: '1px solid #f1e4d8' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ width: 38, height: 38, borderRadius: 11, background: RECIPE_ORANGE, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 11h16v3a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6zM2 11h20M9 7c0-1.5 1-1.5 1-3M14 7c0-1.5 1-1.5 1-3" />
+            </svg>
+          </span>
+          <span style={{ fontFamily: SERIF_FONT, fontSize: 25, fontWeight: 700 }}>Recipe Box</span>
+        </div>
+        {['Recipes', 'Collections', 'Meal plan', 'Family'].map((item) => (
+          <span key={item} style={{ fontSize: 17, fontWeight: item === 'Recipes' ? 600 : 400, color: item === 'Recipes' ? RECIPE_ORANGE : '#5b5048' }}>
+            {item}
+          </span>
+        ))}
+        <div style={{ flex: 1 }} />
+        <div style={{ width: 210, height: 38, borderRadius: 999, background: '#f7efe7', display: 'flex', alignItems: 'center', gap: 8, padding: '0 16px', fontSize: 15, color: '#9a8b7e' }}>
+          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#9a8b7e" strokeWidth={2.4} strokeLinecap="round">
+            <circle cx={11} cy={11} r={7} />
+            <path d="M20 20l-4-4" />
+          </svg>
+          Search recipes…
+        </div>
+        <span style={{ width: 38, height: 38, borderRadius: '50%', background: 'linear-gradient(135deg, #fdba74, #f97316)', color: '#fff', fontSize: 16, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          S
+        </span>
+      </div>
+      <div style={{ padding: '22px 40px 0' }}>
+        <div style={{ fontSize: 14, color: '#9a8b7e' }}>Recipes › Italian › Mains</div>
+        <div style={{ display: 'flex', gap: 40, marginTop: 16 }}>
+          <LasagnaPhoto />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingTop: 6 }}>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {['Family favorite', 'Freezer-friendly'].map((chip) => (
+                <span key={chip} style={{ padding: '5px 12px', borderRadius: 999, background: '#ffedd5', color: '#9a3412', fontSize: 14, fontWeight: 600 }}>
+                  {chip}
+                </span>
+              ))}
+            </div>
+            <div style={{ fontFamily: SERIF_FONT, fontSize: 50, fontWeight: 700, lineHeight: 1.05, letterSpacing: -0.5, marginTop: 16 }}>Grandma&apos;s lasagna</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12, fontSize: 16, color: '#6b5e54' }}>
+              <span style={{ color: '#f59e0b', fontSize: 20, letterSpacing: 2 }}>★★★★★</span>
+              <b style={{ color: '#1f1a17' }}>4.9</b> · 38 family reviews
+            </div>
+            <div style={{ fontSize: 18, lineHeight: 1.5, color: '#5b5048', marginTop: 14 }}>
+              The Sunday dinner classic — slow-simmered sausage ragù, creamy ricotta and a bubbling mozzarella top.
+            </div>
+            <div style={{ display: 'flex', marginTop: 20, borderRadius: 14, background: '#fff', boxShadow: '0 0 0 1px #f1e4d8' }}>
+              {meta.map(([k, v], i) => (
+                <div key={k} style={{ flex: 1, padding: '12px 18px', borderLeft: i ? '1px solid #f1e4d8' : 'none' }}>
+                  <div style={{ fontSize: 13, color: '#9a8b7e', textTransform: 'uppercase', letterSpacing: 1, fontWeight: 600 }}>{k}</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, marginTop: 2 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+              <span style={{ padding: '12px 24px', borderRadius: 12, background: RECIPE_ORANGE, color: '#fff', fontSize: 17, fontWeight: 700, boxShadow: '0 8px 18px rgba(234,88,12,0.3)' }}>♥ Save recipe</span>
+              <span style={{ padding: '12px 24px', borderRadius: 12, background: '#fff', boxShadow: '0 0 0 1px #e9d8c8', fontSize: 17, fontWeight: 600, color: '#5b5048' }}>Print</span>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 40, marginTop: 30 }}>
+          <div style={{ width: 430 }}>
+            <div style={{ fontFamily: SERIF_FONT, fontSize: 26, fontWeight: 700 }}>Ingredients</div>
+            {ingredients.map((item, i) => (
+              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #f1e4d8', fontSize: 17, color: '#3d342e' }}>
+                <span style={{ width: 20, height: 20, borderRadius: 6, border: `2px solid ${i < 2 ? RECIPE_ORANGE : '#e0cdbc'}`, background: i < 2 ? RECIPE_ORANGE : 'transparent', color: '#fff', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {i < 2 ? '✓' : ''}
+                </span>
+                <span style={{ textDecoration: i < 2 ? 'line-through' : 'none', color: i < 2 ? '#a8998c' : undefined }}>{item}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: SERIF_FONT, fontSize: 26, fontWeight: 700 }}>Steps</div>
+            {steps.map((step, i) => (
+              <div key={step} style={{ display: 'flex', gap: 14, marginTop: 14, fontSize: 17, lineHeight: 1.45, color: '#3d342e' }}>
+                <span style={{ width: 30, height: 30, flexShrink: 0, borderRadius: '50%', background: '#ffedd5', color: '#9a3412', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {i + 1}
+                </span>
+                {step}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /** One line in the app's log style, floating over the scene. */
 export const LogPill: React.FC<{ level: 'access' | 'proxy'; text: string; style?: React.CSSProperties }> = ({
   level,

@@ -1,12 +1,26 @@
-# LocalServe YouTube 推广视频 — 分镜脚本 v3
+# LocalServe YouTube 推广视频 — 分镜脚本 v5
 
-> v3 相对 v2 的改动：
+> v5 相对 v4 的改动：
 >
-> - **开头改写**：不再从“build 产物打不开”这种偏开发者的痛点切入，而是从更普遍的需求切入——AI 时代人人都在做只为自己服务的小网页应用，但它们散落在各个文件夹；有的双击 HTML 就能用，有的必须放到本地服务器上才能正常打开（类似 VS Code 的 Live Server 插件做的事）。
-> - **前后呼应**：开头埋下的“双击打开一片空白”在 S7 兑现；反向代理（S8）作为独立卖点保留，不再充当开头痛点。
-> - **删去“管理与常驻”幕**（多站点 / 日志 / 菜单栏托盘），结尾卡顺延为 S13。
-> - **演示数据改为个人小应用**：Budget Tracker / Recipe Box / Reading List / Habit Tracker，路径分散在不同文件夹，与 S2 画面一致。
-> - 第 1 幕加长 2s（0–14s），全片约 87s。
+> - **S6、S7 合并**：S6 结尾点击“在浏览器打开”，直接展开正常页面，不再闪回空白页，字幕顺带提一句。
+> - **进阶部分去掉连接词**：只保留第一句 “Need more?”，之后不再用 “Next” / “One more thing”。
+> - **章节标签重做**：去掉 “POWER FEATURE” 字样，改为“图标 + 功能名”标题，下方细进度条随镜头推进。
+> - **S8 重画**：左右对称；标题去掉 ✕ / ✓；红色 ✕ 直接落在虚线正中，不要竖杠；文案 “Blocked by CORS”；两侧不显示 IP；按 CORS 的实际机制，请求先到达服务器，被拦的是**从右往左**返回的响应；经 LocalServe 的一段同样按“请求向右、响应向左”演示，圆点连续穿过中间图标、不分两段；节点标签为 “app” / “remote server”，中间图标下方为 “Proxy rule”，不加顶部 Without / With 标签；紫色连接线两端与节点、图标间距一致。
+> - **S9** 去掉 “Saving requires administrator approval” 提示。
+> - **App 窗口与浏览器 / 手机纵向居中对齐**（S9、S10–S11、S12）。
+> - 全片约 83s。
+>
+> v4 相对 v3 的改动：
+>
+> - **S1 拆成两个镜头**：先是 AI 对话（每条请求都有“做好了”的回复），再切到小应用卡片陆续出现。
+> - **S2 改为一前一后两个窗口**：Recipe Box 打开 → 加载 → 中间绿勾 → 缩回；Budget Tracker 打开 → 窗口中间红字 “Needs a local server”。文案改为 “Some pages just open and work. / Others only load through a local server.”
+> - **S7 只讲“现在能用了”**，不再展示深层路由与刷新。
+> - **第 3 幕起标明“进阶功能”**：字幕用 “Need more? Here are a few power features.” 开场，后续每个功能用 “Next: …” / “One more thing: …” 过渡；画面左上角加章节标签（POWER FEATURE 1–3 / BONUS）。
+> - **S8 改为前后对比示意图**：先演示网页直连接口被浏览器拦下，再演示中间加入 LocalServe 后请求顺利通过；节点用浏览器窗口、App 图标、服务器机柜三种不同图形，不再是三个方块。
+> - **第 5 幕压缩到 8s**（原 14s，中间等待过长）。
+> - 全片约 85s。
+>
+> v3 改动（保留）：开头从“AI 时代人人都在做个人小网页应用，但它们散落各处、有的必须放到本地服务器上才能用”切入；删去“管理与常驻”幕；演示数据改为个人小应用。
 >
 > 画面文案以 `src/ui/i18n.ts` 英文为准（按钮名、提示语与 App 一致），下文引号内的 UI 文案均已对齐。
 
@@ -15,12 +29,12 @@
 | 项目 | 规格 |
 | --- | --- |
 | 片名（工作） | LocalServe — All your little web apps, one home |
-| 时长 | ~87 秒（30fps，约 2610 帧） |
+| 时长 | ~83 秒（30fps，2490 帧） |
 | 分辨率 | 1920×1080 横屏；可另切 1080×1920 Shorts 版（见文末） |
 | 语言 | 英文旁白 + 英文硬字幕（中文为对照，方便审稿） |
 | 受众 | 用 AI 做小工具的 Vibe Coding 用户、独立开发者、海外前端开发者 |
 | 风格 | 干净、节奏明快；产品 UI 为 `src/ui/` 组件 + 演示数据，不录真实杂乱桌面 |
-| 主线 | AI 帮你做出一堆个人小应用 → 散落各处、有的双击打不开 → 全部收进 LocalServe；以 Budget Tracker 为代表演示建站、正常打开、连接口、手机访问，再扩展到文件分享 |
+| 主线 | AI 帮你做出一堆个人小应用 → 散落各处、有的打不开 → 全部收进 LocalServe → 基础用法（建站、打开）→ 进阶功能（接口代理、域名、手机、文件分享） |
 
 **一句话卖点：** All your little web apps, one home. No CLI. No cloud. Just your Mac.
 
@@ -32,14 +46,16 @@
 - 价格：**$9 一次性买断**（演示数据 `USD 9.00` 与正式定价一致）。
 - 不要提 HTTPS（暂不支持）、不要提“开机自启”（当前版本尚未提供）。
 
-**演示数据（`src/demo/acme.ts`）：**
+**演示数据（**`src/demo/acme.ts`**）：**
 
 | 站点 | 目录 | 端口 / 域名 | 角色 |
 | --- | --- | --- | --- |
-| Budget Tracker | `~/Projects/budget-tracker/dist` | 5173，`/api` 代理到 `:9083` | 主角：双击打不开的构建产物，SPA 路由，连接口，手机访问 |
+| Budget Tracker | `~/Projects/budget-tracker/dist` | 5173，`/api` 代理到 `:9083` | 主角：需要本地服务器的构建产物，连接口，手机访问 |
 | Recipe Box | `~/Downloads/recipe-box` | 4000，`recipes.ls` | 双击就能用的纯 HTML 页面；演示自定义域名 |
-| Reading List | `~/Desktop/reading-list` | 8080 | 仅在 S2 画面中出现 |
-| Habit Tracker | `~/Documents/ai-tests/habit-tracker` | 3000 | 仅在 S2 画面 / Gallery 错误态中出现 |
+| Reading List | `~/Desktop/reading-list` | 8080 | S1 / S2 画面 |
+| Habit Tracker | `~/Documents/ai-tests/habit-tracker` | 3000 | S2 画面 / Gallery 错误态 |
+
+S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App 数据。
 
 ---
 
@@ -47,187 +63,167 @@
 
 | 幕 | 时间 | 内容 |
 | --- | --- | --- |
-| 1 钩子 / 需求 | 0–14s | AI 让人人都能做小应用；但它们散落各处，有的双击打不开 |
-| 2 产品登场 + 建站 | 14–36s | 选文件夹 → 保存并启动 → 打不开的页面正常了，SPA 路由正常 |
-| 3 连接接口 | 36–46s | `/api` 反向代理，告别 CORS |
-| 4 好记的域名 | 46–54s | `recipes.ls` 自定义域名 |
-| 5 局域网与手机 | 54–68s | 二维码 → 手机打开同一站点 |
-| 6 文件分享 | 68–76s | 拖入文件，手机扫码下载 |
-| 7 CTA | 76–87s | 试用 / 价格 / 下载 |
+| 1 钩子 / 需求 | 0–17s | AI 让人人都能做小应用；但它们散落各处，有的必须靠本地服务器才能打开 |
+| 2 产品登场 + 基础用法 | 17–36s | 选文件夹 → 保存并启动 → 点开就是正常页面 |
+| 3 进阶 1：接口代理 | 36–48s | 直连被拦 vs 经 LocalServe 通过 |
+| 4 进阶 2：好记的域名 | 48–56s | `recipes.ls` 自定义域名 |
+| 5 进阶 3：手机访问 | 56–64s | 二维码 → 手机打开同一站点 |
+| 6 附加：文件分享 | 64–72s | 拖入文件，手机扫码下载 |
+| 7 CTA | 72–83s | 试用 / 价格 / 下载 |
 
 ---
 
-## 分镜 S1–S13
+## 分镜 S1–S13（S7 已并入 S6）
 
 ### 第 1 幕 — 钩子 / 需求
 
 > 思路：先用例子让观众认出自己（“我也做过这种小东西”），再点出共同的困境，最后一句话收拢。不讲术语，不出现终端。
 
-#### S1 — “一句话，就有了一个小应用”（0–4s）
+#### S1a — AI 对话（0–3.5s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 浅色背景，左侧是一个简化的 AI 对话气泡，依次出现三条请求：`Make me a budget tracker` / `A recipe box for my family` / `A reading list I can tag`。每条请求发出后，右侧立刻“长出”一张对应的小应用缩略卡（Budget Tracker、Recipe Box、Reading List），随后再快速冒出 Habit Tracker 等几张，铺成一小片。 |
-| 动效 | 气泡打字机输出；缩略卡 spring 弹出，间隔逐渐缩短，制造“越做越多”的节奏。 |
-| VO | With AI, anyone can build little web apps — just for themselves. |
-| 中文 | 有了 AI，每个人都能做出只为自己服务的小网页应用。 |
-| 素材 | 对话气泡 mock、小应用缩略卡（新组件，纯色块 + 标题即可，不必真实页面） |
+| 画面 | 画面中央一个 AI 对话框。三条请求依次打出：`Make me a budget tracker` / `A recipe box for my family` / `A reading list I can tag`；每条之后 AI 回复一行 “Done — Budget Tracker is ready.”（带该应用的颜色方块）。 |
+| 动效 | 打字机输出；回复气泡淡入上浮。 |
+| VO | With AI, anyone can build little web apps — |
+| 中文 | 有了 AI，每个人都能做出小网页应用—— |
 
-#### S2 — 散落与卡壳（4–11s）
-
-| 字段 | 内容 |
-| --- | --- |
-| 画面 | 前半（4–7s）：镜头拉远，缩略卡各自飞向不同的文件夹图标，文件夹下标注路径：`~/Projects/budget-tracker/dist`、`~/Downloads/recipe-box`、`~/Desktop/reading-list`、`~/Documents/ai-tests/habit-tracker`。后半（7–11s）：光标依次双击其中两个 `index.html`——Recipe Box 正常打开，卡片角上一个绿勾；Budget Tracker 打开后是一片空白，弹出标签 `Needs a local server`。 |
-| 动效 | 卡片沿弧线飞散，落进文件夹后轻微抖动；双击后弹出小浏览器窗口，正常 / 空白形成对比；空白窗口轻微晃动。 |
-| VO | But they're scattered all over your Mac. Some open with a double-click — others need a server just to load. |
-| 中文 | 可它们散落在 Mac 的各个角落。有的双击就能打开，有的却得放到服务器上才能正常使用。 |
-
-#### S3 — 收拢（11–14s）
+#### S1b — 小应用出现（3.5–6s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 所有文件夹和缩略卡被同时吸向画面中央，空白窗口与标签在途中消失；画面清空，中央出现大字。 |
+| 画面 | 硬切到新画面：6 张小应用卡片（Budget Tracker、Recipe Box、Reading List、Habit Tracker、Trip Planner、Plant Log）在画面中央 3×2 依次弹出，间隔越来越短，落定后停 1 秒。 |
+| VO | — just for themselves. |
+| 中文 | ——只为自己服务的那种。 |
+
+#### S2 — 散落，有的能用、有的不能（6–14s）
+
+| 字段 | 内容 |
+| --- | --- |
+| 画面 | ① 6–8.3s：卡片沿弧线飞散到各自的文件夹，下方标注路径（`~/Projects/budget-tracker/dist`、`~/Downloads/recipe-box` 等）。② 8.3–12.2s：其他卡片变淡，光标双击 Recipe Box → 浏览器窗口从卡片里放大到画面中央 → 转一下加载圈 → 页面出现，中间弹出绿色对勾 → 停一下 → 窗口缩回卡片。③ 12.2–14s：光标双击 Budget Tracker → 窗口再次放大 → 中间出现红色 ✕ 和 “Needs a local server”，窗口轻微晃动。 |
+| 动效 | 飞散错峰加速；窗口从卡片位置放大、缩回卡片位置；绿勾弹出后自绘；红字弹出 + 左右轻晃。 |
+| VO | But they're scattered all over your Mac. Some pages just open and work. Others only load through a local server. |
+| 中文 | 可它们散落在 Mac 的各个角落。有些网页直接打开就能用，另一些却必须通过本地服务器才能访问。 |
+
+#### S3 — 收拢（14–17s）
+
+| 字段 | 内容 |
+| --- | --- |
+| 画面 | Budget Tracker 窗口缩回；LocalServe 图标出现在中央，各卡片沿曲线被吸进图标，图标轻弹一下、放出一圈涟漪；下方大字落定。 |
 | 字幕（大字） | **All your little apps. One home.** |
 | VO | What if they all had one home? |
 | 中文 | 如果它们都能有一个家呢？ |
 
-### 第 2 幕 — 产品登场 + 建站
+### 第 2 幕 — 产品登场 + 基础用法
 
-#### S4 — LocalServe 登场（14–18s）
+#### S4 — LocalServe 登场（17–21s）
 
 | 字段 | 内容 |
 | --- | --- |
 | 画面 | App 图标从中央弹出 → 展开为 `MacWindow` 主窗口（空列表态：“No sites yet”）。 |
-| 字幕（角标） | No CLI. No cloud. Just your Mac. |
 | VO | Meet LocalServe. It turns any folder into a local site — no terminal, no cloud. |
 | 中文 | 认识 LocalServe：把任意文件夹变成本地站点，不用命令行，也不用上云。 |
-| 组件 | `assets/brand/app-icon.png`、`MacWindow` + `AppWindow`（空状态） |
 
-#### S5 — 新建站点（18–26s）
+#### S5 — 新建站点（21–29s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | `MacCursor` 点击空状态里的 “Add site” → `SiteDrawer`（标题 “Add site”）弹出；逐字输入名称 `Budget Tracker`；点击 “Choose folder…” 后目录填为 `~/Projects/budget-tracker/dist`，右侧出现绿色勾（`dirCheck="ok"`，UI 只有图标没有文字）；输入端口 `5173`；打开 “Enable LAN access”（为 S10 扫码埋点）。代理规则留到 S8 再加。 |
-| 动效 | 抽屉 `enter`；输入框逐字填写 + 光标闪烁；目录绿勾弹出；LAN 开关用数值 `Toggle` 过渡。 |
+| 画面 | 点击 “Add site” → `SiteDrawer` 弹出；输入名称 `Budget Tracker`；“Choose folder…” 选 `~/Projects/budget-tracker/dist`（绿勾）；端口 `5173`；打开 “Enable LAN access”。 |
 | VO | Pick the folder, choose a port… |
 | 中文 | 选好文件夹，设个端口…… |
-| 数据 | `acmeDraft` |
 
-#### S6 — 保存并启动（26–30s）
-
-| 字段 | 内容 |
-| --- | --- |
-| 画面 | 点击 “Save and start” → 抽屉收起 → `SiteCard` 弹入（`presence.enter`），状态 Starting → **Running**，“Port 5173” 标签展开（`portReveal`）；光标移到“在浏览器打开”按钮，tooltip 显示 `http://127.0.0.1:5173`（卡片本身不显示地址文本）。 |
-| VO | …and hit start. That's it. |
-| 中文 | 点启动，就这么简单。 |
-| 数据 | `acmeSite` |
-
-#### S7 — 打不开的页面，现在能用了（30–36s）
+#### S6 — 保存、启动并打开（29–36s，原 S6 + S7 合并）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 前 1.5s 回闪 S2：`file:///…/budget-tracker/dist/index.html`，页面一片空白，左上角小字 “Before”。随后切回：点击卡片的“在浏览器打开”按钮 → 浏览器窗口打开 Budget Tracker，页面正常；进入 `/settings/categories` 并刷新，依然正常。右下角小日志条：`GET /settings/categories 200 (SPA fallback)`。 |
-| VO | Remember the one that only showed a blank page? Now it just works — deep links and refreshes too. |
-| 中文 | 还记得那个只显示空白页的应用吗？现在直接能用，深层路由、刷新也不会 404。 |
-| 素材 | 浏览器 chrome mock + Budget Tracker 页面（`AcmePage`）；日志行来自 `acmeLogs` l7 |
+| 画面 | 点击 “Save and start” → `SiteCard` 弹入，Starting → **Running**；光标点击“在浏览器打开”按钮 → 浏览器窗口从按钮处放大展开，`http://127.0.0.1:5173` 上 Budget Tracker 正常显示（不再闪回空白页）。 |
+| VO | …and hit start. That's it. That blank page from before? Now it just works. |
+| 中文 | 点启动，就这么简单。之前那个空白页？现在直接能用了。 |
 
-### 第 3 幕 — 连接接口
+### 第 3 幕 — 进阶 1：接口代理
 
-#### S8 — 反向代理（36–46s）
+> 从这里开始是进阶功能。左上角章节标题（图标 + 功能名 + 随镜头推进的进度条）依次为 API proxy / Custom domains / Open on your phone / File sharing。字幕只在第一个功能用 “Need more?” 引入，之后不再用 “Next” 等连接词。
 
-| 字段 | 内容 |
-| --- | --- |
-| 画面 | 左：卡片菜单 “Edit site” → `SiteDrawer`（`mode="edit"` + `runningOnOpen`）展开 “Proxy rules”，点 “Add proxy rule” 填入 `/api → http://127.0.0.1:9083`（“Origin” 开关开启），点 “Save and apply”。右：示意图，浏览器 → `:5173/api/me` → LocalServe → `:9083`，同源请求返回 **200**；一个红色 “CORS error” 标签被划掉。 |
-| 动效 | 规则行插入；请求光点沿路径流动；200 绿色徽章弹出。 |
-| VO | Need it to talk to an API? Add a proxy rule. Same origin, no CORS headaches. |
-| 中文 | 需要连接口？加一条代理规则，同源访问，告别跨域。 |
-| 数据 | `acmeSite.proxyRules`、`acmeLogs` l5–l6 |
-
-### 第 4 幕 — 好记的域名
-
-#### S9 — 自定义域名（46–54s）
+#### S8 — 直连被拦 vs 经 LocalServe 通过（36–48s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 列表里弹入第二张卡片 Recipe Box（`presence.enter`，此前画面只有 Budget Tracker，避免穿帮）；悬停打开按钮，tooltip 为 `http://recipes.ls`；浏览器地址栏从 `127.0.0.1:4000` 变成 `http://recipes.ls`，页面是菜谱列表。可插一帧抽屉里 “Enable custom domain” 的帮助提示 “Saving requires administrator approval”，一闪而过。 |
+| 画面 | 左右对称（两节点距中心等距、等高）：左为浏览器窗口（Budget Tracker 页面，蒙着 “Loading data…”），下方 “app”；右为服务器机柜，下方 “remote server”；两侧不显示 IP，顶部不加 Without / With 标签（章节标题 “API proxy” 已说明主题）。① 灰色虚线连接两侧，蓝色请求 `GET /api/me` 从应用到达服务器（指示灯闪一下）；红色 “Response” 从服务器**向左**返回，到虚线正中淡出，红色 ✕ 弹出，下方 “Blocked by CORS”，页面变为 “Couldn't load data”。② ✕ 与虚线淡出，LocalServe 图标弹入中间，下方 “Proxy rule”；两段紫色实线从两侧画出，线端与 app、服务器、中间图标保持**相同间距**；蓝色请求从应用**一口气**滑到服务器、途经图标时不停顿也不隐藏（圆点显示在图标上层），绿色 “Response” 同样连续地**向左**返回应用；页面蒙层消失，浏览器窗口正中弹出绿色圆形对勾（与 S2 同款，对勾自绘），不另加文字标签。 |
+| VO | Need more? Here are a few power features. Call your API directly, and the browser blocks it. Add a proxy rule — LocalServe passes it through. |
+| 中文 | 还想要更多？来看几个进阶功能。直接调用接口，会被浏览器拦下；加一条代理规则，LocalServe 帮你转过去。 |
+
+### 第 4 幕 — 进阶 2：好记的域名
+
+#### S9 — 自定义域名（48–56s）
+
+| 字段 | 内容 |
+| --- | --- |
+| 画面 | 列表弹入第二张卡片 Recipe Box；悬停打开按钮，tooltip `http://recipes.ls`；右侧浏览器（与 App 窗口纵向居中对齐）地址栏从 `127.0.0.1:4000` 变成 `http://recipes.ls`。 |
 | VO | Give every app a name you'll remember. LocalServe manages hosts for you. |
-| 中文 | 给每个应用起个好记的域名，hosts 由 LocalServe 帮你托管。 |
-| 数据 | `docsSite` |
+| 中文 | 给每个应用起个好记的名字，hosts 由 LocalServe 帮你托管。 |
 
-### 第 5 幕 — 局域网与手机
+### 第 5 幕 — 进阶 3：手机访问
 
-#### S10 — 扫码（54–61s）
-
-| 字段 | 内容 |
-| --- | --- |
-| 画面 | 回到 Budget Tracker 卡片，点击二维码按钮（tooltip “Scan to open”）→ `QrPopup`（“LAN access”）弹出，二维码 + `http://192.168.1.24:5173` + “Scan with a phone on the same Wi-Fi”。 |
-| VO | Same Wi-Fi? Scan the code. |
-| 中文 | 同一个 Wi-Fi？扫一下就行。 |
-| 数据 | `ACME_LAN_URL` |
-
-#### S11 — 手机预览（61–68s）
+#### S10–S11 — 扫码 → 手机打开（56–64s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | iPhone 外框从右侧滑入，打开同一个 Budget Tracker 页面（移动端布局）；Mac 侧日志滚出 `GET / 200 (192.168.1.31 · iPhone)` 与一条 `/api/me` 代理日志。 |
-| VO | Your app — and its API — on any device in the room. |
-| 中文 | 应用连同接口，在身边任何设备上打开。 |
-| 素材 | 手机外框 mock；`acmeLogs` l11–l12 |
+| 画面 | 点击 Budget Tracker 的二维码按钮 → `QrPopup` 弹出（约 1s 处）；约 2.8s 手机从右侧滑入（与 App 窗口纵向居中对齐），显示同一个页面；随后两条日志：iPhone 访问与 `/api/me` 代理。 |
+| VO | Take it to your phone. Scan the code. Your app — and its API — on any device in the room. |
+| 中文 | 拿到手机上用。扫一下二维码，应用连同接口，在身边任何设备上都能打开。 |
 
-### 第 6 幕 — 文件分享
+### 第 6 幕 — 附加：文件分享
 
-#### S12 — 扫码下载文件（68–76s）
+#### S12 — 扫码下载文件（64–72s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 镜头上移到 `FileSharePanel`：`Demo.mp4`、`Specs.pdf` 等文件卡片依次落入；点击 “Show QR code” → 手机扫码后出现下载完成提示。 |
-| VO | Need to send a file to your phone? Drop it in. Scan. Done. No cables, no cloud. |
-| 中文 | 想把文件传到手机？拖进来，扫一扫，搞定。不用数据线，也不用网盘。 |
-| 数据 | `demoFiles` |
+| 画面 | `FileSharePanel` 文件依次落入；点击 “Show QR code” → 手机扫码后下载完成。 |
+| VO | Send files to your phone, too. Drop them in. Scan. Done. No cables, no cloud. |
+| 中文 | 文件也能传到手机。拖进来，扫一扫，搞定。不用数据线，也不用网盘。 |
 
 ### 第 7 幕 — CTA
 
-#### S13 — 结尾卡（76–87s）
+#### S13 — 结尾卡（72–83s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 背景虚化的 App 窗口（站点列表里是 Budget Tracker、Recipe Box、Reading List，呼应开头“一个家”）；前景 Logo + 三枚价格标签依次出现：**7-day free trial · No account** / **One-time purchase · No subscription** / **Up to 3 Macs**。最后定格：**LocalServe — Download for macOS**，下方放官网链接。 |
+| 画面 | 背景虚化的 App 窗口（Budget Tracker、Recipe Box、Reading List）；Logo + 三枚标签：**7-day free trial · No account** / **$9 once · No subscription** / **Up to 3 Macs**；最后 **Download for macOS**。 |
 | VO | Try it free for seven days — no account needed. Then buy once, and it's yours forever. LocalServe. All your little apps, one home. |
 | 中文 | 免费试用 7 天，无需注册。之后一次买断，永久使用。LocalServe，给你的小应用一个家。 |
-| 素材 | `assets/brand/logo.png`；`demoSites`；`License` 组件可作为背景参考 |
-| 注意 | 第二枚标签可写为 `$9 once · No subscription`。 |
 
 ---
 
 ## 旁白全文（英文，便于录音 / TTS）
 
 > With AI, anyone can build little web apps — just for themselves.
-> But they're scattered all over your Mac. Some open with a double-click — others need a server just to load.
+> But they're scattered all over your Mac. Some pages just open and work. Others only load through a local server.
 > What if they all had one home?
 > Meet LocalServe. It turns any folder into a local site — no terminal, no cloud.
 > Pick the folder, choose a port… and hit start. That's it.
-> Remember the one that only showed a blank page? Now it just works — deep links and refreshes too.
-> Need it to talk to an API? Add a proxy rule. Same origin, no CORS headaches.
+> That blank page from before? Now it just works.
+> Need more? Here are a few power features.
+> Call your API directly, and the browser blocks it. Add a proxy rule — LocalServe passes it through.
 > Give every app a name you'll remember. LocalServe manages hosts for you.
-> Same Wi-Fi? Scan the code. Your app — and its API — on any device in the room.
-> Need to send a file to your phone? Drop it in. Scan. Done. No cables, no cloud.
+> Take it to your phone. Scan the code. Your app — and its API — on any device in the room.
+> Send files to your phone, too. Drop them in. Scan. Done. No cables, no cloud.
 > Try it free for seven days — no account needed. Then buy once, and it's yours forever.
 > LocalServe. All your little apps, one home.
 
-约 175 词，按 ~150 wpm 语速约 70s 纯语音，其余为留白与转场，与 87s 匹配。S1 约 10 词 / 4s、S2 约 19 词 / 7s，均在正常语速内。
+约 180 词，按 ~150 wpm 约 72s 纯语音，与 83s 匹配。
 
 ---
 
 ## 声音设计
 
-- BGM：轻快 lo-fi / 电子，约 110–120 BPM；S1 轻快上扬，S2 后半（空白页）转为低通、略带不安，S3 收拢处做一次 drop。
-- 音效：缩略卡弹出（S1）、卡片落进文件夹、双击（S2）、按钮点击、Running 状态“叮”、二维码扫描“哔”、文件下载完成提示音。
+- BGM：轻快 lo-fi / 电子，约 110–120 BPM；S2 后半（红字）转为低通、略带不安，S3 收拢处做一次 drop；S8 进入进阶部分时可加一个小转场音。
+- 音效：对话回复（S1a）、卡片弹出（S1b）、飞散落地、双击、绿勾、红字（S2）、请求被拦（S8）、Running 状态、扫码、下载完成。
 - 旁白下 BGM 压到 -18 ~ -20 LUFS 相对电平，结尾卡 BGM 回升。
 
 ## 字幕规范
 
-- 底部安全区内硬字幕，单行 ≤ 42 字符，必要时两行。
-- S3 和 S13 用大字标题代替普通字幕。
+- 底部安全区内硬字幕，56px，单行（≤ 50 字符）。
+- S3 用大字标题代替普通字幕。
 - 同时导出 `.srt`，上传 YouTube 作为 CC 字幕（可加中文、日文翻译轨）。
 
 ---
@@ -245,8 +241,8 @@
 ```
 Built a bunch of little web apps with AI? LocalServe gives them one home on your Mac — every folder becomes a local website, no terminal, no cloud.
 
-✓ Opens apps that show a blank page from a double-click
-✓ One-click local sites with SPA fallback
+✓ Opens apps that only work through a local server
+✓ One-click local sites
 ✓ Reverse proxy for your API (no more CORS)
 ✓ Custom local domains like recipes.ls
 ✓ Scan a QR code to open it on your phone
@@ -256,12 +252,12 @@ Built a bunch of little web apps with AI? LocalServe gives them one home on your
 Download: <官网链接>
 
 00:00 Your little apps, scattered everywhere
-00:14 Create a site in seconds
-00:36 Connect to your API
-00:46 Custom local domains
-00:54 Open it on your phone
-01:08 Share files over Wi-Fi
-01:16 Try it free
+00:17 Create a site in seconds
+00:36 API proxy
+00:48 Custom domains
+00:56 Open it on your phone
+01:04 Share files over Wi-Fi
+01:12 Try it free
 ```
 
 **缩略图思路：** 左侧散落的几个文件夹图标汇入中间的 Mac 窗口（Budget Tracker 卡片 Running 绿点），右侧手机显示同一页面；大字 “ALL YOUR APPS → ONE HOME”。
@@ -272,18 +268,19 @@ Download: <官网链接>
 
 ## 衍生：Shorts 竖版（~30s，可选）
 
-S1+S2 压缩（6s）→ S3 大字（2s）→ S5+S6 压缩（5s）→ S7 前后对比（4s）→ S10+S11（8s）→ S13（5s）。旁白取对应句子，画面使用 1080×1920 构图，App 窗口居上、手机居下。
+S1a+S1b 压缩（4s）→ S2 双击对比（5s）→ S3 大字（2s）→ S5+S6 压缩（含点开正常页面，8s）→ S10–S11（6s）→ S13（5s）。画面使用 1080×1920 构图，App 窗口居上、手机居下。
 
 ---
 
 ## 实现映射（Remotion）
 
-样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v3 实现完整 S1–S13（0–87s），字幕为硬字幕（56px，单行），暂无 VO / BGM。
+样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v5 实现（0–83s），硬字幕 + 章节标题，暂无 VO / BGM。
 
 | 分镜 | 实现 |
 | --- | --- |
-| S1–S3 | `promo/HookScenes.tsx` 的 `AppsHookScene`：一个连续场景，同一批小应用卡片从对话中长出 → 飞散到各文件夹 → 双击对比 → 汇聚进 LocalServe 图标。S3 汇聚借鉴 video-shotcraft 镜头卡 `bezier-source-converge-merge`（错峰连线、沿曲线 inOutCubic 汇聚、0.75 拐点三段式缩小、接收脉冲 +12% 与单次涟漪） |
-| S4–S6 | `promo/BuildSiteScene.tsx` |
-| S7 | `promo/FeatureScenes.tsx` 的 `SpaScene`：前 1.5s `file://` 空白页 + “Before” 标签，随后切到 LocalServe 打开的同一页面 |
-| S8–S12 | `promo/FeatureScenes.tsx`（`ProxyScene` `DomainScene` `PhoneScene` `FilesScene`） |
+| S1–S3 | `promo/HookScenes.tsx` 的 `AppsHookScene`（S1a 对话单独成画面，S1b 起同一批卡片连续出现、飞散、双击、汇聚）。S3 汇聚借鉴 video-shotcraft 镜头卡 `bezier-source-converge-merge` |
+| S4–S6 | `promo/BuildSiteScene.tsx`（结尾点击打开，浏览器展开正常页面） |
+| S8 | `promo/ProxyScene.tsx` |
+| S9–S12 | `promo/FeatureScenes.tsx`（`DomainScene` `PhoneScene` `FilesScene`） |
 | S13 | `promo/FeatureScenes.tsx` 的 `EndCardScene` |
+| 章节标签 / 字幕 | `promo/shared.tsx` 的 `SectionTag` / `Caption`，时间表在 `PromoSample.tsx` |

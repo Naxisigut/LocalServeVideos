@@ -13,7 +13,7 @@ type App = {
   hue: string;
   path: string;
   prompt?: string;
-  /** S1 grid slot (scale 1). */
+  /** S1b grid slot (scale 1). */
   grid: Pt;
   /** S2 resting place (scale SCATTER_SCALE). */
   dest: Pt;
@@ -22,43 +22,52 @@ type App = {
 };
 
 const ACCENT = '#4f46e5';
+const GREEN = '#16a34a';
+const RED = '#dc2626';
 const TILE_W = 320;
 const TILE_H = 220;
 const SCATTER_SCALE = 0.6;
 const CENTER: Pt = { x: 960, y: 430 };
 const ICON_SIZE = 200;
+const POPUP_AT: Pt = { x: 960, y: 520 };
 
-// Pops accelerate (32 → 30 → 10 → 7 → 5 frames apart), then a short rest before S2.
+/** Total length of the hook (S1–S3) in frames. */
+export const APPS_HOOK_FRAMES = 510;
+
+// S1a — chat. S1b cuts to the apps, popping in faster and faster.
+const CHAT_END = 105;
+const PROMPT_AT = [8, 38, 68];
+const REPLY_DELAY = 20;
+
 const APPS: App[] = [
-  { name: 'Budget Tracker', hue: ACCENT, path: '~/Projects/budget-tracker/dist', prompt: 'Make me a budget tracker', grid: { x: 1020, y: 400 }, dest: { x: 380, y: 330 }, tilt: -3, popAt: 32 },
-  { name: 'Recipe Box', hue: '#ea580c', path: '~/Downloads/recipe-box', prompt: 'A recipe box for my family', grid: { x: 1370, y: 400 }, dest: { x: 1540, y: 330 }, tilt: 3, popAt: 64 },
-  { name: 'Reading List', hue: '#0891b2', path: '~/Desktop/reading-list', prompt: 'A reading list I can tag', grid: { x: 1720, y: 400 }, dest: { x: 960, y: 250 }, tilt: 2, popAt: 94 },
-  { name: 'Habit Tracker', hue: '#16a34a', path: '~/Documents/ai-tests/habit-tracker', grid: { x: 1020, y: 660 }, dest: { x: 520, y: 720 }, tilt: 2, popAt: 104 },
-  { name: 'Trip Planner', hue: '#db2777', path: '~/Downloads/trip-planner-v2', grid: { x: 1370, y: 660 }, dest: { x: 1400, y: 720 }, tilt: -3, popAt: 111 },
-  { name: 'Plant Log', hue: '#ca8a04', path: '~/Desktop/untitled-folder-3', grid: { x: 1720, y: 660 }, dest: { x: 960, y: 560 }, tilt: -2, popAt: 116 },
+  { name: 'Budget Tracker', hue: ACCENT, path: '~/Projects/budget-tracker/dist', prompt: 'Make me a budget tracker', grid: { x: 610, y: 400 }, dest: { x: 380, y: 330 }, tilt: -3, popAt: 110 },
+  { name: 'Recipe Box', hue: '#ea580c', path: '~/Downloads/recipe-box', prompt: 'A recipe box for my family', grid: { x: 960, y: 400 }, dest: { x: 1540, y: 330 }, tilt: 3, popAt: 120 },
+  { name: 'Reading List', hue: '#0891b2', path: '~/Desktop/reading-list', prompt: 'A reading list I can tag', grid: { x: 1310, y: 400 }, dest: { x: 960, y: 250 }, tilt: 2, popAt: 128 },
+  { name: 'Habit Tracker', hue: GREEN, path: '~/Documents/ai-tests/habit-tracker', grid: { x: 610, y: 660 }, dest: { x: 520, y: 720 }, tilt: 2, popAt: 134 },
+  { name: 'Trip Planner', hue: '#db2777', path: '~/Downloads/trip-planner-v2', grid: { x: 960, y: 660 }, dest: { x: 1400, y: 720 }, tilt: -3, popAt: 138 },
+  { name: 'Plant Log', hue: '#ca8a04', path: '~/Desktop/untitled-folder-3', grid: { x: 1310, y: 660 }, dest: { x: 960, y: 560 }, tilt: -2, popAt: 141 },
 ];
 
-const PROMPT_AT = [6, 38, 70];
-
-// S2 — scatter, then double-click two of them.
-const PANEL_OUT = 118;
-const FLY_AT = 126;
+// S2 — scatter, then open the two apps one after the other.
+const FLY_AT = 186;
 const FLY_DELAYS = [0, 8, 14, 19, 23, 26];
 const FLY_LEN = 24;
-const FOCUS_AT = 194;
-const RECIPE_CLICK = 216;
+const FOCUS_AT = 250;
+const RECIPE_CLICK = 272;
 const RECIPE_OPEN = RECIPE_CLICK + 8;
-const BUDGET_CLICK = 266;
+const RECIPE_LOADED = RECIPE_OPEN + 32;
+const RECIPE_CLOSE = 348;
+const BUDGET_CLICK = 368;
 const BUDGET_OPEN = BUDGET_CLICK + 8;
-const BLANK_TAG = 290;
+const BUDGET_FAIL = BUDGET_OPEN + 14;
 
 // S3 — converge into LocalServe (bezier-source-converge-merge timing ratios).
-const CLOSE_AT = 324;
-const BADGE_AT = 328;
-const CONV_FROM = 334;
-const CONV_TO = 368;
-const PULSE_AT = 362;
-const HEADLINE_AT = 364;
+const CLOSE_AT = 416;
+const BADGE_AT = 420;
+const CONV_FROM = 426;
+const CONV_TO = 460;
+const PULSE_AT = 454;
+const HEADLINE_AT = 456;
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const lerpPt = (a: Pt, b: Pt, t: number): Pt => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) });
@@ -123,93 +132,114 @@ const FolderGlyph: React.FC = () => (
   </svg>
 );
 
-const ChatPanel: React.FC<{ frame: number }> = ({ frame }) => (
+/** S1a — a chat with an AI assistant; each request gets a "built it" reply.
+ * Every bubble is always laid out (hidden until its cue) so the card keeps a fixed height. */
+const ChatScene: React.FC<{ frame: number }> = ({ frame }) => (
   <div
     style={{
       position: 'absolute',
-      left: 130,
-      top: 300,
-      width: 680,
-      padding: '26px 30px 34px',
-      borderRadius: 28,
-      background: 'rgba(255,255,255,0.86)',
+      left: 960,
+      top: 470,
+      translate: '-50% -50%',
+      width: 980,
+      padding: '30px 40px 40px',
+      borderRadius: 32,
+      background: 'rgba(255,255,255,0.9)',
       boxShadow: '0 0 0 1px rgba(0,0,0,0.06), 0 30px 80px rgba(20,24,40,0.14)',
       fontFamily: DISPLAY_FONT,
-      opacity: interpolate(frame, [0, 8], [0, 1], clamp) * interpolate(frame, [PANEL_OUT, PANEL_OUT + 14], [1, 0], clamp),
-      translate: `${interpolate(frame, [PANEL_OUT, PANEL_OUT + 14], [0, -90], { ...clamp, easing: easeInOut })}px 0`,
+      opacity: interpolate(frame, [0, 8], [0, 1], clamp),
+      scale: String(interpolate(frame, [0, 12], [0.97, 1], { ...clamp, easing: easeOut })),
     }}
   >
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 24, fontWeight: 600, color: '#666' }}>
-      <span style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg, #818cf8, #ec4899)' }} />
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 28, fontWeight: 600, color: '#666' }}>
+      <span style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #818cf8, #ec4899)' }} />
       AI assistant
     </div>
     {APPS.slice(0, 3).map((app, i) => {
       const at = PROMPT_AT[i];
-      if (frame < at || !app.prompt) return null;
-      const chars = Math.min(app.prompt.length, Math.floor((frame - at) * 1.5));
-      const typing = chars < app.prompt.length;
+      if (!app.prompt) return null;
+      const chars = Math.max(0, Math.min(app.prompt.length, Math.floor((frame - at) * 1.5)));
+      const typing = frame >= at && chars < app.prompt.length;
+      const replyAt = at + Math.ceil(app.prompt.length / 1.5) + REPLY_DELAY - 12;
       return (
-        <div key={app.name} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 22 }}>
-          <div
-            style={{
-              padding: '16px 24px',
-              borderRadius: '24px 24px 6px 24px',
-              background: '#111',
-              color: '#fff',
-              fontSize: 32,
-              fontWeight: 500,
-              opacity: interpolate(frame, [at, at + 5], [0, 1], clamp),
-              translate: `0 ${interpolate(frame, [at, at + 8], [14, 0], { ...clamp, easing: easeOut })}px`,
-            }}
-          >
-            {app.prompt.slice(0, chars)}
-            {typing ? <span style={{ opacity: 0.6 }}>▍</span> : null}
+        <React.Fragment key={app.name}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 22 }}>
+            <div
+              style={{
+                padding: '16px 26px',
+                borderRadius: '26px 26px 6px 26px',
+                background: '#111',
+                color: '#fff',
+                fontSize: 36,
+                fontWeight: 500,
+                opacity: interpolate(frame, [at, at + 5], [0, 1], clamp),
+                translate: `0 ${interpolate(frame, [at, at + 8], [14, 0], { ...clamp, easing: easeOut })}px`,
+              }}
+            >
+              {app.prompt.slice(0, chars) || '\u200b'}
+              {typing ? <span style={{ opacity: 0.6 }}>▍</span> : null}
+            </div>
           </div>
-        </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 14 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: '12px 22px',
+                  borderRadius: '24px 24px 24px 6px',
+                  background: '#eef0f5',
+                  color: '#222',
+                  fontSize: 32,
+                  fontWeight: 500,
+                  opacity: interpolate(frame, [replyAt, replyAt + 8], [0, 1], clamp),
+                  translate: `0 ${interpolate(frame, [replyAt, replyAt + 12], [18, 0], { ...clamp, easing: easeOut })}px`,
+                }}
+              >
+                <span style={{ width: 22, height: 22, borderRadius: 6, background: app.hue }} />
+                Done — {app.name} is ready.
+              </div>
+            </div>
+        </React.Fragment>
       );
     })}
   </div>
 );
 
-const Pill: React.FC<{ ok: boolean; children: React.ReactNode }> = ({ ok, children }) => (
-  <div
-    style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 12,
-      padding: '12px 24px',
-      borderRadius: 999,
-      fontFamily: DISPLAY_FONT,
-      fontSize: 32,
-      fontWeight: 700,
-      color: '#fff',
-      background: ok ? '#16a34a' : '#dc2626',
-      boxShadow: '0 14px 34px rgba(0,0,0,0.18)',
-      whiteSpace: 'nowrap',
-    }}
-  >
-    {children}
-  </div>
+const Spinner: React.FC<{ frame: number }> = ({ frame }) => (
+  <svg width={84} height={84} viewBox="0 0 84 84" style={{ rotate: `${frame * 14}deg` }}>
+    <circle cx={42} cy={42} r={34} fill="none" stroke="#e5e7ee" strokeWidth={8} />
+    <path d="M42 8a34 34 0 0 1 34 34" fill="none" stroke="#9aa0ae" strokeWidth={8} strokeLinecap="round" />
+  </svg>
 );
 
-/** A browser window that grows out of a tile on double-click and shrinks back at S3. */
+/** Green check that pops and draws itself. */
+const CheckBadge: React.FC<{ frame: number; at: number }> = ({ frame, at }) => {
+  const pop = spring({ frame: frame - at, fps: 30, config: { damping: 11, mass: 0.6 } });
+  const draw = interpolate(frame, [at + 4, at + 14], [0, 1], { ...clamp, easing: easeOut });
+  return (
+    <svg width={170} height={170} viewBox="0 0 170 170" style={{ scale: String(pop), filter: 'drop-shadow(0 18px 36px rgba(22,163,74,0.35))' }}>
+      <circle cx={85} cy={85} r={80} fill={GREEN} />
+      <path d="M50 88l24 24 48-52" fill="none" stroke="#fff" strokeWidth={16} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - draw} />
+    </svg>
+  );
+};
+
+/** One browser window that grows out of a tile on double-click and shrinks back into it. */
 const Popup: React.FC<{
   frame: number;
   openAt: number;
+  closeAt: number;
   from: Pt;
-  to: Pt;
   url: string;
   shake?: number;
   children: React.ReactNode;
-  tag: React.ReactNode;
-  tagAt: number;
-}> = ({ frame, openAt, from, to, url, shake = 0, children, tag, tagAt }) => {
+}> = ({ frame, openAt, closeAt, from, url, shake = 0, children }) => {
   const open =
     interpolate(frame, [openAt, openAt + 10], [0, 1], { ...clamp, easing: easeOut }) *
-    interpolate(frame, [CLOSE_AT, CLOSE_AT + 8], [1, 0], { ...clamp, easing: easeInOut });
+    interpolate(frame, [closeAt, closeAt + 10], [1, 0], { ...clamp, easing: easeInOut });
   if (open <= 0) return null;
-  const at = lerpPt(from, to, open);
-  const tagPop = spring({ frame: frame - tagAt, fps: 30, config: { damping: 13, mass: 0.6 } });
+  const at = lerpPt(from, POPUP_AT, open);
   return (
     <div
       style={{
@@ -217,19 +247,16 @@ const Popup: React.FC<{
         left: at.x + shake,
         top: at.y,
         translate: '-50% -50%',
-        scale: String(lerp(0.2, 1, open)),
+        scale: String(lerp(0.15, 1, open)),
         opacity: Math.min(1, open * 2),
         zIndex: 20,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 22,
       }}
     >
-      <BrowserFrame width={580} height={330} url={<span style={{ color: '#666' }}>{url}</span>}>
-        {children}
+      <BrowserFrame width={820} height={500} url={<span style={{ color: '#666' }}>{url}</span>}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: DISPLAY_FONT }}>
+          {children}
+        </div>
       </BrowserFrame>
-      <div style={{ height: 60, opacity: frame >= tagAt ? 1 : 0, scale: String(lerp(0.6, 1, tagPop)) }}>{tag}</div>
     </div>
   );
 };
@@ -252,23 +279,28 @@ export const AppsHookScene: React.FC = () => {
 
   const cursorPos = (() => {
     const start = { x: 1100, y: 940 };
-    const recipe = APPS[1].dest;
-    const budget = APPS[0].dest;
     const toRecipe = interpolate(frame, [FOCUS_AT + 2, RECIPE_CLICK - 2], [0, 1], { ...clamp, easing: easeInOut });
-    const toBudget = interpolate(frame, [RECIPE_CLICK + 28, BUDGET_CLICK - 2], [0, 1], { ...clamp, easing: easeInOut });
-    return lerpPt(lerpPt(start, recipe, toRecipe), budget, toBudget);
+    const toBudget = interpolate(frame, [RECIPE_CLOSE, BUDGET_CLICK - 2], [0, 1], { ...clamp, easing: easeInOut });
+    return lerpPt(lerpPt(start, APPS[1].dest, toRecipe), APPS[0].dest, toBudget);
   })();
   const pressed = [RECIPE_CLICK, RECIPE_CLICK + 5, BUDGET_CLICK, BUDGET_CLICK + 5].some((c) => frame >= c && frame < c + 3);
   const cursorOpacity =
     interpolate(frame, [FOCUS_AT, FOCUS_AT + 6], [0, 1], clamp) * interpolate(frame, [CLOSE_AT, CLOSE_AT + 6], [1, 0], clamp);
 
-  const shakeT = frame - BLANK_TAG;
-  const shake = shakeT > 0 && shakeT < 16 ? Math.sin(shakeT * 1.6) * 8 * (1 - shakeT / 16) : 0;
+  const shakeT = frame - BUDGET_FAIL;
+  const shake = shakeT > 0 && shakeT < 16 ? Math.sin(shakeT * 1.6) * 10 * (1 - shakeT / 16) : 0;
+  const failPop = spring({ frame: frame - BUDGET_FAIL, fps, config: { damping: 12, mass: 0.6 } });
+
+  if (frame < CHAT_END) {
+    return (
+      <Backdrop theme="light">
+        <ChatScene frame={frame} />
+      </Backdrop>
+    );
+  }
 
   return (
     <Backdrop theme="light">
-      {frame < PANEL_OUT + 14 ? <ChatPanel frame={frame} /> : null}
-
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         {APPS.map((app, i) => {
           const [p0, p1, p2, p3] = convergeCurve(app.dest, i);
@@ -360,34 +392,32 @@ export const AppsHookScene: React.FC = () => {
         );
       })}
 
-      <Popup
-        frame={frame}
-        openAt={RECIPE_OPEN}
-        from={APPS[1].dest}
-        to={{ x: 1380, y: 690 }}
-        url="file:///…/Downloads/recipe-box/index.html"
-        tagAt={RECIPE_OPEN + 12}
-        tag={<Pill ok>✓ Opens with a double-click</Pill>}
-      >
-        <div style={{ padding: '26px 30px', fontFamily: DISPLAY_FONT }}>
-          <div style={{ fontSize: 16, color: '#ea580c', fontWeight: 700, letterSpacing: 1 }}>RECIPE BOX</div>
-          <div style={{ fontSize: 34, fontWeight: 700, marginTop: 6, color: '#111' }}>Grandma&apos;s lasagna</div>
-          {[90, 76, 84, 58].map((w) => (
-            <div key={w} style={{ height: 13, width: `${w}%`, borderRadius: 7, background: '#eceef3', marginTop: 16 }} />
-          ))}
-        </div>
+      <Popup frame={frame} openAt={RECIPE_OPEN} closeAt={RECIPE_CLOSE} from={APPS[1].dest} url="file:///…/Downloads/recipe-box/index.html">
+        {frame < RECIPE_LOADED ? (
+          <Spinner frame={frame} />
+        ) : (
+          <>
+            <div style={{ position: 'absolute', inset: 0, padding: '30px 40px', opacity: 0.35 }}>
+              <div style={{ fontSize: 18, color: '#ea580c', fontWeight: 700, letterSpacing: 1 }}>RECIPE BOX</div>
+              <div style={{ fontSize: 40, fontWeight: 700, marginTop: 6, color: '#111' }}>Grandma&apos;s lasagna</div>
+              {[90, 76, 84, 58, 70].map((w) => (
+                <div key={w} style={{ height: 15, width: `${w}%`, borderRadius: 8, background: '#e6e8ee', marginTop: 20 }} />
+              ))}
+            </div>
+            <CheckBadge frame={frame} at={RECIPE_LOADED} />
+          </>
+        )}
       </Popup>
-      <Popup
-        frame={frame}
-        openAt={BUDGET_OPEN}
-        from={APPS[0].dest}
-        to={{ x: 540, y: 690 }}
-        url="file:///…/budget-tracker/dist/index.html"
-        shake={shake}
-        tagAt={BLANK_TAG}
-        tag={<Pill ok={false}>Blank page · Needs a local server</Pill>}
-      >
-        <div style={{ height: '100%', background: '#fff' }} />
+      <Popup frame={frame} openAt={BUDGET_OPEN} closeAt={CLOSE_AT} from={APPS[0].dest} url="file:///…/budget-tracker/dist/index.html" shake={shake}>
+        {frame >= BUDGET_FAIL ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, scale: String(lerp(0.7, 1, failPop)), opacity: Math.min(1, failPop * 2) }}>
+            <svg width={110} height={110} viewBox="0 0 110 110">
+              <circle cx={55} cy={55} r={52} fill={`${RED}18`} />
+              <path d="M38 38l34 34M72 38L38 72" stroke={RED} strokeWidth={11} strokeLinecap="round" />
+            </svg>
+            <div style={{ fontSize: 54, fontWeight: 800, color: RED, letterSpacing: -1 }}>Needs a local server</div>
+          </div>
+        ) : null}
       </Popup>
 
       {cursorOpacity > 0 ? (

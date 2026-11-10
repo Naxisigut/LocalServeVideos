@@ -5,7 +5,6 @@ import {
   ACME_LAN_URL,
   DEMO_HOME_DIR,
   DEMO_LAN_IP,
-  acmeDraft,
   acmeLogs,
   acmeSite,
   demoFiles,
@@ -15,14 +14,13 @@ import {
 } from '../../demo/acme';
 import { AppWindow } from '../../ui/AppWindow';
 import { MacCursor } from '../../ui/MacCursor';
-import { MacWindow } from '../../ui/MacWindow';
+import { APP_WINDOW_HEIGHT, MacWindow } from '../../ui/MacWindow';
 import { PRESENCE_MS, motionProgress } from '../../ui/motion';
 import { QrPopup } from '../../ui/QrPopup';
-import { SiteDrawer } from '../../ui/SiteDrawer';
 import type { Language, Theme } from '../../ui/types';
 import { Backdrop } from '../Stage';
-import { AcmePage, BrowserFrame, LogPill, PhoneFrame } from './mocks';
-import { DISPLAY_FONT, MONO_FONT, clamp, easeInOut, easeOut } from './shared';
+import { AcmePage, BrowserFrame, LogPill, PhoneFrame, RecipePage } from './mocks';
+import { DISPLAY_FONT, clamp, easeInOut, easeOut } from './shared';
 
 type SceneProps = { theme: Theme; language: Language };
 
@@ -45,168 +43,30 @@ const WindowShot: React.FC<
 const fadeIn = (frame: number, at: number, len = 12) =>
   interpolate(frame, [at, at + len], [0, 1], { ...clamp, easing: easeOut });
 
-const typed = (frame: number, full: string, at: number, perChar = 2) =>
-  full.slice(0, Math.max(0, Math.min(full.length, Math.floor((frame - at) / perChar))));
-
 const twoSites = [acmeSite, docsSite];
 const ACME_QR = { x: 545, y: 279 };
 const FILE_URL = `http://${DEMO_LAN_IP}:19800/Demo.mp4`;
 
-/** S7 — the build that was blank from Finder now loads; deep link + refresh work too. */
-export const SpaScene: React.FC = () => {
-  const frame = useCurrentFrame();
-  const s = useSeconds();
-  const servedAt = s(1.5);
-  const served = frame >= servedAt;
-  const path = typed(frame, '/settings/categories', servedAt + s(0.7));
-  const navigated = frame >= servedAt + s(2.2);
-  const refreshAt = servedAt + s(2.4);
-  const refresh = interpolate(frame, [refreshAt, refreshAt + s(0.5)], [0, 1], { ...clamp, easing: easeInOut });
-  const flash = (frame >= servedAt && frame < servedAt + 4) || (frame >= refreshAt && frame < refreshAt + s(0.3)) ? 0.35 : 1;
-  return (
-    <Backdrop theme="light">
-      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <BrowserFrame
-          width={1420}
-          height={780}
-          refreshSpin={refresh}
-          url={
-            served ? (
-              <>
-                <span style={{ color: '#999' }}>http://</span>127.0.0.1:5173<span style={{ color: '#4f46e5' }}>{path}</span>
-              </>
-            ) : (
-              <span style={{ color: '#777' }}>file:///Users/demo/Projects/budget-tracker/dist/index.html</span>
-            )
-          }
-          style={{
-            translate: '0 -50px',
-            opacity: fadeIn(frame, 0, 10),
-            scale: String(interpolate(frame, [0, s(0.5)], [0.94, 1], { ...clamp, easing: easeOut })),
-          }}
-        >
-          <div style={{ height: '100%', opacity: flash, background: '#fff' }}>
-            {served ? <AcmePage view={navigated ? 'settings' : 'overview'} /> : null}
-          </div>
-          <div
-            style={{
-              position: 'absolute',
-              left: 28,
-              top: 24,
-              padding: '10px 20px',
-              borderRadius: 999,
-              fontFamily: DISPLAY_FONT,
-              fontSize: 32,
-              fontWeight: 700,
-              color: '#fff',
-              background: served ? '#16a34a' : '#dc2626',
-              opacity: served ? 1 - fadeIn(frame, servedAt + s(1.2), 10) : fadeIn(frame, 6, 8),
-            }}
-          >
-            {served ? 'With LocalServe' : 'Before · double-clicked in Finder'}
-          </div>
-          <LogPill
-            level="access"
-            text={acmeLogs[6].message}
-            style={{ position: 'absolute', right: 28, bottom: 28, opacity: fadeIn(frame, refreshAt + s(0.6)) }}
-          />
-        </BrowserFrame>
-      </AbsoluteFill>
-    </Backdrop>
-  );
-};
+/** Window coordinates (667×640) of the second card's open button. */
+const DOCS_OPEN = { x: 517, y: 369 };
+const DOMAIN_WINDOW = { x: 960, y: 500, scale: 1.15 };
 
-const Node: React.FC<{ title: string; sub: string; accent?: boolean }> = ({ title, sub, accent }) => (
-  <div style={{ width: 210, padding: '22px 18px', borderRadius: 18, background: accent ? '#111' : '#fff', color: accent ? '#fff' : '#111', boxShadow: '0 0 0 1px rgba(0,0,0,0.1), 0 16px 40px rgba(0,0,0,0.12)', textAlign: 'center', fontFamily: DISPLAY_FONT }}>
-    <div style={{ fontSize: 24, fontWeight: 700 }}>{title}</div>
-    <div style={{ fontSize: 17, fontFamily: MONO_FONT, opacity: 0.7, marginTop: 6 }}>{sub}</div>
-  </div>
-);
-
-/** S8 — add a `/api` proxy rule; same-origin request flows through LocalServe. */
-export const ProxyScene: React.FC<SceneProps> = (props) => {
-  const frame = useCurrentFrame();
-  const s = useSeconds();
-  const ruleAt = s(0.8);
-  const rule = acmeDraft.proxyRules[0];
-  const draft = {
-    ...acmeDraft,
-    proxyRules:
-      frame >= ruleAt
-        ? [
-            {
-              ...rule,
-              prefix: typed(frame, rule.prefix, ruleAt + 4),
-              target: typed(frame, rule.target, ruleAt + 16, 1),
-              changeOrigin: interpolate(frame, [s(2.4), s(2.6)], [0, 1], clamp),
-            },
-          ]
-        : [],
-  };
-  const focus = frame < ruleAt + 14 ? ('proxy-prefix-0' as const) : frame < s(2.3) ? ('proxy-target-0' as const) : undefined;
-
-  const flowStart = s(4);
-  const go = interpolate(frame, [flowStart, flowStart + s(1.2)], [0, 1], { ...clamp, easing: easeInOut });
-  const back = interpolate(frame, [flowStart + s(1.4), flowStart + s(2.4)], [0, 1], { ...clamp, easing: easeInOut });
-  const dotX = back > 0 ? 1 - back : go;
-  const okAt = flowStart + s(2.5);
-  const strike = interpolate(frame, [okAt, okAt + 8], [0, 1], clamp);
-
-  return (
-    <Backdrop theme={props.theme}>
-      <WindowShot {...props} x={560} y={500} scale={1.15} style={{ opacity: fadeIn(frame, 0, 10) }}>
-        <AppWindow
-          sites={[acmeSite]}
-          files={[]}
-          trial={demoTrial}
-          overlay={
-            <SiteDrawer
-              mode="edit"
-              runningOnOpen
-              draft={draft}
-              sections={{ proxy: true }}
-              focus={focus}
-              caret={Math.floor(frame / 15) % 2 === 0}
-              hover={frame >= s(3) ? 'save-start' : frame < ruleAt ? 'add-rule' : undefined}
-            />
-          }
-        />
-      </WindowShot>
-      <div style={{ position: 'absolute', left: 1040, top: 330, width: 820, opacity: fadeIn(frame, s(3.4)) }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }}>
-          <Node title="Browser" sub=":5173/api/me" />
-          <Node title="LocalServe" sub="/api → :9083" accent />
-          <Node title="Your API" sub="127.0.0.1:9083" />
-          <div style={{ position: 'absolute', left: 105, right: 105, top: '50%', height: 3, background: 'repeating-linear-gradient(90deg, #bbb 0 10px, transparent 10px 18px)', zIndex: -1 }} />
-          {frame >= flowStart && frame < okAt ? (
-            <div style={{ position: 'absolute', top: '50%', left: `calc(105px + ${dotX} * (100% - 210px))`, translate: '-50% -50%', width: 22, height: 22, borderRadius: '50%', background: back > 0 ? '#16a34a' : '#4f46e5', boxShadow: '0 0 18px rgba(79,70,229,0.6)' }} />
-          ) : null}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 56, fontFamily: DISPLAY_FONT, fontSize: 28, fontWeight: 700 }}>
-          <span style={{ position: 'relative', padding: '10px 22px', borderRadius: 12, color: '#dc2626', background: 'rgba(220,38,38,0.1)', opacity: 1 - 0.6 * strike }}>
-            CORS error
-            <span style={{ position: 'absolute', left: 12, right: 12, top: '50%', height: 4, borderRadius: 2, background: '#dc2626', scale: `${strike} 1`, transformOrigin: 'left' }} />
-          </span>
-          <span style={{ padding: '10px 22px', borderRadius: 12, color: '#fff', background: '#16a34a', opacity: strike, scale: String(interpolate(strike, [0, 1], [0.6, 1])) }}>
-            200 OK · same origin
-          </span>
-        </div>
-      </div>
-    </Backdrop>
-  );
-};
-
-/** S9 — Recipe Box joins with `recipes.ls`; the address bar switches over. */
+/** S9 — Recipe Box joins with `recipes.ls`; clicking open pops a browser on the custom domain. */
 export const DomainScene: React.FC<SceneProps> = (props) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const s = useSeconds();
-  const hoverAt = s(1.6);
-  const swapAt = s(3);
-  const swap = interpolate(frame, [swapAt, swapAt + 10], [0, 1], { ...clamp, easing: easeInOut });
+  const move = interpolate(frame, [s(0.9), s(1.5)], [0, 1], { ...clamp, easing: easeInOut });
+  const hoverAt = s(1.5);
+  const click = s(2.1);
+  const browserIn = interpolate(frame, [click + 3, click + 15], [0, 1], { ...clamp, easing: easeOut });
+  const markAt = s(3);
+  const mark = interpolate(frame, [markAt, markAt + 12], [0, 1], { ...clamp, easing: easeInOut });
+  const pulse = interpolate(frame, [markAt + 6, markAt + 24], [0, 1], clamp);
+  const tag = fadeIn(frame, s(3.5));
   return (
     <Backdrop theme={props.theme}>
-      <WindowShot {...props} x={560} y={500} scale={1.15}>
+      <WindowShot {...props} x={DOMAIN_WINDOW.x} y={DOMAIN_WINDOW.y} scale={DOMAIN_WINDOW.scale}>
         <AppWindow
           sites={twoSites}
           files={[]}
@@ -219,41 +79,77 @@ export const DomainScene: React.FC<SceneProps> = (props) => {
             },
           }}
         />
+        <MacCursor
+          x={interpolate(move, [0, 1], [520, DOCS_OPEN.x])}
+          y={interpolate(move, [0, 1], [590, DOCS_OPEN.y])}
+          pressed={frame >= click && frame < click + 4}
+        />
       </WindowShot>
-      <div style={{ position: 'absolute', left: 1080, top: 300, opacity: fadeIn(frame, s(2.4)) }}>
-        <BrowserFrame
-          width={760}
-          height={420}
-          url={
-            <span style={{ position: 'relative', display: 'inline-block', width: 400, height: 24 }}>
-              <span style={{ position: 'absolute', opacity: 1 - swap, translate: `0 ${-12 * swap}px` }}>http://127.0.0.1:4000</span>
-              <span style={{ position: 'absolute', opacity: swap, translate: `0 ${12 * (1 - swap)}px`, fontWeight: 600 }}>http://recipes.ls</span>
-            </span>
-          }
-        >
-          <div style={{ padding: '30px 36px', fontFamily: DISPLAY_FONT }}>
-            <div style={{ fontSize: 15, color: '#4f46e5', fontWeight: 600 }}>RECIPE BOX</div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>Grandma's lasagna</div>
-            {[92, 80, 86, 60].map((w, i) => (
-              <div key={i} style={{ height: 14, width: `${w}%`, borderRadius: 7, background: '#eceef3', marginTop: 18 }} />
-            ))}
-          </div>
-        </BrowserFrame>
-        <div style={{ marginTop: 26, display: 'inline-flex', padding: '10px 18px', borderRadius: 12, background: 'rgba(17,17,17,0.82)', color: '#fff', fontFamily: DISPLAY_FONT, fontSize: 20, opacity: fadeIn(frame, s(4.6)) * interpolate(frame, [s(6.6), s(7)], [1, 0], clamp) }}>
-          Saving requires administrator approval · hosts managed by LocalServe
-        </div>
-      </div>
+      {browserIn > 0 ? (
+        <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', background: `rgba(244,246,251,${0.55 * browserIn})` }}>
+          <BrowserFrame
+            width={1180}
+            height={APP_WINDOW_HEIGHT * DOMAIN_WINDOW.scale}
+            url={
+              <span
+                style={{
+                  position: 'relative',
+                  padding: '1px 10px',
+                  marginLeft: -10,
+                  fontSize: 22,
+                  borderRadius: 7,
+                  backgroundImage: 'linear-gradient(rgba(79,70,229,0.14), rgba(79,70,229,0.14))',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: `${mark * 100}% 100%`,
+                  boxShadow: `0 0 0 ${2 + pulse * 10}px rgba(79,70,229,${0.45 * (1 - pulse) * mark})`,
+                }}
+              >
+                <span style={{ color: '#999' }}>http://</span>
+                <span style={{ color: mark > 0.5 ? '#4f46e5' : '#333', fontWeight: 700 }}>
+                  recipes.ls
+                </span>
+              </span>
+            }
+            style={{
+              translate: '0 -40px',
+              opacity: browserIn,
+              scale: String(interpolate(browserIn, [0, 1], [1.06, 1])),
+            }}
+          >
+            <RecipePage />
+            <div
+              style={{
+                position: 'absolute',
+                left: 134,
+                top: 16,
+                opacity: tag,
+                translate: `0 ${(1 - tag) * -10}px`,
+                padding: '8px 16px',
+                borderRadius: 999,
+                background: '#4f46e5',
+                color: '#fff',
+                fontSize: 20,
+                fontWeight: 700,
+                boxShadow: '0 10px 24px rgba(79,70,229,0.35)',
+              }}
+            >
+              <span style={{ position: 'absolute', left: 34, top: -7, width: 14, height: 14, background: '#4f46e5', rotate: '45deg' }} />
+              The domain name set by yourself
+            </div>
+          </BrowserFrame>
+        </AbsoluteFill>
+      ) : null}
     </Backdrop>
   );
 };
 
-/** S10–S11 — LAN QR code, then the same site (and API) on a phone. */
+/** S10–S11 — LAN QR code, then the same site (and API) on a phone; 8s. */
 export const PhoneScene: React.FC<SceneProps> = (props) => {
   const frame = useCurrentFrame();
   const s = useSeconds();
-  const move = interpolate(frame, [s(0.3), s(1.1)], [0, 1], { ...clamp, easing: easeInOut });
-  const click = s(1.4);
-  const phoneAt = s(6.5);
+  const move = interpolate(frame, [s(0.2), s(0.9)], [0, 1], { ...clamp, easing: easeInOut });
+  const click = s(1.1);
+  const phoneAt = s(2.8);
   const phone = spring({ frame: frame - phoneAt, fps: 30, config: { damping: 16, mass: 0.8 } });
   return (
     <Backdrop theme={props.theme}>
@@ -276,14 +172,14 @@ export const PhoneScene: React.FC<SceneProps> = (props) => {
           pressed={frame >= click && frame < click + 4}
         />
       </WindowShot>
-      <div style={{ position: 'absolute', left: 1420, top: 520, translate: `-50% -50%`, opacity: phone, rotate: `${interpolate(phone, [0, 1], [8, 0])}deg`, marginLeft: interpolate(phone, [0, 1], [500, 0]) }}>
+      <div style={{ position: 'absolute', left: 1420, top: 500, translate: `-50% -50%`, opacity: phone, rotate: `${interpolate(phone, [0, 1], [8, 0])}deg`, marginLeft: interpolate(phone, [0, 1], [500, 0]) }}>
         <PhoneFrame>
           <AcmePage view="overview" mobile />
         </PhoneFrame>
       </div>
       <div style={{ position: 'absolute', left: 150, top: 770, display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
-        <LogPill level="access" text={acmeLogs[10].message} style={{ opacity: fadeIn(frame, s(8.2)) }} />
-        <LogPill level="proxy" text={acmeLogs[11].message} style={{ opacity: fadeIn(frame, s(8.8)) }} />
+        <LogPill level="access" text={acmeLogs[10].message} style={{ opacity: fadeIn(frame, s(4)) }} />
+        <LogPill level="proxy" text={acmeLogs[11].message} style={{ opacity: fadeIn(frame, s(4.5)) }} />
       </div>
     </Backdrop>
   );
@@ -314,7 +210,7 @@ export const FilesScene: React.FC<SceneProps> = (props) => {
           overlay={<QrPopup url={FILE_URL} enter={fadeIn(frame, qrAt, 9)} />}
         />
       </WindowShot>
-      <div style={{ position: 'absolute', left: 1420, top: 520, translate: '-50% -50%', opacity: phone, marginLeft: interpolate(phone, [0, 1], [500, 0]) }}>
+      <div style={{ position: 'absolute', left: 1420, top: 500, translate: '-50% -50%', opacity: phone, marginLeft: interpolate(phone, [0, 1], [500, 0]) }}>
         <PhoneFrame>
           <div style={{ height: '100%', background: '#f2f3f7', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: 30 }}>
             <div style={{ width: 110, height: 130, borderRadius: 16, background: '#fff', boxShadow: '0 0 0 1px #e3e4ea', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: '#7c3aed' }}>MP4</div>

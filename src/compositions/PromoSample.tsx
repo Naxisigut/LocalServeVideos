@@ -2,81 +2,83 @@ import React from 'react';
 import { AbsoluteFill, Sequence, useVideoConfig } from 'remotion';
 import type { Language, Theme } from '../ui/types';
 import { BuildSiteScene } from './promo/BuildSiteScene';
-import {
-  DomainScene,
-  EndCardScene,
-  FilesScene,
-  PhoneScene,
-  ProxyScene,
-  SpaScene,
-} from './promo/FeatureScenes';
+import { DomainScene, EndCardScene, FilesScene, PhoneScene } from './promo/FeatureScenes';
 import { AppsHookScene } from './promo/HookScenes';
-import { Caption } from './promo/shared';
+import { ProxyScene } from './promo/ProxyScene';
+import { Caption, SectionTag } from './promo/shared';
 
 export type PromoSampleProps = {
   theme: Theme;
   language: Language;
 };
 
-export const PROMO_SAMPLE_SECONDS = 87;
+export const PROMO_SAMPLE_SECONDS = 83;
 
-/** Full promo storyboard v3, S1–S13 (87s) as a rough cut; no VO or music yet. */
+/** Full promo storyboard v5 (83s) as a rough cut; no VO or music yet. */
 export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => {
   const { fps } = useVideoConfig();
   const ui = { theme, language };
-  // S3 carries its own headline, so 11–14s has no caption.
+  // S3 carries its own headline, so 14–17s has no caption.
   const captions = [
-    { from: 0, to: 2.2, text: 'With AI, anyone can build little web apps' },
-    { from: 2.2, to: 4, text: '— just for themselves.' },
-    { from: 4, to: 7.2, text: "But they're scattered all over your Mac." },
-    { from: 7.2, to: 9.3, text: 'Some open with a double-click —' },
-    { from: 9.3, to: 11, text: 'others need a server just to load.' },
-    { from: 14, to: 16, text: 'Meet LocalServe.' },
-    { from: 16, to: 18, text: 'Any folder, a local site. No terminal, no cloud.' },
-    { from: 18, to: 26, text: 'Pick the folder, choose a port…' },
-    { from: 26, to: 30, text: "…and hit start. That's it." },
-    { from: 30, to: 32, text: 'Remember the one that only showed a blank page?' },
-    { from: 32, to: 36, text: 'Now it just works — deep links and refreshes too.' },
-    { from: 36, to: 41, text: 'Need it to talk to an API? Add a proxy rule.' },
-    { from: 41, to: 46, text: 'Same origin, no CORS headaches.' },
-    { from: 46, to: 50, text: "Give every app a name you'll remember." },
-    { from: 50, to: 54, text: 'LocalServe manages hosts for you.' },
-    { from: 54, to: 61, text: 'Same Wi-Fi? Scan the code.' },
-    { from: 61, to: 68, text: 'Your app — and its API — on any device in the room.' },
-    { from: 68, to: 72, text: 'Need to send a file to your phone? Drop it in.' },
-    { from: 72, to: 76, text: 'Scan. Done. No cables, no cloud.' },
-    { from: 76, to: 81, text: 'Try it free for seven days — no account needed.' },
-    { from: 81, to: 84, text: "Then buy once, and it's yours forever." },
-    { from: 84, to: 87, text: 'LocalServe. All your little apps, one home.' },
+    { from: 0, to: 3.5, text: 'With AI, anyone can build little web apps' },
+    { from: 3.5, to: 6, text: '— just for themselves.' },
+    { from: 6, to: 8.3, text: "But they're scattered all over your Mac." },
+    { from: 8.3, to: 12.2, text: 'Some pages just open and work.' },
+    { from: 12.2, to: 14, text: 'Others only load through a local server.' },
+    { from: 17, to: 19, text: 'Meet LocalServe.' },
+    { from: 19, to: 21, text: 'Any folder, a local site. No terminal, no cloud.' },
+    { from: 21, to: 29, text: 'Pick the folder, choose a port…' },
+    { from: 29, to: 32, text: "…and hit start. That's it." },
+    { from: 32, to: 36, text: 'That blank page from before? Now it just works.' },
+    { from: 36, to: 39, text: 'Need more? Here are a few power features.' },
+    { from: 39, to: 41.3, text: 'Call your API directly, and the browser blocks it.' },
+    { from: 41.3, to: 48, text: 'Add a proxy rule — LocalServe passes it through.' },
+    { from: 48, to: 52, text: "Give every app a name you'll remember." },
+    { from: 52, to: 56, text: 'LocalServe manages hosts for you.' },
+    { from: 56, to: 59, text: 'Take it to your phone. Scan the code.' },
+    { from: 59, to: 64, text: 'Your app — and its API — on any device in the room.' },
+    { from: 64, to: 68, text: 'Send files to your phone, too.' },
+    { from: 68, to: 72, text: 'Drop them in. Scan. Done. No cables, no cloud.' },
+    { from: 72, to: 77, text: 'Try it free for seven days — no account needed.' },
+    { from: 77, to: 80, text: "Then buy once, and it's yours forever." },
+    { from: 80, to: 83, text: 'LocalServe. All your little apps, one home.' },
+  ];
+  const sections: { from: number; to: number; title: string }[] = [
+    { from: 36, to: 48, title: 'API proxy' },
+    { from: 48, to: 56, title: 'Custom domains' },
+    { from: 56, to: 64, title: 'Open on your phone' },
+    { from: 64, to: 72, title: 'File sharing' },
   ];
   const at = (seconds: number) => Math.round(seconds * fps);
 
   return (
     <AbsoluteFill style={{ background: '#000' }}>
-      <Sequence name="S1–S3 Apps scatter → one home" durationInFrames={at(14)}>
+      <Sequence name="S1–S3 Apps scatter → one home" durationInFrames={at(17)}>
         <AppsHookScene />
       </Sequence>
-      <Sequence name="S4–S6 Build site" from={at(14)} durationInFrames={at(16)}>
+      <Sequence name="S4–S7 Build site → opens" from={at(17)} durationInFrames={at(19)}>
         <BuildSiteScene {...ui} />
       </Sequence>
-      <Sequence name="S7 Blank page → served" from={at(30)} durationInFrames={at(6)}>
-        <SpaScene />
+      <Sequence name="S8 Proxy: direct vs LocalServe" from={at(36)} durationInFrames={at(12)}>
+        <ProxyScene />
       </Sequence>
-      <Sequence name="S8 Proxy" from={at(36)} durationInFrames={at(10)}>
-        <ProxyScene {...ui} />
-      </Sequence>
-      <Sequence name="S9 Domain" from={at(46)} durationInFrames={at(8)}>
+      <Sequence name="S9 Domain" from={at(48)} durationInFrames={at(8)}>
         <DomainScene {...ui} />
       </Sequence>
-      <Sequence name="S10–S11 QR → Phone" from={at(54)} durationInFrames={at(14)}>
+      <Sequence name="S10–S11 QR → Phone" from={at(56)} durationInFrames={at(8)}>
         <PhoneScene {...ui} />
       </Sequence>
-      <Sequence name="S12 File share" from={at(68)} durationInFrames={at(8)}>
+      <Sequence name="S12 File share" from={at(64)} durationInFrames={at(8)}>
         <FilesScene {...ui} />
       </Sequence>
-      <Sequence name="S13 End card" from={at(76)} durationInFrames={at(11)}>
+      <Sequence name="S13 End card" from={at(72)} durationInFrames={at(11)}>
         <EndCardScene {...ui} />
       </Sequence>
+      {sections.map((sec) => (
+        <Sequence key={sec.title} name={`Section ${sec.title}`} from={at(sec.from)} durationInFrames={at(sec.to) - at(sec.from)} layout="none">
+          <SectionTag title={sec.title} durationInFrames={at(sec.to) - at(sec.from)} />
+        </Sequence>
+      ))}
       {captions.map((c) => (
         <Sequence
           key={c.text}

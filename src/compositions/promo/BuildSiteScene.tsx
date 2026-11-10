@@ -9,6 +9,7 @@ import { BADGE_MORPH_MS, POWER_MS, PRESENCE_MS, motionProgress } from '../../ui/
 import { SiteDrawer, type DrawerField, type DrawerHover, type SiteDraft } from '../../ui/SiteDrawer';
 import type { Language, SiteStatus, Theme } from '../../ui/types';
 import { Backdrop } from '../Stage';
+import { AcmePage, BrowserFrame } from './mocks';
 import { clamp, easeInOut, easeOut } from './shared';
 
 /** Pointer targets in window coordinates (667×640), measured in Studio. */
@@ -28,7 +29,7 @@ type Move = { at: number; to: Point };
 
 const WINDOW_SCALE = 1.3;
 
-/** S4–S6 — icon becomes the window, a site is created, saved and started. */
+/** S4–S6 — icon becomes the window, a site is created, started and opened in the browser. */
 export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
   theme,
   language,
@@ -58,6 +59,8 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
   const cardAt = drawerOut + 6;
   const runningAt = cardAt + s(0.8);
   const openHoverAt = s(14.4);
+  const openClick = s(15);
+  const browserIn = interpolate(frame, [openClick + 3, openClick + 15], [0, 1], { ...clamp, easing: easeOut });
 
   const moves: Move[] = [
     { at: s(4.2), to: POINTS.addSite },
@@ -72,7 +75,7 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
     const t = interpolate(frame, [move.at, move.at + s(0.6)], [0, 1], { ...clamp, easing: easeInOut });
     return { x: from.x + (move.to.x - from.x) * t, y: from.y + (move.to.y - from.y) * t };
   }, POINTS.rest);
-  const clicks = [addClick, nameClick, pickerClick, portClick, lanClick, saveClick];
+  const clicks = [addClick, nameClick, pickerClick, portClick, lanClick, saveClick, openClick];
   const pressed = clicks.some((c) => frame >= c && frame < c + 4);
 
   const typeInto = (full: string, at: number) =>
@@ -168,6 +171,27 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
           }}
         />
       </AbsoluteFill>
+      {browserIn > 0 ? (
+        <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', background: `rgba(244,246,251,${0.55 * browserIn})` }}>
+          <BrowserFrame
+            width={1420}
+            height={880}
+            url={
+              <>
+                <span style={{ color: '#999' }}>http://</span>127.0.0.1:5173
+              </>
+            }
+            style={{
+              translate: '0 -26px',
+              opacity: browserIn,
+              scale: String(interpolate(browserIn, [0, 1], [0.6, 1])),
+              transformOrigin: '72% 30%',
+            }}
+          >
+            <AcmePage view="overview" />
+          </BrowserFrame>
+        </AbsoluteFill>
+      ) : null}
     </Backdrop>
   );
 };
