@@ -4,6 +4,7 @@ import type { Language, Theme } from '../ui/types';
 import { BuildSiteScene } from './promo/BuildSiteScene';
 import { DomainScene, EndCardScene, FilesScene, PhoneScene } from './promo/FeatureScenes';
 import { AppsHookScene } from './promo/HookScenes';
+import { PowerIntroScene } from './promo/PowerIntroScene';
 import { ProxyScene } from './promo/ProxyScene';
 import { Caption, SectionTag } from './promo/shared';
 
@@ -12,13 +13,13 @@ export type PromoSampleProps = {
   language: Language;
 };
 
-export const PROMO_SAMPLE_SECONDS = 83;
+export const PROMO_SAMPLE_SECONDS = 86;
 
-/** Full promo storyboard v5 (83s) as a rough cut; no VO or music yet. */
+/** Full promo storyboard v6 (86s) as a rough cut; no VO or music yet. */
 export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => {
   const { fps } = useVideoConfig();
   const ui = { theme, language };
-  // S3 carries its own headline, so 14–17s has no caption.
+  // S3 and S7 carry their own headlines, so 14–17s and 36–39s have no caption.
   const captions = [
     { from: 0, to: 3.5, text: 'With AI, anyone can build little web apps' },
     { from: 3.5, to: 6, text: '— just for themselves.' },
@@ -30,24 +31,23 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
     { from: 21, to: 29, text: 'Pick the folder, choose a port…' },
     { from: 29, to: 32, text: "…and hit start. That's it." },
     { from: 32, to: 36, text: 'That blank page from before? Now it just works.' },
-    { from: 36, to: 39, text: 'Need more? Here are a few power features.' },
-    { from: 39, to: 41.3, text: 'Call your API directly, and the browser blocks it.' },
-    { from: 41.3, to: 48, text: 'Add a proxy rule — LocalServe passes it through.' },
-    { from: 48, to: 52, text: "Give every app a name you'll remember." },
-    { from: 52, to: 56, text: 'LocalServe manages hosts for you.' },
-    { from: 56, to: 59, text: 'Take it to your phone. Scan the code.' },
-    { from: 59, to: 64, text: 'Your app — and its API — on any device in the room.' },
-    { from: 64, to: 68, text: 'Send files to your phone, too.' },
-    { from: 68, to: 72, text: 'Drop them in. Scan. Done. No cables, no cloud.' },
-    { from: 72, to: 77, text: 'Try it free for seven days — no account needed.' },
-    { from: 77, to: 80, text: "Then buy once, and it's yours forever." },
-    { from: 80, to: 83, text: 'LocalServe. All your little apps, one home.' },
+    { from: 39, to: 44.3, text: 'Call your API directly, and the browser blocks it.' },
+    { from: 44.3, to: 51, text: 'Add a proxy rule — LocalServe passes it through.' },
+    { from: 51, to: 55, text: "Give every app a name you'll remember." },
+    { from: 55, to: 59, text: 'LocalServe manages hosts for you.' },
+    { from: 59, to: 62, text: 'Take it to your phone. Scan the code.' },
+    { from: 62, to: 67, text: 'Your app — and its API — on any device in the room.' },
+    { from: 67, to: 71, text: 'Send files to your phone, too.' },
+    { from: 71, to: 75, text: 'Drop them in. Scan. Done. No cables, no cloud.' },
+    { from: 75, to: 80, text: 'Try it free for seven days — no account needed.' },
+    { from: 80, to: 83, text: "Then buy once, and it's yours forever." },
+    { from: 83, to: 86, text: 'LocalServe. All your little apps, one home.' },
   ];
   const sections: { from: number; to: number; title: string }[] = [
-    { from: 36, to: 48, title: 'API proxy' },
-    { from: 48, to: 56, title: 'Custom domains' },
-    { from: 56, to: 64, title: 'Open on your phone' },
-    { from: 64, to: 72, title: 'File sharing' },
+    { from: 39, to: 51, title: 'API proxy' },
+    { from: 51, to: 59, title: 'Custom domains' },
+    { from: 59, to: 67, title: 'Open on your phone' },
+    { from: 67, to: 75, title: 'File sharing' },
   ];
   const at = (seconds: number) => Math.round(seconds * fps);
 
@@ -56,22 +56,25 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
       <Sequence name="S1–S3 Apps scatter → one home" durationInFrames={at(17)}>
         <AppsHookScene />
       </Sequence>
-      <Sequence name="S4–S7 Build site → opens" from={at(17)} durationInFrames={at(19)}>
+      <Sequence name="S4–S6 Build site → opens" from={at(17)} durationInFrames={at(19)}>
         <BuildSiteScene {...ui} />
       </Sequence>
-      <Sequence name="S8 Proxy: direct vs LocalServe" from={at(36)} durationInFrames={at(12)}>
+      <Sequence name="S7 Power features intro" from={at(36)} durationInFrames={at(3)}>
+        <PowerIntroScene />
+      </Sequence>
+      <Sequence name="S8 Proxy: direct vs LocalServe" from={at(39)} durationInFrames={at(12)}>
         <ProxyScene />
       </Sequence>
-      <Sequence name="S9 Domain" from={at(48)} durationInFrames={at(8)}>
+      <Sequence name="S9 Domain" from={at(51)} durationInFrames={at(8)}>
         <DomainScene {...ui} />
       </Sequence>
-      <Sequence name="S10–S11 QR → Phone" from={at(56)} durationInFrames={at(8)}>
+      <Sequence name="S10–S11 QR → Phone" from={at(59)} durationInFrames={at(8)}>
         <PhoneScene {...ui} />
       </Sequence>
-      <Sequence name="S12 File share" from={at(64)} durationInFrames={at(8)}>
+      <Sequence name="S12 File share" from={at(67)} durationInFrames={at(8)}>
         <FilesScene {...ui} />
       </Sequence>
-      <Sequence name="S13 End card" from={at(72)} durationInFrames={at(11)}>
+      <Sequence name="S13 End card" from={at(75)} durationInFrames={at(11)}>
         <EndCardScene {...ui} />
       </Sequence>
       {sections.map((sec) => (

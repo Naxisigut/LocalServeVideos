@@ -1,5 +1,10 @@
-# LocalServe YouTube 推广视频 — 分镜脚本 v5
+# LocalServe YouTube 推广视频 — 分镜脚本 v6
 
+> v6 相对 v5 的改动：
+>
+> - **S8 前新增 S7 “进阶引入”**（3s，占用原 S7 的空号）：画面中央大字 “Need more?” 由轻微模糊变清晰出现，再以柔和的模糊溶解 morph 变为两行 “Here are a few / **power features.**”（第二行强调色）。S8 起各镜头整体后移 3s。
+> - 全片约 86s。
+>
 > v5 相对 v4 的改动：
 >
 > - **S6、S7 合并**：S6 结尾点击“在浏览器打开”，直接展开正常页面，不再闪回空白页，字幕顺带提一句。
@@ -29,7 +34,7 @@
 | 项目 | 规格 |
 | --- | --- |
 | 片名（工作） | LocalServe — All your little web apps, one home |
-| 时长 | ~83 秒（30fps，2490 帧） |
+| 时长 | ~86 秒（30fps，2580 帧） |
 | 分辨率 | 1920×1080 横屏；可另切 1080×1920 Shorts 版（见文末） |
 | 语言 | 英文旁白 + 英文硬字幕（中文为对照，方便审稿） |
 | 受众 | 用 AI 做小工具的 Vibe Coding 用户、独立开发者、海外前端开发者 |
@@ -65,15 +70,15 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 | --- | --- | --- |
 | 1 钩子 / 需求 | 0–17s | AI 让人人都能做小应用；但它们散落各处，有的必须靠本地服务器才能打开 |
 | 2 产品登场 + 基础用法 | 17–36s | 选文件夹 → 保存并启动 → 点开就是正常页面 |
-| 3 进阶 1：接口代理 | 36–48s | 直连被拦 vs 经 LocalServe 通过 |
-| 4 进阶 2：好记的域名 | 48–56s | `recipes.ls` 自定义域名 |
-| 5 进阶 3：手机访问 | 56–64s | 二维码 → 手机打开同一站点 |
-| 6 附加：文件分享 | 64–72s | 拖入文件，手机扫码下载 |
-| 7 CTA | 72–83s | 试用 / 价格 / 下载 |
+| 3 进阶 1：接口代理 | 36–51s | 引入大字（S7）→ 直连被拦 vs 经 LocalServe 通过（S8） |
+| 4 进阶 2：好记的域名 | 51–59s | `recipes.ls` 自定义域名 |
+| 5 进阶 3：手机访问 | 59–67s | 二维码 → 手机打开同一站点 |
+| 6 附加：文件分享 | 67–75s | 拖入文件，手机扫码下载 |
+| 7 CTA | 75–86s | 试用 / 价格 / 下载 |
 
 ---
 
-## 分镜 S1–S13（S7 已并入 S6）
+## 分镜 S1–S13（原 S7 已并入 S6，S7 改为进阶引入）
 
 ### 第 1 幕 — 钩子 / 需求
 
@@ -142,19 +147,27 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 ### 第 3 幕 — 进阶 1：接口代理
 
-> 从这里开始是进阶功能。左上角章节标题（图标 + 功能名 + 随镜头推进的进度条）依次为 API proxy / Custom domains / Open on your phone / File sharing。字幕只在第一个功能用 “Need more?” 引入，之后不再用 “Next” 等连接词。
+> 从这里开始是进阶功能。S7 用一张大字卡引入，之后左上角章节标题（图标 + 功能名 + 随镜头推进的进度条）依次为 API proxy / Custom domains / Open on your phone / File sharing。只在 S7 用 “Need more?” 引入，之后不再用 “Next” 等连接词。
 
-#### S8 — 直连被拦 vs 经 LocalServe 通过（36–48s）
+#### S7 — 进阶引入（36–39s）
+
+| 字段 | 内容 |
+| --- | --- |
+| 画面 | 浅色背景（与 S8 同款），无章节标题、无底部字幕。① 0–0.6s：画面中央大字 **Need more?** 从轻微模糊（≤8px）淡入变清晰，并从 94% 轻微放大到 100%。② 1–1.7s：文字 morph——旧文字轻微放大、模糊淡出，新文字从轻微模糊中淡入，变为两行 **Here are a few** / **power features.**，第二行为强调色，不加下划线。③ 2.7–3s：整体上移淡出，接 S8。 |
+| VO | Need more? Here are a few power features. |
+| 中文 | 还想要更多？来看几个进阶功能。 |
+
+#### S8 — 直连被拦 vs 经 LocalServe 通过（39–51s）
 
 | 字段 | 内容 |
 | --- | --- |
 | 画面 | 左右对称（两节点距中心等距、等高）：左为浏览器窗口（Budget Tracker 页面，蒙着 “Loading data…”），下方 “app”；右为服务器机柜，下方 “remote server”；两侧不显示 IP，顶部不加 Without / With 标签（章节标题 “API proxy” 已说明主题）。① 灰色虚线连接两侧，蓝色请求 `GET /api/me` 从应用到达服务器（指示灯闪一下）；红色 “Response” 从服务器**向左**返回，到虚线正中淡出，红色 ✕ 弹出，下方 “Blocked by CORS”，页面变为 “Couldn't load data”。② ✕ 与虚线淡出，LocalServe 图标弹入中间，下方 “Proxy rule”；两段紫色实线从两侧画出，线端与 app、服务器、中间图标保持**相同间距**；蓝色请求从应用**一口气**滑到服务器、途经图标时不停顿也不隐藏（圆点显示在图标上层），绿色 “Response” 同样连续地**向左**返回应用；页面蒙层消失，浏览器窗口正中弹出绿色圆形对勾（与 S2 同款，对勾自绘），不另加文字标签。 |
-| VO | Need more? Here are a few power features. Call your API directly, and the browser blocks it. Add a proxy rule — LocalServe passes it through. |
-| 中文 | 还想要更多？来看几个进阶功能。直接调用接口，会被浏览器拦下；加一条代理规则，LocalServe 帮你转过去。 |
+| VO | Call your API directly, and the browser blocks it. Add a proxy rule — LocalServe passes it through. |
+| 中文 | 直接调用接口，会被浏览器拦下；加一条代理规则，LocalServe 帮你转过去。 |
 
 ### 第 4 幕 — 进阶 2：好记的域名
 
-#### S9 — 自定义域名（48–56s）
+#### S9 — 自定义域名（51–59s）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -164,7 +177,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 ### 第 5 幕 — 进阶 3：手机访问
 
-#### S10–S11 — 扫码 → 手机打开（56–64s）
+#### S10–S11 — 扫码 → 手机打开（59–67s）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -174,7 +187,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 ### 第 6 幕 — 附加：文件分享
 
-#### S12 — 扫码下载文件（64–72s）
+#### S12 — 扫码下载文件（67–75s）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -184,7 +197,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 ### 第 7 幕 — CTA
 
-#### S13 — 结尾卡（72–83s）
+#### S13 — 结尾卡（75–86s）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -210,20 +223,20 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 > Try it free for seven days — no account needed. Then buy once, and it's yours forever.
 > LocalServe. All your little apps, one home.
 
-约 180 词，按 ~150 wpm 约 72s 纯语音，与 83s 匹配。
+约 180 词，按 ~150 wpm 约 72s 纯语音，与 86s 匹配。
 
 ---
 
 ## 声音设计
 
 - BGM：轻快 lo-fi / 电子，约 110–120 BPM；S2 后半（红字）转为低通、略带不安，S3 收拢处做一次 drop；S8 进入进阶部分时可加一个小转场音。
-- 音效：对话回复（S1a）、卡片弹出（S1b）、飞散落地、双击、绿勾、红字（S2）、请求被拦（S8）、Running 状态、扫码、下载完成。
+- 音效：对话回复（S1a）、卡片弹出（S1b）、飞散落地、双击、绿勾、红字（S2）、文字 morph（S7）、请求被拦（S8）、Running 状态、扫码、下载完成。
 - 旁白下 BGM 压到 -18 ~ -20 LUFS 相对电平，结尾卡 BGM 回升。
 
 ## 字幕规范
 
 - 底部安全区内硬字幕，56px，单行（≤ 50 字符）。
-- S3 用大字标题代替普通字幕。
+- S3、S7 用大字标题代替普通字幕。
 - 同时导出 `.srt`，上传 YouTube 作为 CC 字幕（可加中文、日文翻译轨）。
 
 ---
@@ -254,10 +267,10 @@ Download: <官网链接>
 00:00 Your little apps, scattered everywhere
 00:17 Create a site in seconds
 00:36 API proxy
-00:48 Custom domains
-00:56 Open it on your phone
-01:04 Share files over Wi-Fi
-01:12 Try it free
+00:51 Custom domains
+00:59 Open it on your phone
+01:07 Share files over Wi-Fi
+01:15 Try it free
 ```
 
 **缩略图思路：** 左侧散落的几个文件夹图标汇入中间的 Mac 窗口（Budget Tracker 卡片 Running 绿点），右侧手机显示同一页面；大字 “ALL YOUR APPS → ONE HOME”。
@@ -274,12 +287,13 @@ S1a+S1b 压缩（4s）→ S2 双击对比（5s）→ S3 大字（2s）→ S5+S6 
 
 ## 实现映射（Remotion）
 
-样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v5 实现（0–83s），硬字幕 + 章节标题，暂无 VO / BGM。
+样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v6 实现（0–86s），硬字幕 + 章节标题，暂无 VO / BGM。
 
 | 分镜 | 实现 |
 | --- | --- |
 | S1–S3 | `promo/HookScenes.tsx` 的 `AppsHookScene`（S1a 对话单独成画面，S1b 起同一批卡片连续出现、飞散、双击、汇聚）。S3 汇聚借鉴 video-shotcraft 镜头卡 `bezier-source-converge-merge` |
 | S4–S6 | `promo/BuildSiteScene.tsx`（结尾点击打开，浏览器展开正常页面） |
+| S7 | `promo/PowerIntroScene.tsx`（逐帧模糊 + 透明度 + 缩放的溶解式文字 morph） |
 | S8 | `promo/ProxyScene.tsx` |
 | S9–S12 | `promo/FeatureScenes.tsx`（`DomainScene` `PhoneScene` `FilesScene`） |
 | S13 | `promo/FeatureScenes.tsx` 的 `EndCardScene` |
