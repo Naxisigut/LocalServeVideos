@@ -65,7 +65,6 @@ export const Caption: React.FC<{ text: string; durationInFrames: number; dark?: 
           fontSize: 48,
           fontWeight: 500,
           letterSpacing: -0.2,
-          textTransform: 'capitalize',
           color: dark ? '#fff' : '#111',
           background: dark ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.72)',
           backdropFilter: 'blur(12px)',

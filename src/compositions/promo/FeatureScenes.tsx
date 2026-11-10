@@ -143,7 +143,7 @@ export const DomainScene: React.FC<SceneProps> = (props) => {
   );
 };
 
-/** S10–S11 — LAN QR code, then the same site (and API) on a phone; 8s. */
+/** S10–S11 — LAN QR code, then the same site on a phone; 8s. */
 export const PhoneScene: React.FC<SceneProps> = (props) => {
   const frame = useCurrentFrame();
   const s = useSeconds();
@@ -179,7 +179,6 @@ export const PhoneScene: React.FC<SceneProps> = (props) => {
       </div>
       <div style={{ position: 'absolute', left: 150, top: 770, display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
         <LogPill level="access" text={acmeLogs[10].message} style={{ opacity: fadeIn(frame, s(4)) }} />
-        <LogPill level="proxy" text={acmeLogs[11].message} style={{ opacity: fadeIn(frame, s(4.5)) }} />
       </div>
     </Backdrop>
   );

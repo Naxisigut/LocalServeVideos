@@ -162,18 +162,18 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 | 字段 | 内容 |
 | --- | --- |
 | 画面 | 左右对称（两节点距中心等距、等高）：左为浏览器窗口（Budget Tracker 页面，蒙着 “Loading data…”），下方 “app”；右为服务器机柜，下方 “remote server”；两侧不显示 IP，顶部不加 Without / With 标签（章节标题 “API proxy” 已说明主题）。① 灰色虚线连接两侧，蓝色请求 `GET /api/me` 从应用到达服务器（指示灯闪一下）；红色 “Response” 从服务器**向左**返回，到虚线正中淡出，红色 ✕ 弹出，下方 “Blocked by CORS”，页面变为 “Couldn't load data”。② ✕ 与虚线淡出，LocalServe 图标弹入中间，下方 “Proxy rule”；两段紫色实线从两侧画出，线端与 app、服务器、中间图标保持**相同间距**；蓝色请求从应用**一口气**滑到服务器、途经图标时不停顿也不隐藏（圆点显示在图标上层），绿色 “Response” 同样连续地**向左**返回应用；页面蒙层消失，浏览器窗口正中弹出绿色圆形对勾（与 S2 同款，对勾自绘），不另加文字标签。 |
-| VO | Call your API directly, and the browser blocks it. Add a proxy rule — LocalServe passes it through. |
-| 中文 | 直接调用接口，会被浏览器拦下；加一条代理规则，LocalServe 帮你转过去。 |
+| VO | When your local site calls a remote server directly, it usually gets blocked by CORS. Add a proxy rule in LocalServe, and it goes through. |
+| 中文 | 本地网页直接调用远程服务器，通常会被 CORS 拦下；在 LocalServe 里加一条代理规则，就能顺利通过。 |
 
 ### 第 4 幕 — 进阶 2：好记的域名
 
 #### S9 — 自定义域名（51–59s）
 
-| 字段 | 内容 |
-| --- | --- |
-| 画面 | 列表弹入第二张卡片 Recipe Box；悬停打开按钮，tooltip `http://recipes.ls`；右侧浏览器（与 App 窗口纵向居中对齐）地址栏从 `127.0.0.1:4000` 变成 `http://recipes.ls`。 |
-| VO | Give every app a name you'll remember. LocalServe manages hosts for you. |
-| 中文 | 给每个应用起个好记的名字，hosts 由 LocalServe 帮你托管。 |
+| 字段  | 内容                                                                                                                         |
+| --- | -------------------------------------------------------------------------------------------------------------------------- |
+| 画面  | 列表弹入第二张卡片 Recipe Box；悬停打开按钮，tooltip `http://recipes.ls`；右侧浏览器（与 App 窗口纵向居中对齐）地址栏从 `127.0.0.1:4000` 变成 `http://recipes.ls`。 |
+| VO  | You can give each site a memorable domain name. LocalServe manages hosts for you.                                          |
+| 中文  | 给每个应用起个好记的名字，hosts 由 LocalServe 帮你托管。                                                                                      |
 
 ### 第 5 幕 — 进阶 3：手机访问
 
@@ -181,9 +181,9 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 点击 Budget Tracker 的二维码按钮 → `QrPopup` 弹出（约 1s 处）；约 2.8s 手机从右侧滑入（与 App 窗口纵向居中对齐），显示同一个页面；随后两条日志：iPhone 访问与 `/api/me` 代理。 |
-| VO | Take it to your phone. Scan the code. Your app — and its API — on any device in the room. |
-| 中文 | 拿到手机上用。扫一下二维码，应用连同接口，在身边任何设备上都能打开。 |
+| 画面 | 点击 Budget Tracker 的二维码按钮 → `QrPopup` 弹出（约 1s 处）；约 2.8s 手机从右侧滑入（与 App 窗口纵向居中对齐），显示同一个页面；随后一条 iPhone 访问日志（不显示 API 代理日志）。 |
+| VO | You can also open your sites on any device by scanning the QR code, as long as it's on the same Wi‑Fi. |
+| 中文 | 扫一下二维码，同一 Wi‑Fi 下的任何设备都能打开你的应用。 |
 
 ### 第 6 幕 — 附加：文件分享
 
@@ -192,8 +192,8 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 | 字段 | 内容 |
 | --- | --- |
 | 画面 | `FileSharePanel` 文件依次落入；点击 “Show QR code” → 手机扫码后下载完成。 |
-| VO | Send files to your phone, too. Drop them in. Scan. Done. No cables, no cloud. |
-| 中文 | 文件也能传到手机。拖进来，扫一扫，搞定。不用数据线，也不用网盘。 |
+| VO | Same goes for file sharing. Pick. Scan. Done. No cables, no cloud. |
+| 中文 | 文件分享也一样。选好，扫一扫，搞定。不用数据线，也不用网盘。 |
 
 ### 第 7 幕 — CTA
 
@@ -216,10 +216,10 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 > Pick the folder, choose a port… and hit start. That's it.
 > That blank page from before? Now it just works.
 > Need more? Here are a few power features.
-> Call your API directly, and the browser blocks it. Add a proxy rule — LocalServe passes it through.
-> Give every app a name you'll remember. LocalServe manages hosts for you.
-> Take it to your phone. Scan the code. Your app — and its API — on any device in the room.
-> Send files to your phone, too. Drop them in. Scan. Done. No cables, no cloud.
+> When your local site calls a remote server directly, it usually gets blocked by CORS. Add a proxy rule in LocalServe, and it goes through.
+> You can give each site a memorable domain name. LocalServe manages hosts for you.
+> You can also open your sites on any device by scanning the QR code, as long as it's on the same Wi‑Fi.
+> Same goes for file sharing. Pick. Scan. Done. No cables, no cloud.
 > Try it free for seven days — no account needed. Then buy once, and it's yours forever.
 > LocalServe. All your little apps, one home.
 

@@ -139,6 +139,11 @@
   position: absolute;
 }
 
+/* Presence pop overshoots scale(1); don't let it spawn a horizontal scrollbar. */
+.ls-window .site-list {
+  overflow-x: hidden;
+}
+
 /* Tooltips render in place (no portal) and stay readable above menus. */
 .ls-window .tooltip-bubble {
   z-index: 80;
