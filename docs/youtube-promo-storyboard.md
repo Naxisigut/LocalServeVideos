@@ -287,7 +287,7 @@ S1a+S1b 压缩（4s）→ S2 双击对比（5s）→ S3 大字（2s）→ S5+S6 
 
 ## 实现映射（Remotion）
 
-样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v6 实现（0–86s），硬字幕 + 章节标题，暂无 VO / BGM。
+样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v6 实现（0–86s），硬字幕 + 章节标题 + 临时 VO（macOS `say` 生成，用于卡节奏），暂无 BGM / 音效。
 
 | 分镜 | 实现 |
 | --- | --- |
@@ -298,3 +298,4 @@ S1a+S1b 压缩（4s）→ S2 双击对比（5s）→ S3 大字（2s）→ S5+S6 
 | S9–S12 | `promo/FeatureScenes.tsx`（`DomainScene` `PhoneScene` `FilesScene`） |
 | S13 | `promo/FeatureScenes.tsx` 的 `EndCardScene` |
 | 章节标签 / 字幕 | `promo/shared.tsx` 的 `SectionTag` / `Caption`，时间表在 `PromoSample.tsx` |
+| VO | 分句与起始时间在 `promo/voiceover.ts`；`node scripts/gen-temp-vo.mjs [voice] [rate]` 生成 `public/voiceover/promo/*.wav` 并报告超出槽位的句子；正式配音按同名文件替换即可 |

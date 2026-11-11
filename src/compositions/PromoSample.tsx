@@ -1,5 +1,6 @@
+import { Audio } from '@remotion/media';
 import React from 'react';
-import { AbsoluteFill, Sequence, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Sequence, staticFile, useVideoConfig } from 'remotion';
 import type { Language, Theme } from '../ui/types';
 import { BuildSiteScene } from './promo/BuildSiteScene';
 import { DomainScene, EndCardScene, FilesScene, PhoneScene } from './promo/FeatureScenes';
@@ -7,6 +8,7 @@ import { AppsHookScene } from './promo/HookScenes';
 import { PowerIntroScene } from './promo/PowerIntroScene';
 import { ProxyScene } from './promo/ProxyScene';
 import { Caption, SectionTag } from './promo/shared';
+import { PROMO_VO_CUES } from './promo/voiceover';
 
 export type PromoSampleProps = {
   theme: Theme;
@@ -15,7 +17,7 @@ export type PromoSampleProps = {
 
 export const PROMO_SAMPLE_SECONDS = 86;
 
-/** Full promo storyboard v6 (86s) as a rough cut; no VO or music yet. */
+/** Full promo storyboard v6 (86s) as a rough cut; placeholder VO, no music yet. */
 export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => {
   const { fps } = useVideoConfig();
   const ui = { theme, language };
@@ -53,7 +55,12 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
   const at = (seconds: number) => Math.round(seconds * fps);
 
   return (
-    <AbsoluteFill style={{ background: '#000' }}>
+    <AbsoluteFill
+      style={{
+        background: '#000',
+        translate: '-1px 0px'
+      }}
+    >
       <Sequence name="S1–S3 Apps scatter → one home" durationInFrames={at(17)}>
         <AppsHookScene />
       </Sequence>
@@ -93,6 +100,9 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
         >
           <Caption text={c.text} durationInFrames={at(c.to) - at(c.from)} />
         </Sequence>
+      ))}
+      {PROMO_VO_CUES.map((cue) => (
+        <Audio key={cue.id} name={`VO ${cue.id}`} from={at(cue.from)} src={staticFile(`voiceover/promo/${cue.id}.wav`)} />
       ))}
     </AbsoluteFill>
   );
