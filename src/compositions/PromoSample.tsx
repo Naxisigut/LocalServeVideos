@@ -1,6 +1,6 @@
 import { Audio } from '@remotion/media';
 import React from 'react';
-import { AbsoluteFill, Sequence, staticFile, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import type { Language, Theme } from '../ui/types';
 import { BuildSiteScene } from './promo/BuildSiteScene';
 import { DomainScene, EndCardScene, FilesScene, PhoneScene } from './promo/FeatureScenes';
@@ -17,9 +17,11 @@ export type PromoSampleProps = {
 
 export const PROMO_SAMPLE_SECONDS = 74;
 
-/** Full promo storyboard v9 (74s) as a rough cut; placeholder VO, no music yet. */
+/** Full promo storyboard v9 (74s) as a rough cut; placeholder VO + Pixabay BGM. */
 export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => {
-  const { fps } = useVideoConfig();
+  const frame = useCurrentFrame();
+  const { fps, durationInFrames } = useVideoConfig();
+  const bgmVolume = 0.18;
   const ui = { theme, language };
   // S7 carries its own headline, so 33.5–36.5s has no caption.
   const captions = [
@@ -59,7 +61,8 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
     <AbsoluteFill
       style={{
         background: '#000',
-        translate: '-1px 0px'
+        translate: '-1px 0px',
+        scale: 1.031
       }}
     >
       <Sequence name="S1–S3 Apps scatter → one home" durationInFrames={at(17)}>
@@ -102,6 +105,14 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
           <Caption text={c.text} durationInFrames={at(c.to) - at(c.from)} />
         </Sequence>
       ))}
+      <Audio
+        name="BGM"
+        src={staticFile('music/product-tutorial-background.mp3')}
+        volume={interpolate(frame, [0, 1 * fps, durationInFrames - 2 * fps, durationInFrames], [0, bgmVolume, bgmVolume, 0], {
+          extrapolateLeft: 'clamp',
+          extrapolateRight: 'clamp',
+        })}
+      />
       {PROMO_VO_CUES.map((cue) => (
         <Audio key={cue.id} name={`VO ${cue.id}`} from={at(cue.from)} src={staticFile(`voiceover/promo/${cue.id}.wav`)} />
       ))}
