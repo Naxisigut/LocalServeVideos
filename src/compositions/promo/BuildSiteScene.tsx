@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Img, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 import appIcon from '../../../assets/brand/app-icon.png';
 import { DEMO_HOME_DIR, DEMO_LAN_IP, acmeDraft, acmeSite, demoTrial } from '../../demo/acme';
 import { AppWindow } from '../../ui/AppWindow';
@@ -10,7 +10,7 @@ import { SiteDrawer, type DrawerField, type DrawerHover, type SiteDraft } from '
 import type { Language, SiteStatus, Theme } from '../../ui/types';
 import { Backdrop } from '../Stage';
 import { AcmePage, BrowserFrame } from './mocks';
-import { clamp, easeInOut, easeOut } from './shared';
+import { QuestionBadge, clamp, easeInOut, easeOut } from './shared';
 
 /** Pointer targets in window coordinates (667×640), measured in Studio. */
 const POINTS = {
@@ -28,6 +28,8 @@ type Point = { x: number; y: number };
 type Move = { at: number; to: Point };
 
 const WINDOW_SCALE = 1.3;
+/** Where S3 (`AppsHookScene`) leaves the LocalServe icon, so the cut is seamless. */
+const HOOK_ICON = { y: 430, size: 200 };
 
 /** S4–S6 — icon becomes the window, a site is created, started and opened in the browser. */
 export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
@@ -38,9 +40,10 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
   const { fps } = useVideoConfig();
   const s = (seconds: number) => Math.round(seconds * fps);
 
-  // S4 — icon → window.
-  const iconPop = spring({ frame, fps, config: { damping: 12, mass: 0.6 } });
-  const morph = interpolate(frame, [s(1.2), s(1.9)], [0, 1], { ...clamp, easing: easeInOut });
+  // S4 — S3's "?" at HOOK_ICON becomes the app icon on "Meet LocalServe", which grows into the window on "It turns…".
+  const reveal = interpolate(frame, [s(0.2), s(0.9)], [0, 1], { ...clamp, easing: easeInOut });
+  const morph = interpolate(frame, [s(1.6), s(2.4)], [0, 1], { ...clamp, easing: easeInOut });
+  const rise = interpolate(morph, [0, 1], [HOOK_ICON.y - 540, -26]);
 
   // S5 — fill the "New site" drawer.
   const addClick = s(5.2);
@@ -111,7 +114,7 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
         <div
           style={{
-            translate: '0 -26px',
+            translate: `0 ${rise}px`,
             scale: String(WINDOW_SCALE * interpolate(morph, [0, 1], [0.25, 1])),
             opacity: morph,
           }}
@@ -160,14 +163,28 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
         </div>
       </AbsoluteFill>
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
+        {reveal < 1 ? (
+          <QuestionBadge
+            size={HOOK_ICON.size}
+            style={{
+              position: 'absolute',
+              translate: `0 ${rise}px`,
+              scale: String(interpolate(reveal, [0, 1], [1, 0.92])),
+              opacity: 1 - reveal,
+              filter: `blur(${reveal * 6}px) drop-shadow(0 24px 50px rgba(20,24,40,0.25))`,
+            }}
+          />
+        ) : null}
         <Img
           src={appIcon}
           style={{
-            width: 260,
-            height: 260,
-            scale: String(iconPop * interpolate(morph, [0, 1], [1, 0.4])),
-            opacity: 1 - morph,
-            filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.25))',
+            position: 'absolute',
+            width: HOOK_ICON.size,
+            height: HOOK_ICON.size,
+            translate: `0 ${rise}px`,
+            scale: String(interpolate(reveal, [0, 1], [0.92, 1]) * interpolate(morph, [0, 1], [1, 0.5])),
+            opacity: reveal * (1 - morph),
+            filter: `blur(${(1 - reveal) * 6}px) drop-shadow(0 24px 50px rgba(20,24,40,0.25))`,
           }}
         />
       </AbsoluteFill>

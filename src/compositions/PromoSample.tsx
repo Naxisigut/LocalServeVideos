@@ -21,15 +21,16 @@ export const PROMO_SAMPLE_SECONDS = 86;
 export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => {
   const { fps } = useVideoConfig();
   const ui = { theme, language };
-  // S3 and S7 carry their own headlines, so 14–17s and 36–39s have no caption.
+  // S7 carries its own headline, so 36–39s has no caption.
   const captions = [
     { from: 0, to: 3.5, text: 'With AI, anyone can build little web apps' },
     { from: 3.5, to: 6, text: '— just for themselves.' },
     { from: 6, to: 8.3, text: "But they're scattered all over your Mac." },
     { from: 8.3, to: 12.2, text: 'Some pages just open and work.' },
     { from: 12.2, to: 14, text: 'Others only load through a local server.' },
-    { from: 17, to: 19, text: 'Meet LocalServe.' },
-    { from: 19, to: 21, text: 'Any folder, a local site. No terminal, no cloud.' },
+    { from: 14.4, to: 17, text: 'What if they all had one home?' },
+    { from: 17, to: 18.6, text: 'Meet LocalServe.' },
+    { from: 18.6, to: 21, text: 'Any folder, a local site. No terminal, no cloud.' },
     { from: 21, to: 29, text: 'Pick the folder, choose a port…' },
     { from: 29, to: 32, text: "…and hit start. That's it." },
     { from: 32, to: 36, text: 'That blank page from before? Now it just works.' },

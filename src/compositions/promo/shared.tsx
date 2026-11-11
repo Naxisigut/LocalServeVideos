@@ -12,6 +12,31 @@ export const MONO_FONT = "ui-monospace, 'SF Mono', Menlo, monospace";
 export const DARK_BACKDROP =
   'radial-gradient(90% 70% at 20% 10%, #1b2440 0%, transparent 60%), radial-gradient(80% 70% at 90% 100%, #2a1830 0%, transparent 60%), #0b0d12';
 
+/** App-icon-sized "?" tile that stands in for LocalServe before it is named (S3 → S4). */
+export const QuestionBadge: React.FC<{ size: number; style?: React.CSSProperties }> = ({ size, style }) => (
+  <div
+    style={{
+      width: size,
+      height: size,
+      borderRadius: '24%',
+      background: 'linear-gradient(160deg, #ffffff 0%, #eef0f7 100%)',
+      boxShadow: '0 0 0 1px rgba(0,0,0,0.06)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: DISPLAY_FONT,
+      fontSize: size * 0.62,
+      fontWeight: 800,
+      lineHeight: 1,
+      color: '#4f46e5',
+      filter: 'drop-shadow(0 24px 50px rgba(20,24,40,0.25))',
+      ...style,
+    }}
+  >
+    ?
+  </div>
+);
+
 /** Top-left title for each power feature. */
 export const SectionTag: React.FC<{ title: string; durationInFrames: number }> = ({ title, durationInFrames }) => {
   const frame = useCurrentFrame();

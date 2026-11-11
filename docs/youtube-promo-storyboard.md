@@ -114,8 +114,8 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | Budget Tracker 窗口缩回；LocalServe 图标出现在中央，各卡片沿曲线被吸进图标，图标轻弹一下、放出一圈涟漪；下方大字落定。 |
-| 字幕（大字） | **All your little apps. One home.** |
+| 画面 | Budget Tracker 窗口缩回；中央出现一个与 App 图标同尺寸的**问号图标**（此时还不揭晓 LocalServe），各卡片沿曲线被吸进问号图标，图标轻弹一下、放出一圈涟漪；下方大字落定，切镜前大字淡出，问号图标原地保留接 S4。 |
+| 字幕（大字） | **All your little apps. One home.**（底部同时显示 VO 字幕） |
 | VO | What if they all had one home? |
 | 中文 | 如果它们都能有一个家呢？ |
 
@@ -125,7 +125,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | App 图标从中央弹出 → 展开为 `MacWindow` 主窗口（空列表态：“No sites yet”）。 |
+| 画面 | 承接 S3 留下的问号图标（同位置、同大小）。① “Meet LocalServe.” 时：问号模糊淡出，LocalServe App 图标在原位由模糊变清晰地替换它。② “It turns any folder…” 时：App 图标展开为 `MacWindow` 主窗口（空列表态：“No sites yet”）。 |
 | VO | Meet LocalServe. It turns any folder into a local site — no terminal, no cloud. |
 | 中文 | 认识 LocalServe：把任意文件夹变成本地站点，不用命令行，也不用上云。 |
 
@@ -236,7 +236,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 ## 字幕规范
 
 - 底部安全区内硬字幕，56px，单行（≤ 50 字符）。
-- S3、S7 用大字标题代替普通字幕。
+- S7 用大字标题代替普通字幕；S3 的大字与 VO 不同，仍保留底部字幕。
 - 同时导出 `.srt`，上传 YouTube 作为 CC 字幕（可加中文、日文翻译轨）。
 
 ---

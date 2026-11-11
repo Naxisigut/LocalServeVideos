@@ -1,10 +1,9 @@
 import React from 'react';
-import { Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import appIcon from '../../../assets/brand/app-icon.png';
+import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { MacCursor } from '../../ui/MacCursor';
 import { Backdrop } from '../Stage';
 import { BrowserFrame } from './mocks';
-import { DISPLAY_FONT, MONO_FONT, clamp, easeInOut, easeOut } from './shared';
+import { DISPLAY_FONT, MONO_FONT, QuestionBadge, clamp, easeInOut, easeOut } from './shared';
 
 type Pt = { x: number; y: number };
 
@@ -443,18 +442,15 @@ export const AppsHookScene: React.FC = () => {
               zIndex: 40,
             }}
           />
-          <Img
-            src={appIcon}
+          <QuestionBadge
+            size={ICON_SIZE}
             style={{
               position: 'absolute',
               left: CENTER.x,
               top: CENTER.y,
-              width: ICON_SIZE,
-              height: ICON_SIZE,
               translate: '-50% -50%',
               scale: String(lerp(0.7, 1, badgeIn) * pulse),
               opacity: badgeIn,
-              filter: 'drop-shadow(0 24px 50px rgba(20,24,40,0.25))',
               zIndex: 41,
             }}
           />
@@ -477,6 +473,7 @@ export const AppsHookScene: React.FC = () => {
           fontWeight: 800,
           letterSpacing: -3,
           zIndex: 42,
+          opacity: interpolate(frame, [APPS_HOOK_FRAMES - 10, APPS_HOOK_FRAMES - 2], [1, 0], clamp),
         }}
       >
         {[
