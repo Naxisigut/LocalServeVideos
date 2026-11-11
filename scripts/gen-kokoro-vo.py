@@ -15,7 +15,7 @@ from mlx_audio.tts.utils import load_model
 ROOT = Path(__file__).resolve().parents[1]
 CUES_PATH = ROOT / "src/compositions/promo/voiceover.ts"
 OUT_DIR = ROOT / "public/voiceover/promo"
-TOTAL_S = 86.0
+TOTAL_S = 74.0
 VOICE = "af_heart"
 LANG = "a"
 MAX_SPEED = 1.25

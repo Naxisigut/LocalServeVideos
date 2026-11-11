@@ -32,10 +32,15 @@ const RESET_AT = 150;
 // Part B — through LocalServe.
 const HUB_AT = 160;
 const RULE_AT = 178;
-const GO = 200;
-const HIT = 256;
-const BACK = 262;
-const LOADED_AT = 314;
+const GO = 190;
+// Packets through the hub match the blocked response's speed (server edge → center).
+const SPEED = (SERVER_EDGE - HUB.x) / (BLOCK_AT - 4 - RESP_A);
+// Each leg runs between a node and the hub's near edge; the packet then jumps to the hub's far edge.
+const BROWSER_LEG = Math.round((HUB.x - HUB_HALF - BROWSER_EDGE) / SPEED);
+const SERVER_LEG = Math.round((SERVER_EDGE - HUB.x - HUB_HALF) / SPEED);
+const HIT = GO + BROWSER_LEG + SERVER_LEG;
+const BACK = HIT + 4;
+const LOADED_AT = BACK + SERVER_LEG + BROWSER_LEG;
 
 const fade = (frame: number, at: number, len = 10) => interpolate(frame, [at, at + len], [0, 1], { ...clamp, easing: easeOut });
 const travel = (frame: number, from: number, len: number) => interpolate(frame, [from, from + len], [0, 1], { ...clamp, easing: easeInOut });
@@ -76,6 +81,15 @@ const Packet: React.FC<{ x: number; color: string; label: string; opacity?: numb
 /** Moves a packet across [from → to] between frames [at, at + len]. */
 const along = (frame: number, at: number, len: number, from: number, to: number) => from + (to - from) * travel(frame, at, len);
 
+/** Moves a packet from `from` to the hub, then continues from the hub's opposite edge to `to`. */
+const viaHub = (frame: number, at: number, from: number, to: number) => {
+  const dir = Math.sign(to - from);
+  const [first, second] = dir > 0 ? [BROWSER_LEG, SERVER_LEG] : [SERVER_LEG, BROWSER_LEG];
+  return frame < at + first
+    ? along(frame, at, first, from, HUB.x - dir * HUB_HALF)
+    : along(frame, at + first, second, HUB.x + dir * HUB_HALF, to);
+};
+
 /** S8 — the browser blocks the API's response when called directly; through a LocalServe proxy rule it gets through. */
 export const ProxyScene: React.FC = () => {
   const frame = useCurrentFrame();
@@ -107,9 +121,9 @@ export const ProxyScene: React.FC = () => {
       />
     );
   } else if (frame >= GO && frame < HIT) {
-    packet = <Packet x={along(frame, GO, HIT - GO, BROWSER_EDGE, SERVER_EDGE)} color={ACCENT} label="GET /api/me" />;
+    packet = <Packet x={viaHub(frame, GO, BROWSER_EDGE, SERVER_EDGE)} color={ACCENT} label="GET /api/me" />;
   } else if (frame >= BACK && frame < LOADED_AT) {
-    packet = <Packet x={along(frame, BACK, LOADED_AT - BACK, SERVER_EDGE, BROWSER_EDGE)} color={GREEN} label="Response" />;
+    packet = <Packet x={viaHub(frame, BACK, SERVER_EDGE, BROWSER_EDGE)} color={GREEN} label="Response" />;
   }
 
   const veil = frame < LOADED_AT ? 1 : 1 - loaded;

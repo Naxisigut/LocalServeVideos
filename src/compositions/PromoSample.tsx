@@ -15,43 +15,43 @@ export type PromoSampleProps = {
   language: Language;
 };
 
-export const PROMO_SAMPLE_SECONDS = 86;
+export const PROMO_SAMPLE_SECONDS = 74;
 
-/** Full promo storyboard v6 (86s) as a rough cut; placeholder VO, no music yet. */
+/** Full promo storyboard v9 (74s) as a rough cut; placeholder VO, no music yet. */
 export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => {
   const { fps } = useVideoConfig();
   const ui = { theme, language };
-  // S7 carries its own headline, so 36–39s has no caption.
+  // S7 carries its own headline, so 33.5–36.5s has no caption.
   const captions = [
     { from: 0, to: 3.5, text: 'With AI, anyone can build little web apps' },
     { from: 3.5, to: 6, text: '— just for themselves.' },
     { from: 6, to: 8.3, text: "But they're scattered all over your Mac." },
-    { from: 8.3, to: 12.2, text: 'Some pages just open and work.' },
-    { from: 12.2, to: 14, text: 'Others only load through a local server.' },
-    { from: 14.4, to: 17, text: 'What if they all had one home?' },
+    { from: 8.3, to: 11.9, text: 'Some pages just open and work.' },
+    { from: 11.9, to: 14, text: 'Others only load through a local server.' },
+    { from: 14.9, to: 17, text: 'What if they all had one home?' },
     { from: 17, to: 18.6, text: 'Meet LocalServe.' },
-    { from: 18.6, to: 21, text: 'Any folder, a local site. No terminal, no cloud.' },
-    { from: 21, to: 29, text: 'Pick the folder, choose a port…' },
-    { from: 29, to: 32, text: "…and hit start. That's it." },
-    { from: 32, to: 36, text: 'That blank page from before? Now it just works.' },
-    { from: 39, to: 41.8, text: 'When your local site calls a remote server directly,' },
-    { from: 41.8, to: 44.3, text: 'it usually gets blocked by CORS.' },
-    { from: 44.3, to: 51, text: 'Add a proxy rule in LocalServe, and it goes through.' },
-    { from: 51, to: 55, text: "You can give each site a memorable domain name." },
-    { from: 55, to: 59, text: 'LocalServe manages hosts for you.' },
-    { from: 59, to: 63.5, text: 'You can also open your sites on any device by scanning the QR code,' },
-    { from: 63.5, to: 67, text: "as long as it's on the same Wi‑Fi." },
-    { from: 67, to: 71, text: 'Same goes for file sharing.' },
-    { from: 71, to: 75, text: 'Pick. Scan. Done. No cables, no cloud.' },
-    { from: 75, to: 80, text: 'Try it free for seven days — no account needed.' },
-    { from: 80, to: 83, text: "Then buy once, and it's yours forever." },
-    { from: 83, to: 86, text: 'LocalServe. All your little apps, one home.' },
+    { from: 18.6, to: 22.5, text: 'It turns any folder into a local site — no terminal, no cloud.' },
+    { from: 22.5, to: 26.5, text: 'Pick the folder, choose a port…' },
+    { from: 26.5, to: 29.5, text: "…and hit start. That's it." },
+    { from: 29.5, to: 33.5, text: 'That blank page from before? Now it just works.' },
+    { from: 36.5, to: 39.3, text: 'When your local site calls a remote server directly,' },
+    { from: 39.3, to: 41.8, text: 'it usually gets blocked by CORS.' },
+    { from: 41.8, to: 47, text: 'Add a proxy rule in LocalServe, and it goes through.' },
+    { from: 47, to: 49.8, text: "You can give each site a memorable domain name." },
+    { from: 49.8, to: 52.5, text: 'LocalServe manages hosts for you.' },
+    { from: 52.5, to: 57, text: 'You can also open your sites on any device by scanning the QR code,' },
+    { from: 57, to: 59.4, text: "as long as it's on the same Wi‑Fi." },
+    { from: 59.4, to: 61.4, text: 'Same goes for file sharing.' },
+    { from: 61.4, to: 64.8, text: 'Pick. Scan. Done. No cables, no cloud.' },
+    { from: 64.8, to: 67.7, text: 'Try it free for seven days — no account needed.' },
+    { from: 67.7, to: 70.3, text: "Then buy once, and it's yours forever." },
+    { from: 70.3, to: 74, text: 'LocalServe. All your little apps, one home.' },
   ];
   const sections: { from: number; to: number; title: string }[] = [
-    { from: 39, to: 51, title: 'API proxy' },
-    { from: 51, to: 59, title: 'Custom domains' },
-    { from: 59, to: 67, title: 'Open on your phone' },
-    { from: 67, to: 75, title: 'File sharing' },
+    { from: 36.5, to: 47, title: 'API proxy' },
+    { from: 47, to: 52.5, title: 'Custom domains' },
+    { from: 52.5, to: 59.4, title: 'Open on your phone' },
+    { from: 59.4, to: 64.8, title: 'File sharing' },
   ];
   const at = (seconds: number) => Math.round(seconds * fps);
 
@@ -65,25 +65,25 @@ export const PromoSample: React.FC<PromoSampleProps> = ({ theme, language }) => 
       <Sequence name="S1–S3 Apps scatter → one home" durationInFrames={at(17)}>
         <AppsHookScene />
       </Sequence>
-      <Sequence name="S4–S6 Build site → opens" from={at(17)} durationInFrames={at(19)}>
+      <Sequence name="S4–S6 Build site → opens" from={at(17)} durationInFrames={at(16.5)}>
         <BuildSiteScene {...ui} />
       </Sequence>
-      <Sequence name="S7 Power features intro" from={at(36)} durationInFrames={at(3)}>
+      <Sequence name="S7 Power features intro" from={at(33.5)} durationInFrames={at(3)}>
         <PowerIntroScene />
       </Sequence>
-      <Sequence name="S8 Proxy: direct vs LocalServe" from={at(39)} durationInFrames={at(12)}>
+      <Sequence name="S8 Proxy: direct vs LocalServe" from={at(36.5)} durationInFrames={at(10.5)}>
         <ProxyScene />
       </Sequence>
-      <Sequence name="S9 Domain" from={at(51)} durationInFrames={at(8)}>
+      <Sequence name="S9 Domain" from={at(47)} durationInFrames={at(5.5)}>
         <DomainScene {...ui} />
       </Sequence>
-      <Sequence name="S10–S11 QR → Phone" from={at(59)} durationInFrames={at(8)}>
+      <Sequence name="S10–S11 QR → Phone" from={at(52.5)} durationInFrames={at(6.9)}>
         <PhoneScene {...ui} />
       </Sequence>
-      <Sequence name="S12 File share" from={at(67)} durationInFrames={at(8)}>
+      <Sequence name="S12 File share" from={at(59.4)} durationInFrames={at(5.4)}>
         <FilesScene {...ui} />
       </Sequence>
-      <Sequence name="S13 End card" from={at(75)} durationInFrames={at(11)}>
+      <Sequence name="S13 End card" from={at(64.8)} durationInFrames={at(9.2)}>
         <EndCardScene {...ui} />
       </Sequence>
       {sections.map((sec) => (

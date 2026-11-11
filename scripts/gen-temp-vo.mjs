@@ -7,7 +7,7 @@ import { PROMO_VO_CUES } from '../src/compositions/promo/voiceover.ts';
 
 const voice = process.argv[2] ?? 'Samantha';
 const rate = process.argv[3] ?? '185';
-const total = 86;
+const total = 74;
 const outDir = join(import.meta.dirname, '..', 'public', 'voiceover', 'promo');
 mkdirSync(outDir, { recursive: true });
 

@@ -143,7 +143,7 @@ export const DomainScene: React.FC<SceneProps> = (props) => {
   );
 };
 
-/** S10–S11 — LAN QR code, then the same site on a phone; 8s. */
+/** S10–S11 — LAN QR code, then the same site on a phone; 6.9s. */
 export const PhoneScene: React.FC<SceneProps> = (props) => {
   const frame = useCurrentFrame();
   const s = useSeconds();
@@ -190,10 +190,10 @@ export const FilesScene: React.FC<SceneProps> = (props) => {
   const { fps } = useVideoConfig();
   const s = useSeconds();
   const files = demoFiles.slice(0, 3);
-  const qrAt = s(3);
-  const phoneAt = s(4.4);
+  const qrAt = s(2);
+  const phoneAt = s(2.5);
   const phone = spring({ frame: frame - phoneAt, fps, config: { damping: 16, mass: 0.8 } });
-  const progress = interpolate(frame, [phoneAt + 8, phoneAt + s(1.6)], [0, 1], { ...clamp, easing: easeInOut });
+  const progress = interpolate(frame, [phoneAt + 6, phoneAt + s(0.9)], [0, 1], { ...clamp, easing: easeInOut });
   return (
     <Backdrop theme={props.theme}>
       <WindowShot {...props} x={interpolate(phone, [0, 1], [960, 640])} y={500} scale={1.15}>
@@ -202,10 +202,10 @@ export const FilesScene: React.FC<SceneProps> = (props) => {
           files={files}
           trial={demoTrial}
           filePresence={files.reduce<Record<string, { enter: number }>>((acc, f, i) => {
-            acc[f.id] = { enter: motionProgress(frame, s(0.3 + i * 0.35), fps, PRESENCE_MS) };
+            acc[f.id] = { enter: motionProgress(frame, s(0.3 + i * 0.3), fps, PRESENCE_MS) };
             return acc;
           }, {})}
-          fileHoverId={frame >= s(2.2) && frame < qrAt ? files[1].id : undefined}
+          fileHoverId={frame >= s(1.5) && frame < qrAt ? files[1].id : undefined}
           overlay={<QrPopup url={FILE_URL} enter={fadeIn(frame, qrAt, 9)} />}
         />
       </WindowShot>

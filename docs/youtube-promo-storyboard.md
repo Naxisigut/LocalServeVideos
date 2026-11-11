@@ -1,5 +1,22 @@
-# LocalServe YouTube 推广视频 — 分镜脚本 v6
+# LocalServe YouTube 推广视频 — 分镜脚本 v9
 
+> v9 相对 v8 的改动：
+>
+> - **S10–S11 缩短为 6.9s**，S12 提前到 59.4s，去掉 VO 结束后的空等。
+> - **S12 缩短为 5.4s**，动画节奏对齐 “Pick. Scan. Done.”：文件 0.3s 起依次落入，2s 弹出二维码，2.5s 手机滑入，约 3.4s 下载完成。
+> - **S13 提前到 64.8s**；VO 拆为两句 “Try it free for seven days — no account needed.” / “Then buy once, and it's yours forever.”（vo17 / vo18，原 vo18 顺延为 vo19）。全片约 74s（vo19 提前到 70.4s，紧接 vo18）。
+>
+> v8 相对 v7 的改动：
+>
+> - **S8 经 LocalServe 的一段**：蓝 / 绿圆点到达图标边缘后，直接瞬移到图标另一侧边缘继续前进；移动速度与红色 Response 相同；绿勾出现后留约 0.75s 气口再切镜。S8 缩短为 10.5s。
+> - **S9 缩短为 5.5s**，去掉 VO 结束后的空等。S9 起各镜头整体提前 4s；全片约 79.5s。
+>
+> v7 相对 v6 的改动：
+>
+> - **S5 去掉 “Enable LAN access”**，表单只填名称、文件夹、端口。
+> - **点击 “Add site” 移到 S4 结尾**：“Pick the folder” 开口时，新建站点弹窗已经打开。
+> - S5 缩短为 4s，S6 起各镜头整体提前 2.5s；全片约 83.5s。
+>
 > v6 相对 v5 的改动：
 >
 > - **S8 前新增 S7 “进阶引入”**（3s，占用原 S7 的空号）：画面中央大字 “Need more?” 由轻微模糊变清晰出现，再以柔和的模糊溶解 morph 变为两行 “Here are a few / **power features.**”（第二行强调色）。S8 起各镜头整体后移 3s。
@@ -34,7 +51,7 @@
 | 项目 | 规格 |
 | --- | --- |
 | 片名（工作） | LocalServe — All your little web apps, one home |
-| 时长 | ~86 秒（30fps，2580 帧） |
+| 时长 | ~74 秒（30fps，2220 帧） |
 | 分辨率 | 1920×1080 横屏；可另切 1080×1920 Shorts 版（见文末） |
 | 语言 | 英文旁白 + 英文硬字幕（中文为对照，方便审稿） |
 | 受众 | 用 AI 做小工具的 Vibe Coding 用户、独立开发者、海外前端开发者 |
@@ -69,12 +86,12 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 | 幕 | 时间 | 内容 |
 | --- | --- | --- |
 | 1 钩子 / 需求 | 0–17s | AI 让人人都能做小应用；但它们散落各处，有的必须靠本地服务器才能打开 |
-| 2 产品登场 + 基础用法 | 17–36s | 选文件夹 → 保存并启动 → 点开就是正常页面 |
-| 3 进阶 1：接口代理 | 36–51s | 引入大字（S7）→ 直连被拦 vs 经 LocalServe 通过（S8） |
-| 4 进阶 2：好记的域名 | 51–59s | `recipes.ls` 自定义域名 |
-| 5 进阶 3：手机访问 | 59–67s | 二维码 → 手机打开同一站点 |
-| 6 附加：文件分享 | 67–75s | 拖入文件，手机扫码下载 |
-| 7 CTA | 75–86s | 试用 / 价格 / 下载 |
+| 2 产品登场 + 基础用法 | 17–33.5s | 选文件夹 → 保存并启动 → 点开就是正常页面 |
+| 3 进阶 1：接口代理 | 33.5–47s | 引入大字（S7）→ 直连被拦 vs 经 LocalServe 通过（S8） |
+| 4 进阶 2：好记的域名 | 47–52.5s | `recipes.ls` 自定义域名 |
+| 5 进阶 3：手机访问 | 52.5–59.4s | 二维码 → 手机打开同一站点 |
+| 6 附加：文件分享 | 59.4–64.8s | 拖入文件，手机扫码下载 |
+| 7 CTA | 64.8–74s | 试用 / 价格 / 下载 |
 
 ---
 
@@ -125,19 +142,19 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 承接 S3 留下的问号图标（同位置、同大小）。① “Meet LocalServe.” 时：问号模糊淡出，LocalServe App 图标在原位由模糊变清晰地替换它。② “It turns any folder…” 时：App 图标展开为 `MacWindow` 主窗口（空列表态：“No sites yet”）。 |
+| 画面 | 承接 S3 留下的问号图标（同位置、同大小）。① “Meet LocalServe.” 时：问号模糊淡出，LocalServe App 图标在原位由模糊变清晰地替换它。② “It turns any folder…” 时：App 图标展开为 `MacWindow` 主窗口（空列表态：“No sites yet”）。③ “…no terminal, no cloud.” 时：光标点击 “Add site”，`SiteDrawer` 弹出，赶在 S5 开始前打开完毕。 |
 | VO | Meet LocalServe. It turns any folder into a local site — no terminal, no cloud. |
 | 中文 | 认识 LocalServe：把任意文件夹变成本地站点，不用命令行，也不用上云。 |
 
-#### S5 — 新建站点（21–29s）
+#### S5 — 新建站点（22.5–26.5s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 点击 “Add site” → `SiteDrawer` 弹出；输入名称 `Budget Tracker`；“Choose folder…” 选 `~/Projects/budget-tracker/dist`（绿勾）；端口 `5173`；打开 “Enable LAN access”。 |
+| 画面 | 开场时 `SiteDrawer` 已打开（S4 结尾已点过 “Add site”）；输入名称 `Budget Tracker`；“Choose folder…” 选 `~/Projects/budget-tracker/dist`（绿勾）；端口 `5173`。不打开 “Enable LAN access”。 |
 | VO | Pick the folder, choose a port… |
 | 中文 | 选好文件夹，设个端口…… |
 
-#### S6 — 保存、启动并打开（29–36s，原 S6 + S7 合并）
+#### S6 — 保存、启动并打开（26.5–33.5s，原 S6 + S7 合并）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -149,7 +166,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 > 从这里开始是进阶功能。S7 用一张大字卡引入，之后左上角章节标题（图标 + 功能名 + 随镜头推进的进度条）依次为 API proxy / Custom domains / Open on your phone / File sharing。只在 S7 用 “Need more?” 引入，之后不再用 “Next” 等连接词。
 
-#### S7 — 进阶引入（36–39s）
+#### S7 — 进阶引入（33.5–36.5s）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -157,17 +174,17 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 | VO | Need more? Here are a few power features. |
 | 中文 | 还想要更多？来看几个进阶功能。 |
 
-#### S8 — 直连被拦 vs 经 LocalServe 通过（39–51s）
+#### S8 — 直连被拦 vs 经 LocalServe 通过（36.5–47s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | 左右对称（两节点距中心等距、等高）：左为浏览器窗口（Budget Tracker 页面，蒙着 “Loading data…”），下方 “app”；右为服务器机柜，下方 “remote server”；两侧不显示 IP，顶部不加 Without / With 标签（章节标题 “API proxy” 已说明主题）。① 灰色虚线连接两侧，蓝色请求 `GET /api/me` 从应用到达服务器（指示灯闪一下）；红色 “Response” 从服务器**向左**返回，到虚线正中淡出，红色 ✕ 弹出，下方 “Blocked by CORS”，页面变为 “Couldn't load data”。② ✕ 与虚线淡出，LocalServe 图标弹入中间，下方 “Proxy rule”；两段紫色实线从两侧画出，线端与 app、服务器、中间图标保持**相同间距**；蓝色请求从应用**一口气**滑到服务器、途经图标时不停顿也不隐藏（圆点显示在图标上层），绿色 “Response” 同样连续地**向左**返回应用；页面蒙层消失，浏览器窗口正中弹出绿色圆形对勾（与 S2 同款，对勾自绘），不另加文字标签。 |
+| 画面 | 左右对称（两节点距中心等距、等高）：左为浏览器窗口（Budget Tracker 页面，蒙着 “Loading data…”），下方 “app”；右为服务器机柜，下方 “remote server”；两侧不显示 IP，顶部不加 Without / With 标签（章节标题 “API proxy” 已说明主题）。① 灰色虚线连接两侧，蓝色请求 `GET /api/me` 从应用到达服务器（指示灯闪一下）；红色 “Response” 从服务器**向左**返回，到虚线正中淡出，红色 ✕ 弹出，下方 “Blocked by CORS”，页面变为 “Couldn't load data”。② ✕ 与虚线淡出，LocalServe 图标弹入中间，下方 “Proxy rule”；两段紫色实线从两侧画出，线端与 app、服务器、中间图标保持**相同间距**；蓝色请求从应用快速滑到图标左边缘，**瞬移**到图标右边缘继续滑向服务器；绿色 “Response” 同样**向左**返回，到图标右边缘瞬移至左边缘再回到应用（速度与红色 Response 相同）；页面蒙层消失，浏览器窗口正中弹出绿色圆形对勾（与 S2 同款，对勾自绘），不另加文字标签。 |
 | VO | When your local site calls a remote server directly, it usually gets blocked by CORS. Add a proxy rule in LocalServe, and it goes through. |
 | 中文 | 本地网页直接调用远程服务器，通常会被 CORS 拦下；在 LocalServe 里加一条代理规则，就能顺利通过。 |
 
 ### 第 4 幕 — 进阶 2：好记的域名
 
-#### S9 — 自定义域名（51–59s）
+#### S9 — 自定义域名（47–52.5s）
 
 | 字段  | 内容                                                                                                                         |
 | --- | -------------------------------------------------------------------------------------------------------------------------- |
@@ -177,7 +194,7 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 ### 第 5 幕 — 进阶 3：手机访问
 
-#### S10–S11 — 扫码 → 手机打开（59–67s）
+#### S10–S11 — 扫码 → 手机打开（52.5–59.4s）
 
 | 字段 | 内容 |
 | --- | --- |
@@ -187,22 +204,22 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 
 ### 第 6 幕 — 附加：文件分享
 
-#### S12 — 扫码下载文件（67–75s）
+#### S12 — 扫码下载文件（59.4–64.8s）
 
 | 字段 | 内容 |
 | --- | --- |
-| 画面 | `FileSharePanel` 文件依次落入；点击 “Show QR code” → 手机扫码后下载完成。 |
+| 画面 | `FileSharePanel` 文件依次落入；点击 “Show QR code”（约 2s）→ 手机扫码（约 2.5s）后下载完成（约 3.4s），对齐 “Pick. Scan. Done.”。 |
 | VO | Same goes for file sharing. Pick. Scan. Done. No cables, no cloud. |
 | 中文 | 文件分享也一样。选好，扫一扫，搞定。不用数据线，也不用网盘。 |
 
 ### 第 7 幕 — CTA
 
-#### S13 — 结尾卡（75–86s）
+#### S13 — 结尾卡（64.8–74s）
 
 | 字段 | 内容 |
 | --- | --- |
 | 画面 | 背景虚化的 App 窗口（Budget Tracker、Recipe Box、Reading List）；Logo + 三枚标签：**7-day free trial · No account** / **$9 once · No subscription** / **Up to 3 Macs**；最后 **Download for macOS**。 |
-| VO | Try it free for seven days — no account needed. Then buy once, and it's yours forever. LocalServe. All your little apps, one home. |
+| VO | ① Try it free for seven days — no account needed.（vo17）② Then buy once, and it's yours forever.（vo18）③ LocalServe. All your little apps, one home.（vo19） |
 | 中文 | 免费试用 7 天，无需注册。之后一次买断，永久使用。LocalServe，给你的小应用一个家。 |
 
 ---
@@ -220,10 +237,11 @@ S1–S2 另有 Trip Planner、Plant Log 两张纯装饰卡片，不进入 App �
 > You can give each site a memorable domain name. LocalServe manages hosts for you.
 > You can also open your sites on any device by scanning the QR code, as long as it's on the same Wi‑Fi.
 > Same goes for file sharing. Pick. Scan. Done. No cables, no cloud.
-> Try it free for seven days — no account needed. Then buy once, and it's yours forever.
+> Try it free for seven days — no account needed.
+> Then buy once, and it's yours forever.
 > LocalServe. All your little apps, one home.
 
-约 180 词，按 ~150 wpm 约 72s 纯语音，与 86s 匹配。
+约 180 词，按 ~150 wpm 约 72s 纯语音，与 79.5s 匹配。
 
 ---
 
@@ -266,11 +284,11 @@ Download: <官网链接>
 
 00:00 Your little apps, scattered everywhere
 00:17 Create a site in seconds
-00:36 API proxy
-00:51 Custom domains
-00:59 Open it on your phone
-01:07 Share files over Wi-Fi
-01:15 Try it free
+00:33 API proxy
+00:47 Custom domains
+00:52 Open it on your phone
+01:00 Share files over Wi-Fi
+01:08 Try it free
 ```
 
 **缩略图思路：** 左侧散落的几个文件夹图标汇入中间的 Mac 窗口（Budget Tracker 卡片 Running 绿点），右侧手机显示同一页面；大字 “ALL YOUR APPS → ONE HOME”。
@@ -287,7 +305,7 @@ S1a+S1b 压缩（4s）→ S2 双击对比（5s）→ S3 大字（2s）→ S5+S6 
 
 ## 实现映射（Remotion）
 
-样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v6 实现（0–86s），硬字幕 + 章节标题 + 临时 VO（macOS `say` 生成，用于卡节奏），暂无 BGM / 音效。
+样片：Composition `PromoSample`（`src/compositions/PromoSample.tsx`）已按 v9 实现（0–74s），硬字幕 + 章节标题 + 临时 VO（macOS `say` 生成，用于卡节奏），暂无 BGM / 音效。
 
 | 分镜 | 实现 |
 | --- | --- |

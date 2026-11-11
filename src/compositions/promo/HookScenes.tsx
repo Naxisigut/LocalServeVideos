@@ -54,19 +54,19 @@ const FLY_LEN = 24;
 const FOCUS_AT = 250;
 const RECIPE_CLICK = 272;
 const RECIPE_OPEN = RECIPE_CLICK + 8;
-const RECIPE_LOADED = RECIPE_OPEN + 32;
-const RECIPE_CLOSE = 348;
-const BUDGET_CLICK = 368;
+const RECIPE_LOADED = RECIPE_OPEN + 23;
+const RECIPE_CLOSE = 339;
+const BUDGET_CLICK = 359;
 const BUDGET_OPEN = BUDGET_CLICK + 8;
 const BUDGET_FAIL = BUDGET_OPEN + 14;
 
 // S3 — converge into LocalServe (bezier-source-converge-merge timing ratios).
-const CLOSE_AT = 416;
-const BADGE_AT = 420;
-const CONV_FROM = 426;
-const CONV_TO = 460;
-const PULSE_AT = 454;
-const HEADLINE_AT = 456;
+const CLOSE_AT = 431;
+const BADGE_AT = 435;
+const CONV_FROM = 441;
+const CONV_TO = 475;
+const PULSE_AT = 469;
+const HEADLINE_AT = 471;
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const lerpPt = (a: Pt, b: Pt, t: number): Pt => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) });

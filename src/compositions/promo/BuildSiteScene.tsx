@@ -19,7 +19,6 @@ const POINTS = {
   name: { x: 470, y: 197 },
   picker: { x: 440, y: 243 },
   port: { x: 480, y: 289 },
-  lan: { x: 502, y: 335 },
   saveStart: { x: 462, y: 538 },
   open: { x: 517, y: 279 },
 };
@@ -45,40 +44,40 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
   const morph = interpolate(frame, [s(1.6), s(2.4)], [0, 1], { ...clamp, easing: easeInOut });
   const rise = interpolate(morph, [0, 1], [HOOK_ICON.y - 540, -26]);
 
-  // S5 — fill the "New site" drawer.
-  const addClick = s(5.2);
+  // End of S4 — "Add site" opens the drawer before "Pick the folder…" starts (5.5s).
+  const addClick = s(4.5);
   const drawerIn = addClick + 3;
-  const nameClick = s(6.6);
+
+  // S5 — fill the "New site" drawer.
+  const nameClick = s(5.6);
   const nameTypeAt = nameClick + 4;
-  const pickerClick = s(8.5);
-  const portClick = s(9.8);
+  const pickerClick = s(7.4);
+  const portClick = s(8.3);
   const portTypeAt = portClick + 4;
-  const lanClick = s(11.1);
-  const saveHoverAt = s(11.9);
+  const saveHoverAt = s(9.3);
 
   // S6 — save and start.
-  const saveClick = s(12.2);
+  const saveClick = s(9.7);
   const drawerOut = saveClick + 3;
   const cardAt = drawerOut + 6;
   const runningAt = cardAt + s(0.8);
-  const openHoverAt = s(14.4);
-  const openClick = s(15);
+  const openHoverAt = s(11.9);
+  const openClick = s(12.5);
   const browserIn = interpolate(frame, [openClick + 3, openClick + 15], [0, 1], { ...clamp, easing: easeOut });
 
   const moves: Move[] = [
-    { at: s(4.2), to: POINTS.addSite },
-    { at: s(5.9), to: POINTS.name },
-    { at: s(7.8), to: POINTS.picker },
-    { at: s(9.1), to: POINTS.port },
-    { at: s(10.5), to: POINTS.lan },
-    { at: s(11.4), to: POINTS.saveStart },
-    { at: s(13.6), to: POINTS.open },
+    { at: s(3.8), to: POINTS.addSite },
+    { at: s(4.9), to: POINTS.name },
+    { at: s(6.7), to: POINTS.picker },
+    { at: s(7.7), to: POINTS.port },
+    { at: s(8.8), to: POINTS.saveStart },
+    { at: s(11.1), to: POINTS.open },
   ];
   const cursor = moves.reduce<Point>((from, move) => {
     const t = interpolate(frame, [move.at, move.at + s(0.6)], [0, 1], { ...clamp, easing: easeInOut });
     return { x: from.x + (move.to.x - from.x) * t, y: from.y + (move.to.y - from.y) * t };
   }, POINTS.rest);
-  const clicks = [addClick, nameClick, pickerClick, portClick, lanClick, saveClick, openClick];
+  const clicks = [addClick, nameClick, pickerClick, portClick, saveClick, openClick];
   const pressed = clicks.some((c) => frame >= c && frame < c + 4);
 
   const typeInto = (full: string, at: number) =>
@@ -90,12 +89,12 @@ export const BuildSiteScene: React.FC<{ theme: Theme; language: Language }> = ({
     name: typeInto(acmeDraft.name, nameTypeAt),
     rootDir: frame >= pickerClick + 5 ? acmeDraft.rootDir : '',
     port: typeInto(acmeDraft.port, portTypeAt),
-    lan: interpolate(frame, [lanClick + 1, lanClick + 6], [0, 1], clamp),
+    lan: false,
   };
   const focus: DrawerField | undefined =
-    frame >= portClick && frame < lanClick ? 'port' : frame >= nameClick && frame < pickerClick ? 'name' : undefined;
+    frame >= portClick && frame < saveHoverAt ? 'port' : frame >= nameClick && frame < pickerClick ? 'name' : undefined;
   const drawerHover: DrawerHover | undefined =
-    frame >= saveHoverAt ? 'save-start' : frame >= s(8.2) && frame < pickerClick + 5 ? 'picker' : undefined;
+    frame >= saveHoverAt ? 'save-start' : frame >= s(7.1) && frame < pickerClick + 5 ? 'picker' : undefined;
   const drawerEnter =
     frame < drawerOut
       ? interpolate(frame, [drawerIn, drawerIn + 8], [0, 1], { ...clamp, easing: easeOut })
