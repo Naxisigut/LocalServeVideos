@@ -1,0 +1,30 @@
+Built a bunch of little web apps with AI? LocalServe gives them one home on your Mac — every folder becomes a local website. No terminal. No cloud. No account.
+
+✓ Opens apps that only work through a local server
+✓ One-click local sites
+✓ Reverse proxy for your API (no more CORS)
+✓ Custom local domains like recipes.ls
+✓ Scan a QR code to open it on your phone
+✓ Share files to any device on the same Wi-Fi
+
+macOS only. 7-day free trial, no account needed. Then $9 once — lifetime license, up to 3 Macs.
+
+Download: https://localserve.lccrundev.click/
+Releases: https://github.com/Naxisigut/LocalServeRelease/releases
+Docs: https://localserve.lccrundev.click/guide.html
+
+00:00 Your little apps, scattered
+00:17 Create a site in seconds
+00:33 API proxy
+00:47 Custom domains & phone
+00:59 File sharing & try it free
+
+—
+用 AI 做出一堆小网页应用，却散落在 Mac 各处？LocalServe 给它们一个家：选文件夹、设端口、点启动，就是一个本地站点。不用命令行，不上云，也不用注册。
+
+7 天免费试用 · $9 一次买断 · 最多 3 台 Mac
+官网：https://localserve.lccrundev.click/
+
+Music: Pixabay (royalty-free)
+
+#LocalServe #VibeCoding #macOS

@@ -1,0 +1,95 @@
+1
+00:00:00,000 --> 00:00:03,500
+With AI, anyone can build little web apps
+
+2
+00:00:03,500 --> 00:00:06,000
+— just for themselves.
+
+3
+00:00:06,000 --> 00:00:08,300
+But they're scattered all over your Mac.
+
+4
+00:00:08,300 --> 00:00:11,900
+Some pages just open and work.
+
+5
+00:00:11,900 --> 00:00:14,000
+Others only load through a local server.
+
+6
+00:00:14,900 --> 00:00:17,000
+What if they all had one home?
+
+7
+00:00:17,000 --> 00:00:18,600
+Meet LocalServe.
+
+8
+00:00:18,600 --> 00:00:22,500
+It turns any folder into a local site — no terminal, no cloud.
+
+9
+00:00:22,500 --> 00:00:26,500
+Pick the folder, choose a port…
+
+10
+00:00:26,500 --> 00:00:29,500
+…and hit start. That's it.
+
+11
+00:00:29,500 --> 00:00:33,500
+That blank page from before? Now it just works.
+
+12
+00:00:33,500 --> 00:00:36,500
+Need more? Here are a few power features.
+
+13
+00:00:36,500 --> 00:00:39,300
+When your local site calls a remote server directly,
+
+14
+00:00:39,300 --> 00:00:41,800
+it usually gets blocked by CORS.
+
+15
+00:00:41,800 --> 00:00:47,000
+Add a proxy rule in LocalServe, and it goes through.
+
+16
+00:00:47,000 --> 00:00:49,800
+You can give each site a memorable domain name.
+
+17
+00:00:49,800 --> 00:00:52,500
+LocalServe manages hosts for you.
+
+18
+00:00:52,500 --> 00:00:57,000
+You can also open your sites on any device by scanning the QR code,
+
+19
+00:00:57,000 --> 00:00:59,400
+as long as it's on the same Wi-Fi.
+
+20
+00:00:59,400 --> 00:01:01,400
+Same goes for file sharing.
+
+21
+00:01:01,400 --> 00:01:04,800
+Pick. Scan. Done. No cables, no cloud.
+
+22
+00:01:04,800 --> 00:01:07,700
+Try it free for seven days — no account needed.
+
+23
+00:01:07,700 --> 00:01:10,300
+Then buy once, and it's yours forever.
+
+24
+00:01:10,300 --> 00:01:14,000
+LocalServe. All your little apps, one home.

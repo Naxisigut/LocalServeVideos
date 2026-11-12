@@ -280,15 +280,13 @@ Built a bunch of little web apps with AI? LocalServe gives them one home on your
 ✓ Share files to any device on your Wi-Fi
 
 7-day free trial, no account. One-time purchase, up to 3 Macs.
-Download: <官网链接>
+Download: https://localserve.lccrundev.click/
 
-00:00 Your little apps, scattered everywhere
+00:00 Your little apps, scattered
 00:17 Create a site in seconds
 00:33 API proxy
-00:47 Custom domains
-00:52 Open it on your phone
-01:00 Share files over Wi-Fi
-01:08 Try it free
+00:47 Custom domains & phone
+00:59 File sharing & try it free
 ```
 
 **缩略图思路：** 左侧散落的几个文件夹图标汇入中间的 Mac 窗口（Budget Tracker 卡片 Running 绿点），右侧手机显示同一页面；大字 “ALL YOUR APPS → ONE HOME”。

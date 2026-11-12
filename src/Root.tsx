@@ -4,6 +4,7 @@ import { PROMO_SAMPLE_SECONDS, PromoSample } from './compositions/PromoSample';
 import { UiGallery } from './compositions/UiGallery';
 import { UiMotionDemo } from './compositions/UiMotionDemo';
 import { UiSmoke } from './compositions/UiSmoke';
+import { YoutubeThumbnail } from './compositions/YoutubeThumbnail';
 export const RemotionRoot: React.FC = () => {
   return (
     <>
@@ -32,6 +33,13 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+        defaultProps={{ theme: 'light' as const, language: 'en' as const }}
+      />
+      <Still
+        id="YoutubeThumbnail"
+        component={YoutubeThumbnail}
+        width={1280}
+        height={720}
         defaultProps={{ theme: 'light' as const, language: 'en' as const }}
       />
       <Folder name="UI-Gallery">
